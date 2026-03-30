@@ -6,6 +6,10 @@ export interface Movie {
   cast: string[]; // <=== Actores de la pelicula
   director: string; // <=== Director de la pelicula
   rating: number; // <=== Calificacion de la pelicula
-  genre: string; // <=== Genero de la pelicula
+  genres: string[]; // <=== Generos de la pelicula
   posterUrl?: string; // <=== Poster de la pelicula
+  trailerkey?: string; // <=== Trailer de la pelicula
+  overview?: string; // <=== Descripcion de la pelicula
+  runtime?: number; // <=== Duracion de la pelicula
+  watchProviders?: string[]; // <=== Plataformas donde se puede ver la pelicula
 }

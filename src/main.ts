@@ -1,5 +1,5 @@
 import "./style.css";
-import { searchMovies } from "./api/movieApi"; // <== Importamos la api de peliculas.
+import { fetchMovie } from "./api/movieApi"; // <== Importamos la api de peliculas.
 import type { Movie } from "./types/movie"; // <== Importamos la interfaz de peliculas.
 
 // Seleccionamos el contenedor del HTML donde vamos a pintar la grilla de peliculas.
@@ -45,7 +45,7 @@ const handleSearch = async (event: Event) => {
   if (query.trim() === "") return;
 
   // Buscamos la pelicula en la api, y obtenemos los resultados, de lo que el usuario escriba.
-  const movies = await searchMovies(query);
+  const movies = await fetchMovie(query);
 
   // Renderizamos, con los resultados de la busqueda.
   renderMovies(movies);
