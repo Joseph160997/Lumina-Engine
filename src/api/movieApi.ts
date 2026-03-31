@@ -1,4 +1,5 @@
 import type { Movie } from "../types/movie";
+import { mapToMovieData } from "../utils/mapper";
 
 // Obtenemos la key de la API de TMDB, la cual usaremos para hacer las llamadas a la API de TMDB.
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -41,7 +42,7 @@ export const fetchMovie = async (query: string): Promise<any> => {
     const data = await response.json();
 
     // Devolvemos la data crauda tal caul viene de la API.
-    return data;
+    return data.results.map(mapToMovieData);
   } catch (error) {
     // si hay un error, lo mostramos en la consola, y devolvemos un array vacio para evitar que la app se rompa.
     console.error("Error al buscar peliculas:", error);
