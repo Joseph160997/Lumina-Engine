@@ -22,7 +22,7 @@ export const renderMovies = (movie: Movie[], container: HTMLElement): void => {
         <h3 class="text-white text-lg font-bold truncate">${movie.title}</h3>
          <p class="text-slate-400 text-sm">${movie.releaseDate}</p>
          
-         <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Details</button>
+         <button data-id="${movie.id}" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Details</button>
          
          </div>
      </div>

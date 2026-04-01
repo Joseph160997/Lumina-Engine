@@ -14,6 +14,7 @@ export const formatCurrency = (amount: number): string => {
  * ej. 2022-01-01 -> 01/01/2022
  */
 export const formatDate = (dateString: string): string => {
+  if (!dateString) return "Fecha no disponible";
   const date = new Date(dateString);
   return date.toLocaleDateString("es-ES", {
     day: "numeric",
