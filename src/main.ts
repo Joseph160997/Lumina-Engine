@@ -51,6 +51,9 @@ const handleOpenModal = (event: Event) => {
   // Si no se encontro un boton de detalles, no hacemos nada (return).
   if (!detailsButton) return;
 
+  const movieId = detailsButton.getAttribute("data-id"); // <== Obtenemos el id de la pelicula del atributo data-id del boton de detalles.
+  console.log("El id de esta pelicula es:", movieId); // <== Mostramos el id de la pelicula en la consola, para verificar que lo estamos obteniendo correctamente.
+
   // Le quitamos la clase "hidden" al modal para mostrarlo, y le agregamos la clase "flex" para centrarlo.
   movieModal.classList.remove("hidden");
 };
