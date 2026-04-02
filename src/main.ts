@@ -1,6 +1,6 @@
 import "./style.css";
-import { fetchMovie } from "./api/movieApi.ts"; // <=== Importamos la api de peliculas.
-import { renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
+import { fetchMovie, fetchMoviesDetails } from "./api/movieApi.ts"; // <=== Importamos la api de peliculas.
+import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
 
 // 1.SELECCIÓN DEL DOM.
 const movieGrid = document.getElementById("movie-grid") as HTMLElement; // <== Seleccionamos el contenedor del HTML donde se van a renderizar las peliculas.
@@ -43,7 +43,7 @@ const handleSearch = async (event: Event) => {
  *  y cuando se haga click en un boton de detalles, vamos a abrir el modal con los detalles de la pelicula seleccionada.
  * 1. Funcion handleOpenModal, que se ejecuta cuando el usuario hace click en un boton de detalles de una pelicula.
  */
-const handleOpenModal = (event: Event) => {
+const handleOpenModal = async (event: Event) => {
   // Verificamos si el elemento clickeado es un boton de detalles, usando el metodo closest para buscar el boton mas cercano al elemento clickeado.
   const target = event.target as HTMLElement;
   const detailsButton = target.closest("button[data-id]") as HTMLButtonElement;
@@ -52,10 +52,24 @@ const handleOpenModal = (event: Event) => {
   if (!detailsButton) return;
 
   const movieId = detailsButton.getAttribute("data-id"); // <== Obtenemos el id de la pelicula del atributo data-id del boton de detalles.
-  console.log("El id de esta pelicula es:", movieId); // <== Mostramos el id de la pelicula en la consola, para verificar que lo estamos obteniendo correctamente.
+  if (!movieId) return; // <== Si no se encontro el id de la pelicula, no hacemos nada (return).
 
-  // Le quitamos la clase "hidden" al modal para mostrarlo, y le agregamos la clase "flex" para centrarlo.
-  movieModal.classList.remove("hidden");
+  try {
+    // mostramos el modal vacion con un loader
+    movieModal.classList.remove("hidden");
+
+    modalContent.innerHTML = "<p class='text-center'>Cargando Detalles</p>";
+
+    // Pedimos los datos a la api
+    const movieData = await fetchMoviesDetails(movieId);
+
+    // Renderizamos lod datos en el contenedor del modal
+    renderMovieDetails(movieData, modalContent);
+  } catch (error) {
+    console.error("Error al cargar el modal:", error);
+    modalContent.innerHTML =
+      "<p class='text-2xl font-bold bg-amber-950'>No se pudo cargar la información</p> ";
+  }
 };
 
 // 2. Funcion handleCloseModal, que se ejecuta cuando el usuario hace click en el boton de cerrar el modal, afuera del modal.
@@ -65,6 +79,9 @@ const handleCloseModal = (event: Event) => {
   if (target === closeModal || target.closest("#movie-modal")) {
     // Le agregamos la clase "hidden" al modal para ocultarlo, y le quitamos la clase "flex" para centrarlo.
     movieModal.classList.add("hidden");
+
+    // Limpiamos el contenido del modal para que no quede la informacion de la pelicula anterior cuando se abra el modal de nuevo.
+    modalContent.innerHTML = "";
   }
 };
 
