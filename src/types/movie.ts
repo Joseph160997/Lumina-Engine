@@ -1,9 +1,11 @@
+import type { CastMmeber } from "./cast";
+
 export interface Movie {
   id: string; // <=== Id unico para manejar la logica
   title: string; // <=== Titulo de la pelicula
   releaseDate: string; // <=== Año de la pelicula
   budget: number; // <=== Presupuesto de la pelicula
-  cast: string[]; // <=== Actores de la pelicula
+  cast: CastMmeber[]; // <=== Elenco de la pelicula
   director: string; // <=== Director de la pelicula
   rating: number; // <=== Calificacion de la pelicula
   genres: string[]; // <=== Generos de la pelicula

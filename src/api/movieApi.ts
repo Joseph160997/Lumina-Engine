@@ -1,5 +1,5 @@
 import type { Movie } from "../types/movie";
-import { mapToMovieData, mapToMovieDetais } from "../utils/mapper";
+import { mapToMovieData } from "../utils/mapper";
 
 // Obtenemos la key de la API de TMDB, la cual usaremos para hacer las llamadas a la API de TMDB.
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -96,7 +96,7 @@ export const fetchMovie = async (query: string): Promise<any> => {
 export const fetchMoviesDetails = async (id: string) => {
   // Hacemos la llamada a la API de TMDB con el endpoint "/movie/{id}" y le pasamos la clave de la API como parámetro "api_key".
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?language=es-ES&append_to_response=videos,watch/providers`,
+    `https://api.themoviedb.org/3/movie/${id}?language=es-MX&append_to_response=videos,watch/providers,credits&include_video_language=es,en,null`,
     options,
   );
 

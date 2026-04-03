@@ -1,6 +1,9 @@
 import "./style.css";
 import { fetchMovie, fetchMoviesDetails } from "./api/movieApi.ts"; // <=== Importamos la api de peliculas.
 import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
+import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
+
+let debouceTimer: number;
 
 // 1.SELECCIÓN DEL DOM.
 const movieGrid = document.getElementById("movie-grid") as HTMLElement; // <== Seleccionamos el contenedor del HTML donde se van a renderizar las peliculas.
@@ -11,6 +14,34 @@ const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const movieModal = document.getElementById("movie-modal") as HTMLElement; // <== Seleccionamos el contenedor del modal de detalles de pelicula.
 const closeModal = document.getElementById("modal-close") as HTMLButtonElement; // <== Seleccionamos el boton de cerrar el modal de detalles de pelicula.
 const modalContent = document.getElementById("modal-content") as HTMLElement; // <== Seleccionamos el contenedor del contenido del modal de detalles de pelicula.
+
+/**
+ * Nueva función par manejar el iunput debuoce.
+ */
+const handleInputSeacrch = (even: Event) => {
+  const target = even.target as HTMLInputElement; // <== Obtenemos el elemento del input de busqueda.
+  const query = target.value.trim().toLowerCase(); // <== Obtenemos el valor del input de busqueda, y lo limpiamos (trim) para eliminar espacios al principio y al final, y lo convertimos a minusculas para evitar problemas de mayusculas.
+
+  // Si el query esta vacio, no hacemos nada (return).
+  if (!query) return;
+
+  // LImpiamos el temporizador.
+  clearTimeout(debouceTimer);
+
+  // NO buscamos hasta tener al menos 3 caracteres.
+  if (query.length < 3) return;
+
+  // inicializamo un nuevo contador.
+  debouceTimer = window.setTimeout(async () => {
+    try {
+      const movies = await fetchMovie(query);
+      renderMovies(movies, movieGrid);
+    } catch (error) {
+      console.error("Error en busqueda dinamica", error);
+    }
+  }, 500);
+};
+
 // 2. Funcion handleSearch, que se ejecuta cuando el usuario hace submit en el formulario de busqueda.
 const handleSearch = async (event: Event) => {
   // Evitamos que el formulario se envie y recargue la pagina.
@@ -44,31 +75,49 @@ const handleSearch = async (event: Event) => {
  * 1. Funcion handleOpenModal, que se ejecuta cuando el usuario hace click en un boton de detalles de una pelicula.
  */
 const handleOpenModal = async (event: Event) => {
-  // Verificamos si el elemento clickeado es un boton de detalles, usando el metodo closest para buscar el boton mas cercano al elemento clickeado.
   const target = event.target as HTMLElement;
   const detailsButton = target.closest("button[data-id]") as HTMLButtonElement;
 
-  // Si no se encontro un boton de detalles, no hacemos nada (return).
   if (!detailsButton) return;
 
-  const movieId = detailsButton.getAttribute("data-id"); // <== Obtenemos el id de la pelicula del atributo data-id del boton de detalles.
-  if (!movieId) return; // <== Si no se encontro el id de la pelicula, no hacemos nada (return).
+  const movieId = detailsButton.getAttribute("data-id");
+  if (!movieId) return;
 
   try {
-    // mostramos el modal vacion con un loader
     movieModal.classList.remove("hidden");
 
-    modalContent.innerHTML = "<p class='text-center'>Cargando Detalles</p>";
+    // HTML Corregido: Spinner y Texto separados para que no rote todo
+    modalContent.innerHTML = `
+    <div class="flex flex-col items-center justify-center p-10">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+      <p class="text-slate-400 font-medium">Cargando Detalles...</p>
+    </div>
+    `;
 
-    // Pedimos los datos a la api
-    const movieData = await fetchMoviesDetails(movieId);
+    const rawData = await fetchMoviesDetails(movieId);
 
-    // Renderizamos lod datos en el contenedor del modal
-    renderMovieDetails(movieData, modalContent);
+    // IMPORTANTE: Verifica si es mapToMovieDetais o mapToMovieDetails
+    const cleanMovieData = {
+      ...mapToMovieData(rawData),
+      ...mapToMovieDetails(rawData),
+    };
+
+    renderMovieDetails(cleanMovieData, modalContent);
   } catch (error) {
     console.error("Error al cargar el modal:", error);
-    modalContent.innerHTML =
-      "<p class='text-2xl font-bold bg-amber-950'>No se pudo cargar la información</p> ";
+    modalContent.innerHTML = `
+      <div class="flex flex-col items-center justify-center p-10 text-center">
+        <p class="text-red-500 font-medium mb-4">Error al cargar los detalles.</p>
+        <button id="close-modal-error" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Cerrar</button>
+      </div>
+    `;
+
+    // Listener extra para el botón de error
+    document
+      .getElementById("close-modal-error")
+      ?.addEventListener("click", () => {
+        movieModal.classList.add("hidden");
+      });
   }
 };
 
@@ -96,3 +145,6 @@ movieModal.addEventListener("click", handleCloseModal);
 
 // 6. Escuchamos el evento click en el boton de cerrar el modal, y llamamos a la funcion handleCloseModal.
 closeModal.addEventListener("click", handleCloseModal);
+
+// conexión del listener al input (debouce handleInputSearch)
+searchInput.addEventListener("input", handleInputSeacrch);

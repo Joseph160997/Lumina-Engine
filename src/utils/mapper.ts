@@ -30,7 +30,7 @@ export const mapToMovieData = (item: any): Movie => {
  * Esto se hace para evitar hacer una petición extra a la API cada vez que mostramos una película en la lista, ya que esos datos no son necesarios en ese contexto.
  * Solo los obtenemos cuando el usuario entra al detalle de una película, donde sí necesitamos esa información.
  */
-export const mapToMovieDetais = (data: any): Partial<Movie> => {
+export const mapToMovieDetails = (data: any): Partial<Movie> => {
   // Buscamos el video que sea un trailer oficial, y que este en youtube.
   const trailer = data.videos?.results.find(
     (v: any) => v.type === "Trailer" && v.site === "YouTube",
@@ -39,7 +39,14 @@ export const mapToMovieDetais = (data: any): Partial<Movie> => {
   return {
     budget: data.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
     runtime: data.runtime || 0, // <=== Si no hay duración, ponemos un valor por defecto.
-    cast: data.credits?.cast.slice(0, 5).map((actor: any) => actor.name) || [], // <=== Tomamos los primeros 5 actores del elenco, y si no hay elenco, ponemos una lista vacía.
+    cast:
+      data.credits?.cast.slice(0, 5).map((actor: any) => ({
+        name: actor.name,
+        character: actor.character,
+        profilePath: actor.profile_path
+          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+          : null,
+      })) || [], // <=== Mapeamos el elenco, y si no hay elenco, ponemos una lista vacía.
     director:
       data.credits?.crew.find((member: any) => member.job === "Director")
         ?.name || "Director desconocido", // <=== Buscamos el director en el crew, y si no lo encontramos, ponemos un valor por defecto.
