@@ -23,10 +23,23 @@ export const formatDate = (dateString: string): string => {
   });
 };
 
-// OTRA FUNCION PARA FORMATEAR LA DURACION DE LA PELICULA, EJ. 120 -> 2h 0m
-export const formatRuntime = (runtime: number): string => {
-  if (!runtime) return "Duración no disponible";
-  const hours = Math.floor(runtime / 60);
-  const minutes = runtime % 60;
+/**
+ * Convierte minutos totales en un formato de horas y minutos. Ej. 125 -> 2h 5m
+ * @param runtime - El tiempo total en minutos.
+ * @returns Strinng formateado, o  mensaje de eeror si no hay dato.
+ */
+export const formatRunTime = (runtime: number): string => {
+  // 1. Proteccion, si no hay tiempo es cero.
+  if (!runtime || runtime <= 0) return "Duración no disponible";
+
+  // 2. Lógica matematica:
+  const hours = Math.floor(runtime / 60); // <=== Calcula las horas completas
+  const minutes = runtime % 60; // <=== Calcula los minutos restantes
+
+  // 3. Retorno elegante, si no hay horas, solo devolvemosminutos, si no hay minutos solo mostramos horas.
+  if (hours === 0) return `${minutes}m`;
+
+  if (minutes === 0) return `${hours}h`;
+
   return `${hours}h ${minutes}m`;
 };

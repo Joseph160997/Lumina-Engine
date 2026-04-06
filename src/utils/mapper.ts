@@ -35,6 +35,7 @@ export const mapToMovieDetails = (data: any): Partial<Movie> => {
   const trailer = data.videos?.results.find(
     (v: any) => v.type === "Trailer" && v.site === "YouTube",
   );
+  const rawProviders = data["watch/providers"]?.results?.ES?.flatrate || [];
 
   return {
     budget: data.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
@@ -47,6 +48,13 @@ export const mapToMovieDetails = (data: any): Partial<Movie> => {
           ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
           : null,
       })) || [], // <=== Mapeamos el elenco, y si no hay elenco, ponemos una lista vacía.
+    watchProviders:
+      rawProviders.map((p: any) => ({
+        name: p.provider_name,
+        logo: p.logo_path
+          ? `https://image.tmdb.org/t/p/original${p.logo_path}`
+          : null,
+      })) || [], // <=== Mapeamos las plataformas de streaming, y si no hay plataformas, ponemos una lista vacía.
     director:
       data.credits?.crew.find((member: any) => member.job === "Director")
         ?.name || "Director desconocido", // <=== Buscamos el director en el crew, y si no lo encontramos, ponemos un valor por defecto.

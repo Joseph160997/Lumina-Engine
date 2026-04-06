@@ -13,5 +13,5 @@ export interface Movie {
   trailerkey?: string; // <=== Trailer de la pelicula
   overview?: string; // <=== Descripcion de la pelicula
   runtime?: number; // <=== Duracion de la pelicula
-  watchProviders?: string[]; // <=== Plataformas donde se puede ver la pelicula
+  watchProviders?: { name: string; logo: string }[]; // <=== Plataformas donde se puede ver la pelicula
 }

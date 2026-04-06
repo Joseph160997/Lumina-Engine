@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.css"; // <== Importamos el archivo de estilos CSS para aplicar estilos a nuestra aplicación.
 import { fetchMovie, fetchMoviesDetails } from "./api/movieApi.ts"; // <=== Importamos la api de peliculas.
 import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
 import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
@@ -75,12 +75,14 @@ const handleSearch = async (event: Event) => {
  * 1. Funcion handleOpenModal, que se ejecuta cuando el usuario hace click en un boton de detalles de una pelicula.
  */
 const handleOpenModal = async (event: Event) => {
-  const target = event.target as HTMLElement;
+  const target = event.target as HTMLElement; // <== Obtenemos el elemento que fue clickeado.
+
+  // Verificamos si el elemento clickeado es un boton de detalles, usando closest para buscar el boton mas cercano al elemento clickeado que tenga el atributo data-id.
   const detailsButton = target.closest("button[data-id]") as HTMLButtonElement;
 
   if (!detailsButton) return;
 
-  const movieId = detailsButton.getAttribute("data-id");
+  const movieId = detailsButton.getAttribute("data-id"); // <== Obtenemos el valor del atributo data-id, que es el ID de la pelicula seleccionada.
   if (!movieId) return;
 
   try {
@@ -95,6 +97,7 @@ const handleOpenModal = async (event: Event) => {
     `;
 
     const rawData = await fetchMoviesDetails(movieId);
+    console.log("Datos crudos de la película:", rawData); // Log para revisar los datos crudos obtenidos de la API
 
     // IMPORTANTE: Verifica si es mapToMovieDetais o mapToMovieDetails
     const cleanMovieData = {
@@ -103,6 +106,9 @@ const handleOpenModal = async (event: Event) => {
     };
 
     renderMovieDetails(cleanMovieData, modalContent);
+    // Asegúrate de que este ID coincida con el contenedor en tu HTML
+
+    // Renderizamos el consejo de la IA en el modal, pasandole el titulo, la sinopsis y los generos de la pelicula.
   } catch (error) {
     console.error("Error al cargar el modal:", error);
     modalContent.innerHTML = `
