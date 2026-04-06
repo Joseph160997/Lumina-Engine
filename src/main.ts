@@ -117,13 +117,6 @@ const handleOpenModal = async (event: Event) => {
         <button id="close-modal-error" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Cerrar</button>
       </div>
     `;
-
-    // Listener extra para el botón de error
-    document
-      .getElementById("close-modal-error")
-      ?.addEventListener("click", () => {
-        movieModal.classList.add("hidden");
-      });
   }
 };
 
@@ -154,3 +147,14 @@ closeModal.addEventListener("click", handleCloseModal);
 
 // conexión del listener al input (debouce handleInputSearch)
 searchInput.addEventListener("input", handleInputSeacrch);
+
+//listener para el botton de cerrar el modal en caso de error
+// Listener extra para el botón de error
+document.getElementById("close-modal-error")?.addEventListener("click", () => {
+  movieModal.classList.add("hidden");
+  modalContent.innerHTML = ""; // Limpiamos el contenido del modal.
+});
+
+modalContent.addEventListener("click", (event) => {
+  event.stopPropagation(); // Evitamos que el click dentro del contenido del modal cierre el modal.
+});
