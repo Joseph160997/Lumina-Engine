@@ -14,4 +14,5 @@ export interface Movie {
   overview?: string; // <=== Descripcion de la pelicula
   runtime?: number; // <=== Duracion de la pelicula
   watchProviders?: { name: string; logo: string }[]; // <=== Plataformas donde se puede ver la pelicula
+  revenue: number; // <=== Recaudacion de la pelicula
 }

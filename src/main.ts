@@ -155,6 +155,7 @@ document.getElementById("close-modal-error")?.addEventListener("click", () => {
   modalContent.innerHTML = ""; // Limpiamos el contenido del modal.
 });
 
+// Listener para evitar que el click dentro del contenido del modal cierre el modal.
 modalContent.addEventListener("click", (event) => {
   event.stopPropagation(); // Evitamos que el click dentro del contenido del modal cierre el modal.
 });

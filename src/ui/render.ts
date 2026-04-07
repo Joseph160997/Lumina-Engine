@@ -114,6 +114,13 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
 
       <p class="text-lg text-slate-300 leading-relaxed mb-8 italic">"${movie.overview}"</p>
 
+      <div class="flex items-center gap-2 mt-4 bg-slate-800/50 mb-6 p-3 rounded-lg border border-slate-700">
+       <div class="flex flex-col">
+       <span class="text-[10px] uppercase tracking-tight text-pink-500 font-bold">Director</span>
+        <p class="text-slate-100 fiont-medium">${movie.director}</p>
+        </div>
+        </div>
+
         <!-- LANZAMIENTO -->
       <div class="grid grid-cols-2 gap-4"> 
       <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
@@ -132,11 +139,22 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
       <span class="block text-emerald-500 font-bold text-[10px] uppercase mb-1">Duración</span>
       <p class="text-white font-medium">⏱️ ${formatRunTime(movie.runtime || 0)}</p>
       </div>
-      
-      <!-- PRESUPUESTO -->
+
+        <!-- PRESUPUESTO -->
       <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
       <span class="block text-purple-500 font-bold text-[10px] uppercase mb-1">Presupuesto</span>
       <p class="text-white font-medium">💰 ${formatCurrency(movie.budget)}</p>
+      </div>
+      
+
+        <!-- RECAUDACIÓN -->
+      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
+      <span class="block text-slate-400 font-bold text-[10px] uppercase mb-1">Recaudación</span>
+      <p class="text-blue-400 font-mono text-sm font-semibold">💵 ${
+        movie.revenue > 0
+          ? formatCurrency(movie.revenue)
+          : '<span class="text-slate-600 italic">No disponible</span>'
+      }</p>
       </div>
 
       
@@ -146,6 +164,10 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
         ${providersHtml}
 
       </div>
+
+      
+
+
       </div>
        
         ${castHtml}

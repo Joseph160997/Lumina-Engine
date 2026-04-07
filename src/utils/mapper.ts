@@ -20,6 +20,7 @@ export const mapToMovieData = (item: any): Movie => {
     budget: item.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
     cast: [], // <=== Inicialmente, la lista de actores está vacía.
     director: "Director desconocido", // <=== Si no hay director, ponemos un valor por defecto.
+    revenue: 0, // <=== Inicialmente, la recaudación está en cero.
     genres: [], // <=== Inicialmente, la lista de géneros está vacía.
   };
 };
@@ -38,6 +39,7 @@ export const mapToMovieDetails = (data: any): Partial<Movie> => {
   const rawProviders = data["watch/providers"]?.results?.ES?.flatrate || [];
 
   return {
+    revenue: data.revenue || 0, // <=== Si no hay recaudación, ponemos un valor por defecto.
     budget: data.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
     runtime: data.runtime || 0, // <=== Si no hay duración, ponemos un valor por defecto.
     cast:
