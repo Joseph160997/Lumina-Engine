@@ -1,4 +1,3 @@
-import type { Movie } from "../types/movie";
 import { mapToMovieData } from "../utils/mapper";
 
 // Obtenemos la key de la API de TMDB, la cual usaremos para hacer las llamadas a la API de TMDB.
