@@ -2,35 +2,68 @@ import type { Movie } from "../types/movie.ts";
 import { formatCurrency, formatRunTime } from "../utils/formatters.ts";
 
 /**
- * 1. La función recibe el array de peliculas "limpias" (Tipo Movie), y renderiza cada pelicula en el contenedor del HTML.
- * 2. Exportamos la funcion para que pueda ser utilizada en otros archivos, como en main.ts.
- * Recibe un array, y el elemneto de DOM donde se va a renderizar la grilla de peliculas.
+ * Funcion para centralizar la logica d eimagenes.
  */
-export const renderMovies = (movie: Movie[], container: HTMLElement): void => {
-  // existe el contendor, si no, "return" (vete de aqui).
+const DEFAULT_POSTER = "https://via.placeholder.com/500x750?text=No+Image";
+
+/**
+ * Función para obtener la URL de una imagen de una película.
+ * La función recibe un string que puede ser nulo o una ruta relativa a una imagen.
+ * Si el string es nulo, devuelve la imagen por defecto.
+ * Si el string ya es una URL completa, la devuelve sin modificar.
+ * Si el string es una ruta relativa, la completa con la base URL de la API de TMDB y devuelve la URL completa.
+ * @param path - string que puede ser nulo o una ruta relativa a una imagen.
+ * @returns string - la URL de la imagen.
+ */
+export const getPosterUrl = (path: string | undefined): string => {
+  // Si no hay poster, devolvemos la imagen por defecto.
+  if (!path) return DEFAULT_POSTER;
+
+  // Si el path ya es una URL completa, lo devolvemos tal cual.
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+
+  // Si el path es una ruta relativa, la completa con la base URL de la API de TMDB.
+  return `https://image.tmdb.org/t/p/w500${path}`;
+};
+
+/**
+ * Esta función se encarga de renderizar una grilla de películas en un contenedor del HTML.
+ * Recibe un array de objetos de tipo Movie, y el elemento de DOM donde se va a renderizar la grilla de películas.
+ * La función es exportada para que pueda ser utilizada en otros archivos, como en main.ts.
+ *
+ * Paso 1: Verificar si el contenedor existe, si no es el caso, la función termina sin hacer nada.
+ * Paso 2: Se crea una variable para acumular el HTML que se va a renderizar. Esta variable es un string vacío al principio.
+ * Paso 3: Se utiliza el método .forEach() para recorrer cada objeto del array de películas.
+ * Paso 4: Dentro del bucle .forEach(), se genera el HTML para cada tarjeta de película.
+ *       El HTML generado se acumula en la variable "htmlContent" utilizando el operador +=.
+ *       Cada tarjeta de película tiene una imagen, un título, una fecha de lanzamiento, y un botón de detalles.
+ * Paso 5: Finalmente, se inyecta todo el contenido de la variable "htmlContent" en el contenedor del HTML.
+ */
+export const renderMovies = (movies: Movie[], container: HTMLElement): void => {
+  // Paso 1: Verificar si el contenedor existe
   if (!container) return;
 
-  // Creamos una variable para acumular el HTML que vamos a renderizar.
-  let htmlContent = ""; // <== Acumulador de HTML, ES un string vacio al principio, y luego se va llenando con cada pelicula del array.
+  // Paso 2: Crear una variable para acumular el HTML
+  let htmlContent = "";
 
-  // Usamos .forEach para recorrer cada pelicula del array, y generar el HTML para cada una.
-  movie.forEach((movie) => {
-    // acumulamos el HTML de card en la variable "htmlContent", usamos += para ir sumando cada card al HTML total.
+  // Paso 3: Recorrer cada objeto del array de películas
+  movies.forEach((movie) => {
+    // Paso 4: Generar el HTML para cada tarjeta de película
     htmlContent += `
      <div class="group relative bg-slate-800 rounded-lg overflow-hidden shadow-lg transition-all hover:scale-105 hover:-translate-y-2">
-       <img src="${movie.posterUrl}" alt="${movie.title}" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
+       <img src="${getPosterUrl(movie.posterUrl)}" alt="${movie.title}" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
        <div class="p-4">
         <h3 class="text-white text-lg font-bold truncate">${movie.title}</h3>
          <p class="text-slate-400 text-sm">${movie.releaseDate}</p>
          
          <button data-id="${movie.id}" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Details</button>
          
-         </div>
+       </div>
      </div>
      `;
   });
 
-  // FINALMENTE, INYECTAMOS TODO EL CONTENIDO DE UNA SOLA VEZ, EN EL CONTENEDOR DEL HTML.
+  // Paso 5: Inyectar todo el contenido en el contenedor del HTML
   container.innerHTML = htmlContent;
 };
 
@@ -94,7 +127,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
   // inyectamos todo en el contenedor del modal, usando template literals para insertar los datos de la pelicula en el HTML.
   const htmlContent = `
   <div class="flex flex-col md:flex-row gap-8"> 
-   <img src="${movie.posterUrl}" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
+   <img src="${getPosterUrl(movie.posterUrl)}" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
    
     <div class="flex-1">
       <h2 class="text-4xl font-black mb-4 text-white tracking-tight">${movie.title}</h2>
