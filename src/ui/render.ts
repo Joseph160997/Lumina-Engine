@@ -156,31 +156,31 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
 
         <!-- LANZAMIENTO -->
       <div class="grid grid-cols-2 gap-4"> 
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
+      <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
       <span class="block text-blue-500 font-bold text-[10px] uppercase mb-1">Lanzamiento</span>
       <p class="text-white font-medium">${movie.releaseDate}</p>
       </div> 
         
       <!-- PUNTUACIÓN -->
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
+      <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
       <span class="block text-yellow-500 font-bold text-[10px] uppercase mb-1">Rating</span>
       <p class="text-white font-medium">✨ ${movie.rating.toFixed(1)} / 10</p>
       </div>
 
       <!-- DURACIÓN -->
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
+      <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
       <span class="block text-emerald-500 font-bold text-[10px] uppercase mb-1">Duración</span>
-      <p class="text-white font-medium">⏱️ ${formatRunTime(movie.runtime || 0)}</p>
+      <p class="text-white font-medium">⏱️ ${(movie.runtime ?? 0) > 0 ? formatRunTime(movie.runtime!) : "No Disponible"}</p>
       </div>
 
       <!-- PRESUPUESTO -->
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-800">
+      <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-800">
       <span class="text-[10px] uppercase tracking-widest text-red-400 font-bold blok mb-1">Presupuesto</span>
       <p class="text-emerald-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.budget)}">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
       </div>
 
       <!-- BLOQUE DE Ingresos -->
-      <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-800 min-w-0">
+      <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 min-w-0">
       <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold blok mb-1">Ingresos</span>
       <p class="text-blue-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.revenue)}">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
       </div>
