@@ -117,7 +117,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
       <div class="flex items-center gap-2 mt-4 bg-slate-800/50 mb-6 p-3 rounded-lg border border-slate-700">
        <div class="flex flex-col">
        <span class="text-[10px] uppercase tracking-tight text-pink-500 font-bold">Director</span>
-        <p class="text-slate-100 fiont-medium">${movie.director}</p>
+        <p class="text-slate-100 font-medium">${movie.director}</p>
         </div>
         </div>
 
@@ -140,23 +140,17 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
       <p class="text-white font-medium">⏱️ ${formatRunTime(movie.runtime || 0)}</p>
       </div>
 
-        <!-- PRESUPUESTO -->
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
-      <span class="block text-purple-500 font-bold text-[10px] uppercase mb-1">Presupuesto</span>
-      <p class="text-white font-medium">💰 ${formatCurrency(movie.budget)}</p>
-      </div>
-      
-
-        <!-- RECAUDACIÓN -->
-      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700">
-      <span class="block text-slate-400 font-bold text-[10px] uppercase mb-1">Recaudación</span>
-      <p class="text-blue-400 font-mono text-sm font-semibold">💵 ${
-        movie.revenue > 0
-          ? formatCurrency(movie.revenue)
-          : '<span class="text-slate-600 italic">No disponible</span>'
-      }</p>
+      <!-- PRESUPUESTO -->
+      <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-800">
+      <span class="text-[10px] uppercase tracking-widest text-red-400 font-bold blok mb-1">Presupuesto</span>
+      <p class="text-emerald-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.budget)}">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
       </div>
 
+      <!-- BLOQUE DE Ingresos -->
+      <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-800 min-w-0">
+      <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold blok mb-1">Ingresos</span>
+      <p class="text-blue-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.revenue)}">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
+      </div>
       
       </div> 
 
@@ -164,18 +158,10 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
         ${providersHtml}
 
       </div>
-
-      
-
-
       </div>
        
         ${castHtml}
         
-      
-      
-
-
       <div class="mt-8">
       ${
         movie.trailerkey
