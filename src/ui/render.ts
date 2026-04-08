@@ -43,6 +43,20 @@ export const renderMovies = (movies: Movie[], container: HTMLElement): void => {
   // Paso 1: Verificar si el contenedor existe
   if (!container) return;
 
+  if (movies.length === 0) {
+    container.innerHTML = `
+    <div class="col-span-full flex flex-col items-center justify-center py-20 text-center animate-fade-in">
+    <div class="bg-slate-400/50 p-6 rounded-full mb-6">
+     <span class="text-6xl">🔍</span>
+      </div>
+      <h2 class="text-2xl font-bold text-white mb-2">No se encontraron resultados</h2>
+      <p class="text-slate-400 max-w-md mx-auto">No hay peliculas que coincidan con tu búsqueda, Intenta con otro título o verifica la ortografía.</p>
+      <button class="mt-8 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-300 transition-colors" onclick="window.location.reload()">Volver a Buscar</button>
+    </div>
+    `;
+    return;
+  }
+
   // Paso 2: Crear una variable para acumular el HTML
   let htmlContent = "";
 
