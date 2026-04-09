@@ -97,7 +97,6 @@ const handleOpenModal = async (event: Event) => {
     `;
 
     const rawData = await fetchMoviesDetails(movieId);
-    console.log("Datos crudos de la película:", rawData); // Log para revisar los datos crudos obtenidos de la API
 
     // IMPORTANTE: Verifica si es mapToMovieDetais o mapToMovieDetails
     const cleanMovieData = {

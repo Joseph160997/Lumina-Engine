@@ -50,7 +50,7 @@ export const renderMovies = (movies: Movie[], container: HTMLElement): void => {
      <span class="text-6xl">🔍</span>
       </div>
       <h2 class="text-2xl font-bold text-white mb-2">No se encontraron resultados</h2>
-      <p class="text-slate-400 max-w-md mx-auto">No hay peliculas que coincidan con tu búsqueda, Intenta con otro título o verifica la ortografía.</p>
+      <p class="text-slate-400 font-bold  max-w-md mx-auto">No hay películas que coincidan con tu búsqueda, Intenta con otro título o verifica la ortografía.</p>
       <button class="mt-8 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-300 transition-colors" onclick="window.location.reload()">Volver a Buscar</button>
     </div>
     `;
