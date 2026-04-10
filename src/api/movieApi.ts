@@ -1,3 +1,4 @@
+import { Movie } from "../types/movie";
 import { mapToMovieData } from "../utils/mapper";
 
 // Obtenemos la key de la API de TMDB, la cual usaremos para hacer las llamadas a la API de TMDB.
@@ -21,6 +22,11 @@ const options = {
 
 /**
  * Busca peliculas por un texto ("query") en la API de TMDB.
+ * Esta función hace una llamada a la API de TMDB con el endpoint "/search/movie", y le pasa la consulta como parámetro.
+ * La función devuelve un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
+ * La función maneja los errores, y si hay un error, lo muestra en la consola y devuelve un array vacío para evitar que la app se rompa.
+ * @param {string} query - El texto de busqueda que se va a usar para buscar peliculas en la API de TMDB.
+ * @returns {Promise<any>} - Un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
  */
 export const fetchMovie = async (query: string): Promise<any> => {
   // preparamos la URL, Usamos encodeURIComponent para asegurarnos de que el texto de busqueda sea seguro para usar en una URL.

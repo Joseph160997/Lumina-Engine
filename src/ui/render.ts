@@ -1,5 +1,6 @@
 import type { Movie } from "../types/movie.ts";
 import { formatCurrency, formatRunTime } from "../utils/formatters.ts";
+import { isMovieFavorite } from "../services/favoritesServices.ts";
 
 /**
  * Funcion para centralizar la logica d eimagenes.
@@ -66,11 +67,14 @@ export const renderMovies = (movies: Movie[], container: HTMLElement): void => {
     htmlContent += `
      <div class="group relative bg-slate-800 rounded-lg overflow-hidden shadow-lg transition-all hover:scale-105 hover:-translate-y-2">
        <img src="${getPosterUrl(movie.posterUrl)}" alt="${movie.title}" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
+       <button data-id="${movie.id}" class="favorite-btn absolute top-3 right-3 p-2 rounded-full bg-slate-900/60 backdrop-blur-md border border-slate-700 hover:scale-110 transition-transform">
+         <span class="heart-icon ${isMovieFavorite(movie.id) ? "text-red-500" : "text-slate-300"} text-xl">${isMovieFavorite(movie.id) ? "❤️" : "🤍"}</span>
+       </button>
        <div class="p-4">
         <h3 class="text-white text-lg font-bold truncate">${movie.title}</h3>
          <p class="text-slate-400 text-sm">${movie.releaseDate}</p>
          
-         <button data-id="${movie.id}" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Details</button>
+         <button data-id="${movie.id}" class="details-btn mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Details</button>
          
        </div>
      </div>
