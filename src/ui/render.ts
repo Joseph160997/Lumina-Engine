@@ -122,7 +122,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
       ? `
      <div class="mt-10">
       <h3 class="text-xl font-bold text-white mb-6 border-l-4 border-blue-600 pl-4 uppercase tracking-tight">Reparto Principal</h3>
-      <div class="flex gap-6 overflow-x-auto pb-6 coustom-scrollbar"> ${movie.cast
+      <div class="flex gap-6 overflow-x-auto pb-6 custom-scrollbar"> ${movie.cast
         .map(
           (actor: any) => `
         <div class="shrink-0 w-32 group"> 
@@ -145,7 +145,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
   // inyectamos todo en el contenedor del modal, usando template literals para insertar los datos de la pelicula en el HTML.
   const htmlContent = `
   <div class="sticky top-0 z-20 flex justify-baseline mb-4">
-  <button data-id="${movie.id}" class="modal-favorite-btn p-3 py-3 rounded-full bg-slate-600/50 backdrop-blur-md border border-slate-400 shdow-2xl hover:scale-110 transition-all cursor-pointer">
+  <button data-id="${movie.id}" class="modal-favorite-btn p-3 py-3 rounded-full bg-slate-600/50 backdrop-blur-md border border-slate-400 shadow-2xl hover:scale-110 transition-all cursor-pointer">
     <span class="modal-heart-icon ${isMovieFavorite(movie.id) ? "text-red-500" : "text-slate-300"} text-2xl">${isMovieFavorite(movie.id) ? "❤️" : "🤍"}</span>
   </button>
   </div>
@@ -200,13 +200,13 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
 
       <!-- PRESUPUESTO -->
       <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-800">
-      <span class="text-[10px] uppercase tracking-widest text-red-400 font-bold blok mb-1">Presupuesto</span>
+      <span class="text-[10px] uppercase tracking-widest text-red-400 font-bold block mb-1">Presupuesto</span>
       <p class="text-emerald-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.budget)}">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
       </div>
 
       <!-- BLOQUE DE Ingresos -->
       <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 min-w-0">
-      <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold blok mb-1">Ingresos</span>
+      <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold block mb-1">Ingresos</span>
       <p class="text-blue-100  font-mono text-sm md:text-lg font-semibold truncate" title="${formatCurrency(movie.revenue)}">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
       </div>
       

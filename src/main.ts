@@ -11,6 +11,8 @@ import { Movie } from "./types/movie.ts";
 
 let currentMovies: Movie[] = []; // <== Creamos una variable global para almacenar las peliculas que se estan mostrando actualmente en el grid, esto nos servira para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
 let debouceTimer: number;
+let lastSearchMovie: Movie[] = []; // <== Creamos una variable global para almacenar el resultado de la ultima busqueda de peliculas, esto nos servira para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos, y para mantener la consistencia entre el estado de currentMovies y lo que se muestra en el grid, especialmente para manejar los favoritos dentro del modal de detalles de película.
+let isViewingFavorites = false; // <== Creamos una variable global para saber si estamos viendo la lista de favoritos o no, esto nos servira para manejar los favoritos dentro del modal de detalles de película, y para mantener la consistencia visual en toda la aplicación.
 
 // 1.SELECCIÓN DEL DOM.
 const movieGrid = document.getElementById("movie-grid") as HTMLElement; // <== Seleccionamos el contenedor del HTML donde se van a renderizar las peliculas.
@@ -19,6 +21,7 @@ const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const btnFavorites = document.getElementById(
   "btn-favorites",
 ) as HTMLButtonElement; // <== Seleccionamos el boton de favoritos.
+const btnBack = document.getElementById("btn-back") as HTMLButtonElement; // <== Seleccionamos el boton de volver, para volver a la lista de peliculas despues de ver los favoritos.
 
 // Seleccion de elementos del modal de detalles de pelicula.
 const movieModal = document.getElementById("movie-modal") as HTMLElement; // <== Seleccionamos el contenedor del modal de detalles de pelicula.
@@ -47,6 +50,7 @@ const handleInputSeacrch = (even: Event) => {
       //  llamamos a la funcion fetchMovie, que hace la peticion a la API de peliculas, y le pasamos el query de busqueda (query)
       const movies = await fetchMovie(query);
       currentMovies = movies;
+      lastSearchMovie = movies;
 
       //  llamamos a la funcion renderMovies, que se encarga de renderizar las peliculas en el HTML,
       //  y le pasamos el array de peliculas (movies) y el contenedor del HTML (movieGrid).
@@ -75,6 +79,7 @@ const handleSearch = async (event: Event) => {
     const movies = await fetchMovie(query);
     currentMovies = movies; // <== Guardamos las peliculas obtenidas en la variable global currentMovies,
     // para tenerlas disponibles para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
+    lastSearchMovie = movies; // <=== Guardamos una copia
 
     //  llamamos a la funcion renderMovies, que se encarga de renderizar las peliculas en el HTML, y le pasamos el array de peliculas (movies) y el contenedor del HTML (movieGrid).
     renderMovies(movies, movieGrid);
@@ -221,6 +226,15 @@ movieGrid?.addEventListener("click", (event) => {
 
         icon.classList.toggle("text-gray-400", !isFavorite); // Agregamos o quitamos la clase de color gris según el estado de favorito.
       }
+
+      if (isViewingFavorites) {
+        // Si estamos viendo la lista de favoritos, actualizamos el grid para mostrar solo las películas que siguen siendo favoritas después del toggle.
+        const updatedFavorites = getFavorites(); // Obtenemos el array actualizado de películas favoritas después del toggle.
+
+        renderMovies(updatedFavorites, movieGrid); // Renderizamos las películas favoritas actualizadas en el grid.
+
+        currentMovies = updatedFavorites; // Actualizamos el estado de currentMovies para que coincida con las películas que se están mostrando actualmente en el grid, que en este caso son las películas favoritas actualizadas, esto es necesario para mantener la consistencia entre el estado de currentMovies y lo que se muestra en el grid, especialmente para manejar los favoritos dentro del modal de detalles de película.
+      }
       checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle.
     }
     return; // Salimos de la función para evitar que se ejecute el código de abrir el modal.
@@ -276,12 +290,12 @@ modalContent?.addEventListener("click", (event) => {
   }
   // SINCRONIZACIÓN: actualizar tambien el boton del grid si el modal esta abierto, para mantener la consistencia visual en toda la aplicación.
   // Buscamos el boton del grid que tenga el mismo id, y le cambiamos el color.
-  const grdiBtn = document.querySelector(
+  const gridBtn = document.querySelector(
     `.favorite-btn[data-id="${movie.id}"]`,
   );
 
-  if (grdiBtn) {
-    const gridIcon = grdiBtn.querySelector(".heart-icon");
+  if (gridBtn) {
+    const gridIcon = gridBtn.querySelector(".heart-icon");
     if (gridIcon) {
       gridIcon.textContent = isFav ? "❤️" : "🤍";
 
@@ -291,6 +305,39 @@ modalContent?.addEventListener("click", (event) => {
   }
   // Actualizar el contador nav.
   checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle.
+});
+
+btnFavorites.addEventListener("click", () => {
+  const favorites = getFavorites(); // Obtenemos el array de películas favoritas desde el servicio de favoritos.
+
+  if (favorites.length > 0) {
+    // Renderizamos las películas favoritas en el grid, usando la función renderMovies, y le pasamos el array de películas favoritas (favorites) y el contenedor del HTML (movieGrid).
+    renderMovies(favorites, movieGrid);
+
+    // Actualizamos el estado de currentMovies para que coincida con las películas que se están mostrando actualmente en el grid, que en este caso son las películas favoritas, esto es necesario para mantener la consistencia entre el estado de currentMovies y lo que se muestra en el grid, especialmente para manejar los favoritos dentro del modal de detalles de película.
+    currentMovies = favorites;
+
+    // Gestion de UI
+    btnFavorites.classList.add("hidden");
+    btnBack.classList.remove("hidden"); // <==
+    searchForm.classList.add("opacity-50", "pointer-events-none"); // <== Deshabilitamos el formulario de búsqueda mientras estamos viendo los favoritos, para evitar que el usuario intente hacer una búsqueda mientras está viendo los favoritos, lo que podría causar confusión o problemas de usabilidad. Al agregar la clase "opacity-50", hacemos que el formulario se vea atenuado, indicando visualmente que está deshabilitado, y al agregar la clase "pointer-events-none", evitamos que el usuario pueda interactuar con el formulario, como hacer clic en el input o en el botón de búsqueda, lo que refuerza aún más la idea de que el formulario está deshabilitado mientras se están mostrando los favoritos.
+
+    isViewingFavorites = true; // Actualizamos el estado para indicar que estamos viendo los favoritos, esto es necesario para mantener la consistencia visual en toda la aplicación, especialmente para manejar los favoritos dentro del modal de detalles de película.
+  }
+});
+btnBack?.addEventListener("click", () => {
+  // restauramos los ultimos resualtados o dejamos el grid vacio
+  renderMovies(lastSearchMovie, movieGrid);
+
+  currentMovies = lastSearchMovie;
+
+  //Gestion de Ui
+  btnBack.classList.add("hidden");
+
+  checkFavoritesVisibility();
+  searchForm.classList.remove("opacity-50", "pointer-events-none");
+
+  isViewingFavorites = false; // Actualizamos el estado para indicar que ya no estamos viendo los favoritos, esto es necesario para mantener la consistencia visual en toda la aplicación, especialmente para manejar los favoritos dentro del modal de detalles de película.
 });
 
 // Al cargar la página, verificamos si hay películas favoritas para mostrar u ocultar el botón de favoritos.

@@ -26,9 +26,9 @@ const options = {
  * La función devuelve un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
  * La función maneja los errores, y si hay un error, lo muestra en la consola y devuelve un array vacío para evitar que la app se rompa.
  * @param {string} query - El texto de busqueda que se va a usar para buscar peliculas en la API de TMDB.
- * @returns {Promise<any>} - Un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
+ * @returns {Promise<Movie[]>} - Un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
  */
-export const fetchMovie = async (query: string): Promise<any> => {
+export const fetchMovie = async (query: string): Promise<Movie[]> => {
   // preparamos la URL, Usamos encodeURIComponent para asegurarnos de que el texto de busqueda sea seguro para usar en una URL.
   const url = `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&language=es-ES`;
 
@@ -51,7 +51,7 @@ export const fetchMovie = async (query: string): Promise<any> => {
   } catch (error) {
     // si hay un error, lo mostramos en la consola, y devolvemos un array vacio para evitar que la app se rompa.
     console.error("Error al buscar peliculas:", error);
-    return { results: [] };
+    return [];
   }
 };
 
