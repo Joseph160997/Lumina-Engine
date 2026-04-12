@@ -144,6 +144,13 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
   // 3. Logica de detalles de la pelicula
   // inyectamos todo en el contenedor del modal, usando template literals para insertar los datos de la pelicula en el HTML.
   const htmlContent = `
+  <div class="sticky top-0 z-20 flex justify-baseline mb-4">
+  <button data-id="${movie.id}" class="modal-favorite-btn p-3 py-3 rounded-full bg-slate-600/50 backdrop-blur-md border border-slate-400 shdow-2xl hover:scale-110 transition-all cursor-pointer">
+    <span class="modal-heart-icon ${isMovieFavorite(movie.id) ? "text-red-500" : "text-slate-300"} text-2xl">${isMovieFavorite(movie.id) ? "❤️" : "🤍"}</span>
+  </button>
+  </div>
+
+
   <div class="flex flex-col md:flex-row gap-8"> 
    <img src="${getPosterUrl(movie.posterUrl)}" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
    

@@ -5,6 +5,7 @@ import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
 import {
   toggleFavorite,
   isMovieFavorite,
+  getFavorites,
 } from "./services/favoritesServices.ts";
 import { Movie } from "./types/movie.ts";
 
@@ -15,6 +16,9 @@ let debouceTimer: number;
 const movieGrid = document.getElementById("movie-grid") as HTMLElement; // <== Seleccionamos el contenedor del HTML donde se van a renderizar las peliculas.
 const searchForm = document.getElementById("search-form") as HTMLFormElement; // <== Seleccionamos el formulario de busqueda.
 const searchInput = document.getElementById("search-input") as HTMLInputElement; // <== Seleccionamos el input de busqueda.
+const btnFavorites = document.getElementById(
+  "btn-favorites",
+) as HTMLButtonElement; // <== Seleccionamos el boton de favoritos.
 
 // Seleccion de elementos del modal de detalles de pelicula.
 const movieModal = document.getElementById("movie-modal") as HTMLElement; // <== Seleccionamos el contenedor del modal de detalles de pelicula.
@@ -139,6 +143,30 @@ const handleCloseModal = (event: Event) => {
   }
 };
 
+/**
+ * Funcion que controla si el boton de favoritos debe estar visible o no, dependiendo de si hay peliculas renderizadas en el grid o no.
+ * Primero obtenemos el array de peliculas favoritas desde el servicio de favoritos.
+ * Luego, verificamos si el array de peliculas favoritas tiene elementos.
+ * Si tiene elementos, mostramos el boton de favoritos y actualizamos su texto para mostrar la cantidad de peliculas favoritas que hay.
+ * Si no tiene elementos, ocultamos el boton de favoritos.
+ * @returns void
+ */
+export const checkFavoritesVisibility = () => {
+  const favorites = getFavorites(); // Obtenemos el array de peliculas favoritas desde el servicio de favoritos.
+
+  // Verificamos si el array de peliculas favoritas tiene elementos.
+  if (favorites.length > 0) {
+    // Si tiene elementos, mostramos el boton de favoritos.
+    btnFavorites.classList.remove("hidden");
+
+    // Actualizamos el texto del bot n de favoritos para mostrar la cantidad de peliculas favoritas que hay.
+    btnFavorites.innerText = `❤️ Mis favoritos (${favorites.length})`;
+  } else {
+    // Si no tiene elementos, ocultamos el boton de favoritos.
+    btnFavorites.classList.add("hidden");
+  }
+};
+
 // 3. Escuchamos el evento submit en el formulario de busqueda, y llamamos a la funcion handleSearch.
 searchForm.addEventListener("submit", handleSearch);
 
@@ -193,6 +221,7 @@ movieGrid?.addEventListener("click", (event) => {
 
         icon.classList.toggle("text-gray-400", !isFavorite); // Agregamos o quitamos la clase de color gris según el estado de favorito.
       }
+      checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle.
     }
     return; // Salimos de la función para evitar que se ejecute el código de abrir el modal.
   }
@@ -208,3 +237,61 @@ movieGrid?.addEventListener("click", (event) => {
     }
   }
 });
+
+/**
+ * Listener para el boton de favoritos dentro del modal de detalles de pelicula.
+ * Este listener se encarga de manejar el click en el boton de favoritos dentro del modal, para agregar o quitar la pelicula de favoritos, y actualizar el estado del boton de favoritos dentro del modal.
+ */
+modalContent?.addEventListener("click", (event) => {
+  const target = event.target as HTMLElement; // Obtenemos el elemento clickeado.
+
+  // Verificamos si el elemento clickeado es un botón de favorito dentro del modal.
+  const favBtn = target.closest(".modal-favorite-btn") as HTMLButtonElement;
+
+  if (!favBtn) return; // Si no se hizo click en un botón de favorito dentro del modal, salimos de la función.
+
+  // Obtenemos el ID de la película desde el atributo data-id del botón de favorito dentro del modal, como el modal se genera dinámicamente, el botón de favorito dentro del modal también se genera dinámicamente, por lo que obtenemos el ID de la película desde el atributo data-id del botón de favorito dentro del modal.
+  const movieId = favBtn.getAttribute("data-id");
+
+  if (!movieId) return; // Si no se pudo obtener el ID de la película, salimos de la función.
+
+  // para que esto funcione, la pelicula debe estar en currentMovie, ya que el modal se genera a partir de las peliculas que se estan renderizando actualmente en el grid, y currentMovies es el array de peliculas que se estan renderizando actualmente en el grid, por lo que la pelicula que se esta mostrando en el modal debe estar en currentMovies, o podemos buscarla en el array de favoritos, si ya existia.
+  const movie =
+    currentMovies.find((m) => m.id === movieId) ||
+    getFavorites().find((m) => m.id === movieId); // Buscamos la película en el array de películas actualmente renderizadas, y si no la encontramos, la buscamos en el array de favoritos.
+
+  if (!movie) return; // Si no se pudo encontrar la película, salimos de la función.
+
+  toggleFavorite(movie); // Llamamos a la función toggleFavorite para agregar o quitar la película de favoritos, esto es necesario para mantener la consistencia entre el estado de favoritos dentro del modal y el estado de favoritos en el resto de la aplicación.
+
+  // Actialuzamos el estado del botón de favorito dentro del modal después de hacer toggle.
+  const isFav = isMovieFavorite(movie.id); // Verificamos si la película es ahora un favorito o no.
+
+  const icon = favBtn.querySelector(".modal-heart-icon") as HTMLElement; // Seleccionamos el ícono del corazón dentro del botón de favorito del modal.
+
+  if (icon) {
+    icon.textContent = isFav ? "❤️" : "🤍"; // Cambiamos el ícono del corazón según el estado de favorito.
+    icon.classList.toggle("text-red-500", isFav); // Agregamos o quitamos la clase de color rojo según el estado de favorito.
+    icon.classList.toggle("text-slate-300", !isFav); // Agregamos o quitamos la clase de color gris según el estado de favorito.
+  }
+  // SINCRONIZACIÓN: actualizar tambien el boton del grid si el modal esta abierto, para mantener la consistencia visual en toda la aplicación.
+  // Buscamos el boton del grid que tenga el mismo id, y le cambiamos el color.
+  const grdiBtn = document.querySelector(
+    `.favorite-btn[data-id="${movie.id}"]`,
+  );
+
+  if (grdiBtn) {
+    const gridIcon = grdiBtn.querySelector(".heart-icon");
+    if (gridIcon) {
+      gridIcon.textContent = isFav ? "❤️" : "🤍";
+
+      gridIcon.classList.toggle("text-red-500", isFav); // Agregamos o quitamos la clase de color rojo según el estado de favorito.
+      gridIcon.classList.toggle("text-gray-400", !isFav); // Agregamos o quitamos la clase de color gris según el estado de favorito.
+    }
+  }
+  // Actualizar el contador nav.
+  checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle.
+});
+
+// Al cargar la página, verificamos si hay películas favoritas para mostrar u ocultar el botón de favoritos.
+checkFavoritesVisibility();
