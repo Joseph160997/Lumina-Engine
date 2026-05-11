@@ -1,113 +1,119 @@
 import { Movie } from "../types/movie";
 import { mapToMovieData } from "../utils/mapper";
 
-// Obtenemos la key de la API de TMDB, la cual usaremos para hacer las llamadas a la API de TMDB.
+// --- Configuración fija del cliente TMDB (v3) --------------------------------
+// La clave viene del archivo .env como VITE_TMDB_API_KEY. Vite la inyecta en build;
+// debe ser el "API Read Access Token" de TMDB para usar Authorization: Bearer.
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-// Creamos la URL base para hacer las llamadas a la API de TMDB.
+// Todas las rutas de esta API cuelgan de /3/ (no repetimos el dominio en cada función).
+// Importante: la URL termina en "/" para concatenar "search/movie" o "movie/123" sin "//" raro.
 const BASE_URL = "https://api.themoviedb.org/3/";
 
 /**
- *  Creación de cabeceras, las cuales usaremos par ahacer las llamadas a la API de TMDB.
- *  Aqui es donde le decimos a TMDB quienes somos usando nuestro token.
+ * Opciones reutilizables en cada fetch: GET + cabeceras de identificación.
+ * TMDB devuelve JSON; el Bearer es cómo autenticas la petición (no va api_key en la query).
  */
 const options = {
-  method: "GET", // <=== El metodo que usaremos para hacer las llamadas a la API.
+  method: "GET",
   headers: {
-    // <=== Las cabeceras son las que usaremos para hacer las llamadas a la API.
-    accept: "application/json", // <=== El formato de datos que usaremos para hacer las llamadas a la API.
-    Authorization: `Bearer ${API_KEY}`, // <=== La key que usaremos para hacer las llamadas a la API.
+    accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
   },
 };
 
 /**
- * Busca peliculas por un texto ("query") en la API de TMDB.
- * Esta función hace una llamada a la API de TMDB con el endpoint "/search/movie", y le pasa la consulta como parámetro.
- * La función devuelve un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
- * La función maneja los errores, y si hay un error, lo muestra en la consola y devuelve un array vacío para evitar que la app se rompa.
- * @param {string} query - El texto de busqueda que se va a usar para buscar peliculas en la API de TMDB.
- * @returns {Promise<Movie[]>} - Un array de objetos tipo Movie, que contiene la información de cada película encontrada en la busqueda.
+ * Busca películas por texto en TMDB (endpoint search/movie).
+ *
+ * Antes se llamaba `fetchMovie`; el nombre `searchMovies` deja claro que puede haber
+ * muchos resultados y que es una búsqueda, no "una sola película".
+ *
+ * Flujo: trim del texto → si queda vacío no llamamos a la API → fetch → comprobar OK →
+ * JSON → tomar `results` con cuidado (si la API falla en forma, no asumimos que existe)
+ * → cada ítem pasa por mapToMovieData para cumplir tu interfaz Movie.
+ *
+ * Si algo falla (red, HTTP no OK, JSON raro), registramos en consola y devolvemos [] para
+ * que la UI pueda seguir (grid vacío) sin tirar toda la app.
+ *
+ * @param query - Texto que escribe el usuario en el buscador
+ * @returns Siempre un array (vacío si error o sin resultados)
  */
-export const fetchMovie = async (query: string): Promise<Movie[]> => {
-  // preparamos la URL, Usamos encodeURIComponent para asegurarnos de que el texto de busqueda sea seguro para usar en una URL.
-  const url = `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&language=es-ES`;
+export const searchMovies = async (query: string): Promise<Movie[]> => {
+  // 1) Normalizamos espacios; evita disparar la API con solo espacios.
+  const trimmed = query.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  // 2) Construimos la URL: query va codificado (tildes, espacios, símbolos).
+  //    language=es-ES pide textos en español (títulos, overviews cuando existan).
+  const url = `${BASE_URL}search/movie?query=${encodeURIComponent(trimmed)}&language=es-ES`;
 
   try {
-    // Hacemos la llamada a la API de TMDB usando fetch, y le pasamos las opciones que preparamos antes.
+    // 3) Petición HTTP; `options` lleva el Bearer y accept JSON.
     const response = await fetch(url, options);
 
-    // Si la respuesta no es exitosa, lanzamos un error.
+    // 4) response.ok es false para 4xx/5xx; entonces entramos al catch vía throw
+    //    y al final devolvemos [] (misma política que errores de red).
     if (!response.ok) {
       throw new Error(
-        `Error en la busqueda de peliculas...: ${response.statusText}`,
+        `Búsqueda TMDB falló: ${response.status} ${response.statusText}`,
       );
     }
 
-    // Si la respuesta es exitosa, convertimos la respuesta a JSON, y extraemos el array de peliculas.
-    const data = await response.json();
+    // 5) Cuerpo JSON; tipamos mínimo { results?: ... } para guiar a TypeScript.
+    const data = (await response.json()) as { results?: unknown[] };
 
-    // Devolvemos la data crauda tal caul viene de la API.
-    return data.results.map(mapToMovieData);
+    // 6) TMDB normalmente manda results: []. Si por algún motivo no es array, usamos [].
+    const results = Array.isArray(data.results) ? data.results : [];
+
+    // 7) Cada elemento crudo de TMDB → objeto Movie de tu app (ids string, posterUrl, etc.).
+    return results.map((item) => mapToMovieData(item));
   } catch (error) {
-    // si hay un error, lo mostramos en la consola, y devolvemos un array vacio para evitar que la app se rompa.
+    // 8) Red caída, CORS en entornos raros, JSON inválido, o el throw del paso 4.
     console.error("Error al buscar peliculas:", error);
     return [];
   }
 };
 
 /**
- * Obtiene los detalles específicos de una película por su ID.
+ * Obtiene UNA película por ID con datos extra en la misma respuesta.
+ *
+ * Antes se llamaba `fetchMoviesDetails` (plural confuso). Aquí el nombre es singular
+ * porque el id identifica una sola ficha.
+ *
+ * Endpoint: GET /movie/{id} con append_to_response para no hacer 3 peticiones aparte:
+ * - videos → trailers (YouTube, etc.)
+ * - watch/providers → dónde ver (streaming); el mapper elige región (ej. ES)
+ * - credits → cast y crew (director en el mapper)
+ *
+ * No devolvemos Movie todavía: devolvemos el JSON crudo (Record<string, unknown>) porque
+ * main.ts fusiona mapToMovieData(raw) + mapToMovieDetails(raw). Así esta capa solo habla HTTP.
+ *
+ * Si HTTP falla, lanzamos Error: main.ts tiene try/catch en el modal y muestra mensaje al usuario.
+ *
+ * @param id - ID numérico de TMDB como string (como lo usas en toda la app)
+ * @returns Objeto JSON de TMDB; el mapper lo convierte en campos de Movie
  */
-/**export const fetchMovieDetails = async (id: string): Promise<Movie> => {
-  // Preparamos la URL para obtener los detalles de la película, incluyendo videos y créditos.
-  const url = `${BASE_URL}/movie/${id}?append_to_response=videos,credits&language=es-ES`;
+export const fetchMovieDetails = async (
+  id: string,
+): Promise<Record<string, unknown>> => {
+  // 1) ID en la ruta codificado por si viniera con caracteres no seguros (defensivo).
+  //    Misma variante de idioma que la búsqueda (es-ES) para coherencia.
+  //    include_video_language filtra qué pistas de vídeo considera TMDB al listar trailers.
+  const url = `${BASE_URL}movie/${encodeURIComponent(id)}?language=es-ES&append_to_response=videos,watch/providers,credits&include_video_language=es,en,null`;
 
-  try {
-    // Hacemos la llamada a la API de TMDB usando fetch, y le pasamos las opciones que preparamos antes.
-    const response = await fetch(url, options);
+  // 2) Una sola petición con todo lo anexo (videos + providers + credits).
+  const response = await fetch(url, options);
 
-    // Si la respuesta no es exitosa, lanzamos un error.
-    if (!response.ok) {
-      throw new Error(
-        `Error al obtener detalles de la película: ${response.statusText}`,
-      );
-    }
-
-    // Si la respuesta es exitosa, convertimos la respuesta a JSON.
-    const data = await response.json();
-
-    // Mapeamos los datos básicos y luego fusionamos con los detalles adicionales.
-    const basicMovie = mapToMovieData(data); //
-    const details = mapToMovieDetais(data);
-
-    // Devolvemos la película completa con todos los detalles.
-    return { ...basicMovie, ...details };
-  } catch (error) {
-    // Si hay un error, lo mostramos en la consola y lanzamos el error, o
-    console.error("Error al obtener detalles de la película:", error);
-    throw error;
+  // 3) Aquí no devolvemos []: sin detalle no hay modal útil. Quien llama decide el mensaje de error.
+  if (!response.ok) {
+    throw new Error(
+      `Detalle TMDB falló: ${response.status} ${response.statusText}`,
+    );
   }
-};
-*/
 
-/**
- * NUeva funcion para obtener detales especificos por su id.
- */
-/**
- * Obtiene los detalles específicos de una película por su ID.
- * La llamada a la API de TMDB se hace con el endpoint "/movie/{id}" y se le pasa la clave de la API como parámetro "api_key".
- * Se devuelve un objeto con los detalles de la película en formato JSON.
- */
-export const fetchMoviesDetails = async (id: string) => {
-  // Hacemos la llamada a la API de TMDB con el endpoint "/movie/{id}" y le pasamos la clave de la API como parámetro "api_key".
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?language=es-MX&append_to_response=videos,watch/providers,credits&include_video_language=es,en,null`,
-    options,
-  );
-
-  // Si la respuesta no es exitosa, lanzamos un error.
-  if (!response.ok) throw new Error("Error al obtener los detalles");
-
-  // Devolvemos los detalles de la película en formato JSON.
-  return await response.json();
+  // 4) Parseamos JSON y lo devolvemos; el tipado amplio evita mentir propiedades concretas
+  //    (videos, credits, etc.) que ya consume mapToMovieDetails con acceso defensivo (?.).
+  return (await response.json()) as Record<string, unknown>; //<== as Record<string, unknown> es un tipo de dato que representa un objeto con propiedades de tipo string y valor desconocido.
 };

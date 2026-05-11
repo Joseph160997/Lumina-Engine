@@ -1,40 +1,41 @@
 /**
- * Guarda caulquier tipo de dato bajo una clave específica.
- * Usamo 'any' aqui termporalmente, para poder usarlo con cualquier cosa.
+ * Capa genérica sobre localStorage: serializa JSON al guardar y parsea al leer.
+ * No asume que el valor sea un array; eso lo decide cada servicio (p. ej. favoritos).
  */
-export const saveData = (key: string, data: any): void => {
-  // . Usamos try-catch para manejar posibles errores
+
+/**
+ * Guarda cualquier valor serializable en localStorage bajo `key`.
+ * @param key - Clave del "cajón" en localStorage.
+ * @param data - Objeto/array/número/etc. que JSON.stringify pueda convertir.
+ */
+export const saveData = (key: string, data: unknown): void => {
   try {
-    // Convertimos el arry a JSON, ya que localStorage solo acepta strings y no objetos.
-    const serialzedData = JSON.stringify(data);
-
-    // Guardamos ese texto en el "cajón" que indica la variable "key"
-    localStorage.setItem(key, serialzedData);
-
-    // Si todo sale bien la función termina en silencio.
-
-    // Si algo falla, mostramos un error en la consola.
+    // localStorage solo acepta strings; JSON.stringify convierte el valor a texto.
+    const serialized = JSON.stringify(data);
+    localStorage.setItem(key, serialized);
   } catch (error) {
     console.error("error saving to Localstorage", error);
   }
 };
 
 /**
- * Recupera los datos del localStorage
- * Si sino encuenra nada devuelve un array vacio.
+ * Lee y parsea JSON desde localStorage.
+ * @param key - Clave a leer.
+ * @returns El valor parseado, o `null` si no hay clave, hay error de parseo, o getItem falla conceptualmente (vacío).
+ *          No devuelve `[]` aquí: un array vacío es decisión de quien interpreta los datos (p. ej. lista de favoritos).
  */
-export const getData = (key: string): any => {
-  // Intentamos recuperar los datos guardaos en el "cajón" que indica la variable "key"
-  const data = localStorage.getItem(key);
+export const getData = (key: string): unknown | null => {
+  const raw = localStorage.getItem(key);
 
-  // Si no tenemos datos, devolvemos un array vacío.
-  if (!data) return [];
+  // Sin clave o string vacío: no hay dato guardado.
+  if (raw === null || raw === "") {
+    return null;
+  }
 
-  // Si tenemos datos, los convertimos de nuevo a un objeto de JS.
   try {
-    return JSON.parse(data);
+    return JSON.parse(raw) as unknown;
   } catch (error) {
     console.error("error getting data from Localstorage", error);
-    return [];
+    return null;
   }
 };

@@ -1,9 +1,9 @@
 import type { Movie } from "../types/movie";
 
 /**
- * Esta fuunción mapea los datos de la API a un formato más adecuado para la aplicación.
- * Toma un objeto de película de la API y devuelve un objeto con las propiedades necesarias para nuestra interface Movie.
- *
+ * Mapea los datos de la API a un formato más adecuado para la aplicación.
+ * @param item - El objeto de película de la API de TMDB.
+ * @returns - El objeto con las propiedades necesarias para nuestra interface Movie.
  */
 export const mapToMovieData = (item: any): Movie => {
   // Aquí puedes realizar cualquier transformación necesaria.
@@ -16,7 +16,7 @@ export const mapToMovieData = (item: any): Movie => {
     rating: item.vote_average || 0, // <=== Si no hay rating, ponemos un valor por defecto.
     posterUrl: item.poster_path
       ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-      : "https://via.placeholder.com/500x750?text=No+Image", // <=== Si no hay poster, ponemos una imagen por defecto.
+      : "https://via.placeholder.com/500x750?text=No+Image", // <=== Si no hay poster , ponemos una imagen por defecto.
     budget: item.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
     cast: [], // <=== Inicialmente, la lista de actores está vacía.
     director: "Director desconocido", // <=== Si no hay director, ponemos un valor por defecto.
@@ -27,7 +27,7 @@ export const mapToMovieData = (item: any): Movie => {
 
 /**
  * Este mapper solo se usa cuando entramos al detalle de una pelicula.
- * Toma los datos extra que no definimpos en el mapper anterior, como el presupuesto, trailer, el elenco y el director.
+ * Toma los datos extra que no definimos en el mapper anterior, como el presupuesto, trailer, el elenco y el director.
  * Esto se hace para evitar hacer una petición extra a la API cada vez que mostramos una película en la lista, ya que esos datos no son necesarios en ese contexto.
  * Solo los obtenemos cuando el usuario entra al detalle de una película, donde sí necesitamos esa información.
  */

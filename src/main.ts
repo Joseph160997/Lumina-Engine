@@ -1,5 +1,5 @@
 import "./style.css"; // <== Importamos el archivo de estilos CSS para aplicar estilos a nuestra aplicación.
-import { fetchMovie, fetchMoviesDetails } from "./api/movieApi.ts"; // <=== Importamos la api de peliculas.
+import { fetchMovieDetails, searchMovies } from "./api/movieApi.ts";
 import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
 import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
 import {
@@ -7,10 +7,10 @@ import {
   isMovieFavorite,
   getFavorites,
 } from "./services/favoritesServices.ts";
-import { Movie } from "./types/movie.ts";
+import type { Movie } from "./types/movie.ts";
 
 let currentMovies: Movie[] = []; // <== Creamos una variable global para almacenar las peliculas que se estan mostrando actualmente en el grid, esto nos servira para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
-let debouceTimer: number;
+let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 let lastSearchMovie: Movie[] = []; // <== Creamos una variable global para almacenar el resultado de la ultima busqueda de peliculas, esto nos servira para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos, y para mantener la consistencia entre el estado de currentMovies y lo que se muestra en el grid, especialmente para manejar los favoritos dentro del modal de detalles de película.
 let isViewingFavorites = false; // <== Creamos una variable global para saber si estamos viendo la lista de favoritos o no, esto nos servira para manejar los favoritos dentro del modal de detalles de película, y para mantener la consistencia visual en toda la aplicación.
 
@@ -29,56 +29,60 @@ const closeModal = document.getElementById("modal-close") as HTMLButtonElement; 
 const modalContent = document.getElementById("modal-content") as HTMLElement; // <== Seleccionamos el contenedor del contenido del modal de detalles de pelicula.
 
 /**
- * Nueva función par manejar el iunput debuoce.
+ * Búsqueda con debounce al escribir: evita llamar a la API en cada tecla.
  */
-const handleInputSeacrch = (even: Event) => {
-  const target = even.target as HTMLInputElement; // <== Obtenemos el elemento del input de busqueda.
-  const query = target.value.trim().toLowerCase(); // <== Obtenemos el valor del input de busqueda, y lo limpiamos (trim) para eliminar espacios al principio y al final, y lo convertimos a minusculas para evitar problemas de mayusculas.
+const handleInputSearch = (event: Event): void => {
+  const target = event.target as HTMLInputElement;
 
-  // Si el query esta vacio, no hacemos nada (return).
+  const query = target.value.trim().toLowerCase();
+
   if (!query) return;
 
-  // LImpiamos el temporizador.
-  clearTimeout(debouceTimer);
+  clearTimeout(debounceTimer);
 
-  // NO buscamos hasta tener al menos 3 caracteres.
   if (query.length < 3) return;
 
-  // inicializamo un nuevo contador.
-  debouceTimer = window.setTimeout(async () => {
+  debounceTimer = window.setTimeout(async () => {
     try {
-      //  llamamos a la funcion fetchMovie, que hace la peticion a la API de peliculas, y le pasamos el query de busqueda (query)
-      const movies = await fetchMovie(query);
+      //  llamamos a searchMovies (TMDB), con el texto de búsqueda (query)
+      const movies = await searchMovies(query);
+
+      // Guardamos las peliculas obtenidas en la variable global currentMovies, para tenerlas disponibles para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
       currentMovies = movies;
+
+      // Guardamos una copia de las peliculas obtenidas en la variable global lastSearchMovie, para tenerlas disponibles para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
       lastSearchMovie = movies;
 
-      //  llamamos a la funcion renderMovies, que se encarga de renderizar las peliculas en el HTML,
-      //  y le pasamos el array de peliculas (movies) y el contenedor del HTML (movieGrid).
+      //  llamamos a la funcion renderMovies, que se encarga de renderizar las peliculas en el HTML, y le pasamos el array de peliculas (movies) y el contenedor del HTML (movieGrid)
       renderMovies(movies, movieGrid);
 
-      // si algo sale mal en la peticion a la API, o en el renderizado, lo capturamos con el catch, y mostramos un error en la consola.
+      // si algo sale mal en la peticion a la API, o en el renderizado, lo capturamos con el catch, y mostramos un error en la consola (console.error).
     } catch (error) {
       console.error("Error en busqueda dinamica", error);
     }
-  }, 500); // <== El tiempo de espera para ejecutar la busqueda, en milisegundos (500ms = 0.5 segundos).
+  }, 500);
 };
 
-// 2. Funcion handleSearch, que se ejecuta cuando el usuario hace submit en el formulario de busqueda.
+/**
+ * Funcion que se encarga de hacer la busqueda de peliculas, cuando el usuario hace submit en el formulario de busqueda.
+ * @param event - El evento que se ejecuta cuando el usuario hace submit en el formulario de busqueda.
+ * @returns void - No retorna nada, solo ejecuta la funcion.
+ */
 const handleSearch = async (event: Event) => {
-  // Evitamos que el formulario se envie y recargue la pagina.
+  // Evitamos que el formulario se envie y recargue la pagina, para que no se recargue la pagina cuando el usuario haga submit en el formulario de busqueda, evitando el comportamiento por defecto del formulario.
   event.preventDefault();
 
-  // Obtenemos el valor del input de busqueda, y lo limpiamos (trim) para eliminar espacios al principio y al final.
-  const query = searchInput.value.trim();
+  // Obtenemos el valor del input de busqueda, y lo limpiamos (trim) para eliminar espacios al principio y al final, y lo convertimos a minusculas para evitar problemas de mayusculas.
+  const query = searchInput.value.trim().toLowerCase();
 
   // Si el query esta vacio, no hacemos nada (return).
   if (!query) return;
 
   try {
-    //  llamamos a la funcion fetchMovie, que hace la peticion a la API de peliculas, y le pasamos el query de busqueda (query)
-    const movies = await fetchMovie(query);
+    //  llamamos a searchMovies (TMDB), con el query de búsqueda (query)
+    const movies = await searchMovies(query);
     currentMovies = movies; // <== Guardamos las peliculas obtenidas en la variable global currentMovies,
-    // para tenerlas disponibles para manejar los favoritos sin tener que volver a hacer la peticion a la API cada vez que queremos agregar o quitar una pelicula de favoritos.
+
     lastSearchMovie = movies; // <=== Guardamos una copia
 
     //  llamamos a la funcion renderMovies, que se encarga de renderizar las peliculas en el HTML, y le pasamos el array de peliculas (movies) y el contenedor del HTML (movieGrid).
@@ -91,16 +95,20 @@ const handleSearch = async (event: Event) => {
 };
 
 /**
- * vamos hacer dos funciones para el modal de detalles de pelicula:
- * 1. handleOpenModal: que se encarga de abrir el modal, y mostrar los detalles de la pelicula seleccionada.
- * 2. handleCloseModal: que se encarga de cerrar el modal.
- * para esto vamos a usar una delegacion de eventos, es decir, vamos a escuchar el evento click en el contenedor del HTML donde se renderizan las peliculas (movieGrid),
- *  y cuando se haga click en un boton de detalles, vamos a abrir el modal con los detalles de la pelicula seleccionada.
- * 1. Funcion handleOpenModal, que se ejecuta cuando el usuario hace click en un boton de detalles de una pelicula.
+ * Funcion que se encarga de abrir el modal, y mostrar los detalles de la pelicula seleccionada.
+ * Paso 1: Verificar si el ID de la pelicula es valido, si no es el caso, la funcion termina sin hacer nada.
+ * Paso 2: Intentar abrir el modal, y mostrar un spinner y un texto de carga mientras se cargan los detalles de la pelicula.
+ * Paso 3: Hacer la peticion a la API de TMDB para obtener los detalles de la pelicula, y le pasamos el ID de la pelicula (movieId).
+ * Paso 4: Mapeamos los datos de la pelicula, y le pasamos los datos mapeados a la funcion renderMovieDetails, que se encarga de renderizar los detalles de la pelicula en el modal.
+ * Paso 6: Si algo sale mal en la peticion a la API, o en el renderizado, lo capturamos con el catch, y mostramos un error en la consola.
+ * @param movieId - El ID de la pelicula a mostrar en el modal.
+ * @returns void
  */
 const handleOpenModal = async (movieId: string) => {
+  // Paso 1: Verificar si el ID de la pelicula es valido, si no es el caso, la funcion termina sin hacer nada.
   if (!movieId) return;
 
+  // Paso 2: Intentar abrir el modal, y mostrar un spinner y un texto de carga mientras se cargan los detalles de la pelicula.
   try {
     movieModal.classList.remove("hidden");
 
@@ -111,19 +119,20 @@ const handleOpenModal = async (movieId: string) => {
       <p class="text-slate-400 font-medium">Cargando Detalles...</p>
     </div>
     `;
+    // Paso 3: Hacer la peticion a la API de TMDB para obtener los detalles de la pelicula, y le pasamos el ID de la pelicula (movieId).
+    const rawData = await fetchMovieDetails(movieId);
 
-    const rawData = await fetchMoviesDetails(movieId);
-
-    // IMPORTANTE: Verifica si es mapToMovieDetais o mapToMovieDetails
+    // Paso 4: Mapeamos los datos de la pelicula, y le pasamos los datos mapeados a la funcion renderMovieDetails, que se encarga de renderizar los detalles de la pelicula en el modal.
+    // Creamos un objeto con los datos mapeados, y le pasamos los datos mapeados a la funcion renderMovieDetails, que se encarga de renderizar los detalles de la pelicula en el modal.
     const cleanMovieData = {
       ...mapToMovieData(rawData),
       ...mapToMovieDetails(rawData),
-    };
+    }; // <== esos tres puntos (...), son el operador de propagacion, que se utiliza para copiar los propiedades de un objeto a otro.
 
+    //  llamamos a la funcion renderMovieDetails, que se encarga de renderizar los detalles de la pelicula en el modal, y le pasamos los datos mapeados (cleanMovieData) y el contenedor del modal (modalContent), para que se renderice el contenido del modal.
     renderMovieDetails(cleanMovieData, modalContent);
-    // Asegúrate de que este ID coincida con el contenedor en tu HTML
 
-    // Renderizamos el consejo de la IA en el modal, pasandole el titulo, la sinopsis y los generos de la pelicula.
+    // Paso 5: Si algo sale mal en la peticion a la API, o en el renderizado, lo capturamos con el catch, y mostramos un error en la consola.
   } catch (error) {
     console.error("Error al cargar el modal:", error);
     modalContent.innerHTML = `
@@ -135,16 +144,31 @@ const handleOpenModal = async (movieId: string) => {
   }
 };
 
-// 2. Funcion handleCloseModal, que se ejecuta cuando el usuario hace click en el boton de cerrar el modal, afuera del modal.
-const handleCloseModal = (event: Event) => {
-  // Verificamos si el elemento clickeado es el boton de cerrar el modal, o si se hizo click afuera del contenido del modal.
-  const target = event.target as HTMLElement;
-  if (target === closeModal || target.closest("#movie-modal")) {
-    // Le agregamos la clase "hidden" al modal para ocultarlo, y le quitamos la clase "flex" para centrarlo.
-    movieModal.classList.add("hidden");
+/**
+ * Funcion que se encarga de cerrar el modal, y limpiar el contenido del modal.
+ * Paso 1: Verificamos si el elemento clickeado es el boton de cerrar el modal, o si se hizo click afuera del contenido del modal.
+ * Paso 2: Le agregamos la clase "hidden" al modal para ocultarlo, y le quitamos la clase "flex" para centrarlo.
+ * Paso 3: Limpiamos el contenido del modal para que no quede la informacion de la pelicula anterior cuando se abra el modal de nuevo.
+ * @param event - El evento que se ejecuta cuando el usuario hace click en el boton de cerrar el modal, afuera del modal.
+ * @returns void
+ */
+const closeModalAndClear = () => {
+  movieModal.classList.add("hidden");
+  modalContent.innerHTML = "";
+};
 
-    // Limpiamos el contenido del modal para que no quede la informacion de la pelicula anterior cuando se abra el modal de nuevo.
-    modalContent.innerHTML = "";
+/**
+ * Cierra solo si: click en el fondo (overlay) o en el botón X del modal.
+ * No cerramos por clicks genéricos dentro del panel (evita condiciones demasiado amplias).
+ */
+const handleCloseModal = (event: Event) => {
+  const target = event.target as HTMLElement;
+  const clickedBackdrop = target === movieModal;
+  const clickedClose =
+    target === closeModal || Boolean(target.closest("#modal-close"));
+
+  if (clickedBackdrop || clickedClose) {
+    closeModalAndClear();
   }
 };
 
@@ -156,7 +180,7 @@ const handleCloseModal = (event: Event) => {
  * Si no tiene elementos, ocultamos el boton de favoritos.
  * @returns void
  */
-export const checkFavoritesVisibility = () => {
+const checkFavoritesVisibility = () => {
   const favorites = getFavorites(); // Obtenemos el array de peliculas favoritas desde el servicio de favoritos.
 
   // Verificamos si el array de peliculas favoritas tiene elementos.
@@ -164,7 +188,7 @@ export const checkFavoritesVisibility = () => {
     // Si tiene elementos, mostramos el boton de favoritos.
     btnFavorites.classList.remove("hidden");
 
-    // Actualizamos el texto del bot n de favoritos para mostrar la cantidad de peliculas favoritas que hay.
+    // Actualizamos el texto del botón de favoritos para mostrar la cantidad de películas favoritas.
     btnFavorites.innerText = `❤️ Mis favoritos (${favorites.length})`;
   } else {
     // Si no tiene elementos, ocultamos el boton de favoritos.
@@ -178,72 +202,82 @@ searchForm.addEventListener("submit", handleSearch);
 // 5. Escuchamos el evento click en el modal de detalles de pelicula, y llamamos a la funcion handleCloseModal.
 movieModal.addEventListener("click", handleCloseModal);
 
-// 6. Escuchamos el evento click en el boton de cerrar el modal, y llamamos a la funcion handleCloseModal.
-closeModal.addEventListener("click", handleCloseModal);
+// El botón X está cubierto por handleCloseModal (closest #modal-close) al hacer burbuja en #movie-modal.
 
-// conexión del listener al input (debouce handleInputSearch)
-searchInput.addEventListener("input", handleInputSeacrch);
+// Debounce en el input de búsqueda
+searchInput.addEventListener("input", handleInputSearch);
 
-//listener para el botton de cerrar el modal en caso de error
-// Listener extra para el botón de error
-document.getElementById("close-modal-error")?.addEventListener("click", () => {
-  movieModal.classList.add("hidden");
-  modalContent.innerHTML = ""; // Limpiamos el contenido del modal.
-});
-
-// Listener para evitar que el click dentro del contenido del modal cierre el modal.
+/**
+ * El botón "Cerrar" del estado de error se inyecta después en el DOM; por eso no sirve
+ * getElementById al cargar el script. Aquí: si es ese botón, cerramos; si no, paramos la burbuja
+ * para que un click en el contenido no actúe como click en el overlay.
+ */
 modalContent.addEventListener("click", (event) => {
-  event.stopPropagation(); // Evitamos que el click dentro del contenido del modal cierre el modal.
+  const target = event.target as HTMLElement;
+  if (target.closest("#close-modal-error")) {
+    closeModalAndClear();
+    return;
+  }
+  event.stopPropagation();
 });
 
+/**
+ * Listener para el grid de peliculas, que se encarga de manejar el click en el grid de peliculas, para agregar o quitar la pelicula de favoritos, y actualizar el estado del boton de favoritos dentro del grid.
+ * @param event - El evento que se ejecuta cuando el usuario hace click en el grid de peliculas.
+ * @returns void - No retorna nada, solo ejecuta la funcion.
+ */
 movieGrid?.addEventListener("click", (event) => {
-  // Obtener el elemento clickeado
   const target = event.target as HTMLElement;
 
-  // Verificar si el elemento clickeado es un botón de favorito
+  if (target.closest(".empty-state-reload")) {
+    window.location.reload();
+    return;
+  }
+
   const isFav = target.closest(".favorite-btn") as HTMLButtonElement;
 
   if (isFav) {
-    event.stopPropagation(); // Evitamos que el click en el botón de favorito también dispare el evento de abrir el modal.
+    event.stopPropagation(); // Evitamos que el click en el botón de favorito también dispare el evento de abrir el modal, evitando que se abra el modal cuando se hace click en el botón de favorito.
 
-    // Obetener el ID de la película desde el atributo data-id del botón
+    // Obtener el ID de la película desde data-id del botón favorito.
     const movieId = isFav.getAttribute("data-id");
 
-    const movie = currentMovies.find((m) => m.id === movieId); // Buscamos la película en el array de películas actualmente renderizadas.
+    const movie = currentMovies.find((m) => m.id === movieId); // Buscamos la película en el array de películas actualmente renderizadas (currentMovies), para poder agregar o quitar la pelicula de favoritos.
 
     if (movie) {
-      toggleFavorite(movie); // Llamamos a la función toggleFavorite para agregar o quitar la película de favoritos.
+      toggleFavorite(movie); // Llamamos a la función toggleFavorite para agregar o quitar la película de favoritos, esto es necesario para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
 
-      // Actualizamos el estado del botón de favorito después de hacer toggle
+      // Actualizamos el estado del botón de favorito después de hacer toggle, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
       const isFavorite = isMovieFavorite(movie.id); // Verificamos si la película es ahora un favorito o no.
 
-      const icon = isFav.querySelector(".heart-icon") as HTMLElement; // Seleccionamos el ícono del corazón dentro del botón.
+      const icon = isFav.querySelector(".heart-icon") as HTMLElement; // Seleccionamos el ícono del corazón dentro del botón (isFav), para poder cambiar el color del corazón según el estado de favorito.
 
       if (icon) {
-        icon.textContent = isFavorite ? "❤️" : "🤍"; // Cambiamos el ícono del corazón según el estado de favorito.
+        icon.textContent = isFavorite ? "❤️" : "🤍"; // Cambiamos el ícono del corazón según el estado de favorito, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
 
-        icon.classList.toggle("text-red-500", isFavorite); // Agregamos o quitamos la clase de color rojo según el estado de favorito.
+        icon.classList.toggle("text-red-500", isFavorite); // Agregamos o quitamos la clase de color rojo según el estado de favorito, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
 
-        icon.classList.toggle("text-gray-400", !isFavorite); // Agregamos o quitamos la clase de color gris según el estado de favorito.
+        icon.classList.toggle("text-slate-300", !isFavorite);
       }
 
       if (isViewingFavorites) {
-        // Si estamos viendo la lista de favoritos, actualizamos el grid para mostrar solo las películas que siguen siendo favoritas después del toggle.
+        // Si estamos viendo la lista de favoritos, actualizamos el grid para mostrar solo las películas que siguen siendo favoritas después del toggle, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
         const updatedFavorites = getFavorites(); // Obtenemos el array actualizado de películas favoritas después del toggle.
 
-        renderMovies(updatedFavorites, movieGrid); // Renderizamos las películas favoritas actualizadas en el grid.
+        renderMovies(updatedFavorites, movieGrid); // Renderizamos las películas favoritas actualizadas en el grid, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
 
         currentMovies = updatedFavorites; // Actualizamos el estado de currentMovies para que coincida con las películas que se están mostrando actualmente en el grid, que en este caso son las películas favoritas actualizadas, esto es necesario para mantener la consistencia entre el estado de currentMovies y lo que se muestra en el grid, especialmente para manejar los favoritos dentro del modal de detalles de película.
       }
-      checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle.
+      checkFavoritesVisibility(); // Verificamos si el botón de favoritos debe estar visible o no, dependiendo de si hay películas favoritas o no, después de hacer toggle, para mantener la consistencia entre el estado de favoritos dentro del grid y el estado de favoritos en el resto de la aplicación.
     }
-    return; // Salimos de la función para evitar que se ejecute el código de abrir el modal.
+    return; // Salimos de la función para evitar que se ejecute el código de abrir el modal, evitando que se abra el modal cuando se hace click en el botón de favorito.
   }
-  // Si no se hizo click en el botón de favorito, entonces se ejecuta el código para abrir el modal (handleOpenModal).
+  // Si no se hizo click en el botón de favorito, entonces se ejecuta el código para abrir el modal (handleOpenModal), para abrir el modal con los detalles de la película seleccionada.
   const detailsBtn = target.closest(".details-btn") as HTMLButtonElement;
 
   if (detailsBtn) {
-    event.stopPropagation(); // Evitamos que el click en el botón de detalles también dispare el evento de abrir el modal, ya que handleOpenModal se encargará de abrir el modal con los detalles de la película seleccionada.
+    event.stopPropagation();
+
     // Obtenemos el ID de la película desde el atributo data-id del botón de detalles, y se lo pasamo directamente a la función handleOpenModal para que abra el modal con los detalles de la película seleccionada.
     const movieId = detailsBtn.getAttribute("data-id");
     if (movieId) {
@@ -278,7 +312,7 @@ modalContent?.addEventListener("click", (event) => {
 
   toggleFavorite(movie); // Llamamos a la función toggleFavorite para agregar o quitar la película de favoritos, esto es necesario para mantener la consistencia entre el estado de favoritos dentro del modal y el estado de favoritos en el resto de la aplicación.
 
-  // Actialuzamos el estado del botón de favorito dentro del modal después de hacer toggle.
+  // Actualizamos el estado del botón de favorito dentro del modal tras el toggle.
   const isFav = isMovieFavorite(movie.id); // Verificamos si la película es ahora un favorito o no.
 
   const icon = favBtn.querySelector(".modal-heart-icon") as HTMLElement; // Seleccionamos el ícono del corazón dentro del botón de favorito del modal.
@@ -300,7 +334,7 @@ modalContent?.addEventListener("click", (event) => {
       gridIcon.textContent = isFav ? "❤️" : "🤍";
 
       gridIcon.classList.toggle("text-red-500", isFav); // Agregamos o quitamos la clase de color rojo según el estado de favorito.
-      gridIcon.classList.toggle("text-gray-400", !isFav); // Agregamos o quitamos la clase de color gris según el estado de favorito.
+      gridIcon.classList.toggle("text-slate-300", !isFav);
     }
   }
   // Actualizar el contador nav.
@@ -326,7 +360,7 @@ btnFavorites.addEventListener("click", () => {
   }
 });
 btnBack?.addEventListener("click", () => {
-  // restauramos los ultimos resualtados o dejamos el grid vacio
+  // Restauramos la última búsqueda en el grid (puede ser [] si aún no había búsqueda).
   renderMovies(lastSearchMovie, movieGrid);
 
   currentMovies = lastSearchMovie;
