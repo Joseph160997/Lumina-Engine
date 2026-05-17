@@ -34,7 +34,7 @@ export const getFavorites = (): Movie[] => {
  * Indica si ya existe un favorito con ese id (comparación por string, igual que en toda la app).
  */
 export const isMovieFavorite = (movieId: string): boolean => {
-  return getFavorites().some((fav) => fav.id === movieId);
+  return getFavorites().some((fav) => fav.id === movieId); // <=== some es un metodo que se utiliza para verificar si alguna pelicula en esa lista tiene el mismo id que el que nos han pasado.
 };
 
 /**
