@@ -16,3 +16,8 @@ export interface Movie {
   watchProviders?: { name: string; logo: string | null }[]; // <=== Plataformas (logo puede ser null si TMDB no envía imagen)
   revenue: number; // <=== Recaudacion de la pelicula
 }
+
+/**
+ * Interfaz para los datos de la API de TMDB Crudas (sin mapear), tal cual como viene los datos de la API.
+ *
+ */

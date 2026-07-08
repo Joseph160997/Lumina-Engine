@@ -9,6 +9,7 @@
  * @param data - Objeto/array/número/etc. que JSON.stringify pueda convertir.
  */
 export const saveData = (key: string, data: unknown): void => {
+  if (!key || !data) return;
   try {
     // localStorage solo acepta strings; JSON.stringify convierte el valor a texto.
     const serialized = JSON.stringify(data);

@@ -58,7 +58,7 @@ export const renderMovies = (movies: Movie[], container: HTMLElement): void => {
 
     htmlContent += `
      <div class="group relative bg-slate-800 rounded-lg overflow-hidden shadow-lg transition-all hover:scale-105 hover:-translate-y-2">
-       <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
+       <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" loading="lazy" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
        <button type="button" data-id="${movie.id}" class="favorite-btn absolute top-3 right-3 p-2 rounded-full bg-slate-900/60 backdrop-blur-md border border-slate-700 hover:scale-110 transition-transform">
          <span class="heart-icon ${favorite ? "text-red-500" : "text-slate-300"} text-xl">${favorite ? "❤️" : "🤍"}</span>
        </button>
@@ -103,6 +103,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
         <img src="${logoSrc}" 
              title="${nameSafe}" 
              alt="${nameSafe}"
+             loading="lazy"
              class="w-10 h-10 rounded-lg hover:scale-110 transition-transform cursor-help object-contain border border-slate-700" />`;
         })
         .join("")}   
@@ -125,7 +126,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
         <div class="shrink-0 w-32 group"> 
         <div class="relative overflow-hidden rounded-lg mb-3 shadow-lg aspect-2/3">
           <img src="${photo}"
-              alt="${nameSafe}" class="w-full h-full object-cover transition-transform duration-300 group-hover:-scale-110"/>
+              alt="${nameSafe}" loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:-scale-110"/>
               </div>
               <p class="text-white text-sm font-bold leading-tight truncate">${nameSafe}</p>
               <p class="text-slate-500 text-xs mt-1 truncate">${charSafe}</p>
@@ -149,7 +150,7 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
 
 
   <div class="flex flex-col md:flex-row gap-8"> 
-   <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
+   <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" loading="lazy" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
    
     <div class="flex-1">
       <h2 class="text-4xl font-black mb-4 text-white tracking-tight">${titleSafe}</h2>
