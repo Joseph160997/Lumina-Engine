@@ -6,7 +6,7 @@ type TmdbMovieStatus =
   | "Released"
   | "Canceled";
 
-interface TmdbRawVideoDto {
+export interface TmdbRawVideoDto {
   readonly id: string;
   readonly key: string; // ID de YouTube, ej: "dQw4w9WgXcQ"
   readonly name: string;
@@ -21,7 +21,7 @@ interface TmdbRawVideoDto {
   readonly official: boolean;
 }
 
-interface TmdbRawCastDto {
+export interface TmdbRawCastDto {
   readonly id: number;
   readonly name: string;
   readonly character: string;
@@ -29,11 +29,11 @@ interface TmdbRawCastDto {
 }
 
 // Sub-recursos que TMDB solo incluye si pides append_to_response=credits,videos
-interface TmdbRawCreditsDto {
+export interface TmdbRawCreditsDto {
   readonly cast: ReadonlyArray<TmdbRawCastDto>;
 }
 
-interface TmdbRawVideosDto {
+export interface TmdbRawVideosDto {
   readonly results: ReadonlyArray<TmdbRawVideoDto>;
 }
 

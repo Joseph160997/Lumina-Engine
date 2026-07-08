@@ -1,23 +1,63 @@
-import type { CastMember } from "./cast";
+export interface Genre {
+  readonly id: number;
+  readonly name: string;
+}
 
-export interface Movie {
-  id: string; // <=== Id unico para manejar la logica
-  title: string; // <=== Titulo de la pelicula
-  releaseDate: string; // <=== Fecha de estreno (ISO o texto que muestre la API)
-  budget: number; // <=== Presupuesto de la pelicula
-  cast: CastMember[]; // <=== Elenco de la pelicula
-  director: string; // <=== Director de la pelicula
-  rating: number; // <=== Calificacion de la pelicula
-  genres: string[]; // <=== Generos de la pelicula
-  posterUrl?: string; // <=== Poster de la pelicula
-  trailerkey?: string | null; // <=== Clave del trailer en YouTube (TMDB), o null si no hay
-  overview?: string; // <=== Descripcion de la pelicula
-  runtime?: number; // <=== Duracion de la pelicula
-  watchProviders?: { name: string; logo: string | null }[]; // <=== Plataformas (logo puede ser null si TMDB no envía imagen)
-  revenue: number; // <=== Recaudacion de la pelicula
+export interface CastMember {
+  readonly id: number;
+  readonly name: string;
+  readonly character: string;
+  readonly profileUrl: string | null;
+}
+
+export interface Video {
+  readonly id: string;
+  readonly key: string;
+  readonly name: string;
+  readonly type: string;
+  readonly isOfficial: boolean;
+  readonly youtubeUrl: string | null; // ya resuelto, listo para usar
 }
 
 /**
- * Interfaz para los datos de la API de TMDB Crudas (sin mapear), tal cual como viene los datos de la API.
- *
+ * Película tal como la consume el resto de la app.
+ * Corresponde a una entrada de lista/búsqueda (TmdbRawMovieDto).
  */
+export interface Movie {
+  readonly id: number;
+  readonly title: string;
+  readonly originalTitle: string;
+  readonly overview: string;
+  readonly posterUrl: string | null;
+  readonly backdropUrl: string | null;
+  readonly releaseDate: Date | null;
+  readonly rating: number; // antes vote_average
+  readonly voteCount: number;
+  readonly genres: ReadonlyArray<Genre>;
+}
+
+/**
+ * Película con el detalle completo.
+ * Corresponde al endpoint /movie/{id} (TmdbRawMovieDetailDto).
+ */
+export interface MovieDetail extends Omit<Movie, "genres"> {
+  readonly genres: ReadonlyArray<Genre>;
+  readonly runtimeMinutes: number | null;
+  readonly budget: number;
+  readonly revenue: number;
+  readonly status: string;
+  readonly tagline: string | null;
+  readonly homepageUrl: string | null;
+  readonly cast: ReadonlyArray<CastMember>;
+  readonly videos: ReadonlyArray<Video>;
+}
+
+/**
+ * Página de resultados, ya en formato de dominio.
+ */
+export interface MoviePage {
+  readonly page: number;
+  readonly totalPages: number;
+  readonly totalResults: number;
+  readonly movies: ReadonlyArray<Movie>;
+}
