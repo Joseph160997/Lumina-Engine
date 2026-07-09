@@ -1,7 +1,7 @@
 import "./style.css"; // <== Importamos el archivo de estilos CSS para aplicar estilos a nuestra aplicación.
 import { fetchMovieDetails, searchMovies } from "./api/movieApi.ts";
 import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
-import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
+import { mapToMovieData, mapToMovieDetails } from "./mappers/mapper.ts";
 import {
   toggleFavorite,
   isMovieFavorite,

@@ -76,6 +76,11 @@ export interface TmdbRawGenreDto {
   readonly name: string;
 }
 
+/**
+ * Respuesta cruda de un endpoint de detalle de TMDB (/movie/{id}).
+ * Contiene todos los campos de TmdbRawMovieDto, más otros campos extra.
+ * NOTA: este shape NO corresponde a la lista/búsqueda, que trae `genre_ids` (IDs) en vez de `genres` (objetos).
+ */
 export interface TmdbRawMovieDetailDto extends Omit<
   TmdbRawMovieDto,
   "genre_ids"
