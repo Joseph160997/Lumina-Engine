@@ -1,66 +1,136 @@
-import type { Movie } from "../types/movie";
+import type {
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDto,
+  TmdbRawMovieDetailDto,
+  TmdbRawCastDto,
+  TmdbRawVideoDto,
+} from "../api/dto/movie.dto";
+import type {
+  Movie,
+  MovieDetail,
+  MoviePage,
+  Genre,
+  CastMember,
+  Video,
+} from "../types/movie";
+
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=";
+
+/** Construye una URL completa de imagen o null si no hay path. */
+function toImageUrl(
+  path: string | null,
+  size: "w200" | "w342" | "w500" | "original" = "w500",
+): string | null {
+  return path ? `${IMAGE_BASE_URL}/${size}${path}` : null;
+}
+
+/** TMDB manda "" cuando no conoce la fecha; lo normalizamos a null. */
+function toReleaseDate(raw: string): Date | null {
+  return raw ? new Date(raw) : null;
+}
 
 /**
- * Mapea los datos de la API a un formato más adecuado para la aplicación.
- * @param item - El objeto de película de la API de TMDB.
- * @returns - El objeto con las propiedades necesarias para nuestra interface Movie.
+ * Convierte genre_ids (solo números) a objetos Genre completos,
+ * usando un catálogo de géneros ya cargado (ver nota más abajo).
  */
-export const mapToMovieData = (item: any): Movie => {
-  // Aquí puedes realizar cualquier transformación necesaria.
+function mapGenreIds(
+  genreIds: ReadonlyArray<number>,
+  genreCatalog: ReadonlyMap<number, string>,
+): ReadonlyArray<Genre> {
+  return genreIds
+    .map((id) => {
+      const name = genreCatalog.get(id);
+      return name ? { id, name } : null;
+    })
+    .filter((genre): genre is Genre => genre !== null);
+}
+
+function mapGenres(
+  raw: ReadonlyArray<{ id: number; name: string }>,
+): ReadonlyArray<Genre> {
+  return raw.map(({ id, name }) => ({ id, name }));
+}
+
+function mapCastMember(raw: TmdbRawCastDto): CastMember {
   return {
-    id: item.id.toString(), // <=== Nuestra api devuelve un número, pero nuestra interfaz Movie espera un string, así que lo convertimos.
-    title: item.title || "No title", // <=== Si no hay título, ponemos un valor por defecto.
-    releaseDate: item.release_date || "Fecha desconocida", // <=== Si no hay fecha de lanzamiento, ponemos un valor por defecto.
-    overview:
-      item.overview || "No hay descripción disponible para esta pelicula", // <=== Si no hay descripción, ponemos un valor por defecto.
-    rating: item.vote_average || 0, // <=== Si no hay rating, ponemos un valor por defecto.
-    posterUrl: item.poster_path
-      ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-      : "https://via.placeholder.com/500x750?text=No+Image", // <=== Si no hay poster , ponemos una imagen por defecto.
-    budget: item.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
-    cast: [], // <=== Inicialmente, la lista de actores está vacía.
-    director: "Director desconocido", // <=== Si no hay director, ponemos un valor por defecto.
-    revenue: 0, // <=== Inicialmente, la recaudación está en cero.
-    genres: [], // <=== Inicialmente, la lista de géneros está vacía.
+    id: raw.id,
+    name: raw.name,
+    character: raw.character,
+    profileUrl: toImageUrl(raw.profile_path, "w200"),
   };
-};
+}
+
+function mapVideo(raw: TmdbRawVideoDto): Video {
+  return {
+    id: raw.id,
+    key: raw.key,
+    name: raw.name,
+    type: raw.type,
+    isOfficial: raw.official,
+    youtubeUrl:
+      raw.site === "YouTube" ? `${YOUTUBE_WATCH_URL}${raw.key}` : null,
+  };
+}
 
 /**
- * Este mapper solo se usa cuando entramos al detalle de una pelicula.
- * Toma los datos extra que no definimos en el mapper anterior, como el presupuesto, trailer, el elenco y el director.
- * Esto se hace para evitar hacer una petición extra a la API cada vez que mostramos una película en la lista, ya que esos datos no son necesarios en ese contexto.
- * Solo los obtenemos cuando el usuario entra al detalle de una película, donde sí necesitamos esa información.
+ * Mapea una película de lista/búsqueda.
+ * Requiere el catálogo de géneros porque el DTO solo trae IDs sueltos.
  */
-export const mapToMovieDetails = (data: any): Partial<Movie> => {
-  // Buscamos el video que sea un trailer oficial, y que este en youtube.
-  const trailer = data.videos?.results.find(
-    (v: any) => v.type === "Trailer" && v.site === "YouTube",
-  );
-  const rawProviders = data["watch/providers"]?.results?.ES?.flatrate || [];
-
+export function mapMovie(
+  raw: TmdbRawMovieDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): Movie {
   return {
-    revenue: data.revenue || 0, // <=== Si no hay recaudación, ponemos un valor por defecto.
-    budget: data.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
-    runtime: data.runtime || 0, // <=== Si no hay duración, ponemos un valor por defecto.
-    cast:
-      data.credits?.cast.slice(0, 5).map((actor: any) => ({
-        name: actor.name,
-        character: actor.character,
-        profilePath: actor.profile_path
-          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-          : null,
-      })) || [], // <=== Mapeamos el elenco, y si no hay elenco, ponemos una lista vacía.
-    watchProviders:
-      rawProviders.map((p: any) => ({
-        name: p.provider_name,
-        logo: p.logo_path
-          ? `https://image.tmdb.org/t/p/original${p.logo_path}`
-          : null,
-      })) || [], // <=== Mapeamos las plataformas de streaming, y si no hay plataformas, ponemos una lista vacía.
-    director:
-      data.credits?.crew.find((member: any) => member.job === "Director")
-        ?.name || "Director desconocido", // <=== Buscamos el director en el crew, y si no lo encontramos, ponemos un valor por defecto.
-    trailerkey: trailer ? trailer.key : null, // <=== Si encontramos un trailer, ponemos su key (que es el ID del video en youtube), si no, ponemos null.
-    genres: data.genres?.map((g: any) => g.name) || [], // <=== Mapeamos los géneros, y si no hay géneros, ponemos una lista vacía.
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenreIds(raw.genre_ids, genreCatalog),
   };
-};
+}
+
+export function mapMoviePage(
+  raw: TmdbMovieListResponseDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): MoviePage {
+  return {
+    page: raw.page,
+    totalPages: raw.total_pages,
+    totalResults: raw.total_results,
+    movies: raw.results.map((movie) => mapMovie(movie, genreCatalog)),
+  };
+}
+
+/**
+ * Mapea el detalle completo de una película.
+ * Aquí NO se necesita el catálogo de géneros porque el DTO
+ * ya trae genres como objetos completos ({id, name}).
+ */
+export function mapMovieDetail(raw: TmdbRawMovieDetailDto): MovieDetail {
+  return {
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenres(raw.genres),
+    runtimeMinutes: raw.runtime,
+    budget: raw.budget,
+    revenue: raw.revenue,
+    status: raw.status,
+    tagline: raw.tagline,
+    homepageUrl: raw.homepage,
+    cast: raw.credits?.cast.map(mapCastMember) ?? [],
+    videos: raw.videos?.results.map(mapVideo) ?? [],
+  };
+}
