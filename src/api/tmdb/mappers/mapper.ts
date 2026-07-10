@@ -4,7 +4,7 @@ import type {
   TmdbRawMovieDetailDto,
   TmdbRawCastDto,
   TmdbRawVideoDto,
-} from "../api/dto/movie.dto";
+} from "../dto/movie.dto";
 import type {
   Movie,
   MovieDetail,
@@ -12,7 +12,7 @@ import type {
   Genre,
   CastMember,
   Video,
-} from "../types/movie";
+} from "../../../types/movie";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=";

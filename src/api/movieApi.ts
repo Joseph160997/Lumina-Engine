@@ -1,5 +1,5 @@
 import { Movie } from "../types/movie";
-import { mapToMovieData } from "../mappers/mapper";
+import { mapToMovieData } from "./tmdb/mappers/mapper";
 
 // --- Configuración fija del cliente TMDB (v3) --------------------------------
 // La clave viene del archivo .env como VITE_TMDB_API_KEY. Vite la inyecta en build;

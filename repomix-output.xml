@@ -43,11 +43,16 @@ The content is organized as follows:
 .gitignore
 index.html
 LICENSE
+mkdir
 package.json
 public/favicon.svg
 public/icons.svg
 README.md
+src/api/client/api.client.ts
 src/api/movieApi.ts
+src/api/tmdb/dto/movie.dto.ts
+src/api/tmdb/mappers/mapper.ts
+src/api/tmdb/validators/movie.validator.ts
 src/assets/hero.png
 src/assets/typescript.svg
 src/assets/vite.svg
@@ -55,13 +60,11 @@ src/main.ts
 src/services/favoritesServices.ts
 src/services/storage.ts
 src/style.css
-src/types/cast.ts
 src/types/movie.ts
 src/types/task.ts
 src/ui/render.ts
 src/utils/formatters.ts
 src/utils/mapper.test.ts
-src/utils/mapper.ts
 src/vite-env.d.ts
 tsconfig.json
 vite.config.ts
@@ -70,8 +73,298 @@ vite.config.ts
 <files>
 This section contains the contents of the repository's files.
 
-<file path="src/utils/mapper.test.ts">
+<file path="mkdir">
 
+</file>
+
+<file path="src/api/client/api.client.ts">
+
+</file>
+
+<file path="src/api/tmdb/dto/movie.dto.ts">
+type TmdbMovieStatus =
+  | "Rumored"
+  | "Planned"
+  | "In Production"
+  | "Post Production"
+  | "Released"
+  | "Canceled";
+
+export interface TmdbRawVideoDto {
+  readonly id: string;
+  readonly key: string; // ID de YouTube, ej: "dQw4w9WgXcQ"
+  readonly name: string;
+  readonly site: "YouTube" | "Vimeo";
+  readonly type:
+    | "Trailer"
+    | "Teaser"
+    | "Clip"
+    | "Featurette"
+    | "Behind the Scenes"
+    | "Bloopers";
+  readonly official: boolean;
+}
+
+export interface TmdbRawCastDto {
+  readonly id: number;
+  readonly name: string;
+  readonly character: string;
+  readonly profile_path: string | null;
+}
+
+// Sub-recursos que TMDB solo incluye si pides append_to_response=credits,videos
+export interface TmdbRawCreditsDto {
+  readonly cast: ReadonlyArray<TmdbRawCastDto>;
+}
+
+export interface TmdbRawVideosDto {
+  readonly results: ReadonlyArray<TmdbRawVideoDto>;
+}
+
+/**
+ * Respuesta cruda de un endpoint de lista/búsqueda de TMDB.
+ * Aplica a: /discover/movie, /search/movie, /movie/popular, /movie/top_rated, etc.
+ */
+export interface TmdbMovieListResponseDto {
+  readonly page: number;
+  readonly results: ReadonlyArray<TmdbRawMovieDto>;
+  readonly total_pages: number;
+  readonly total_results: number;
+}
+
+/**
+ * Película tal cual viene en el JSON crudo de TMDB dentro de una lista.
+ * NOTA: este shape NO corresponde al endpoint de detalle (/movie/{id}),
+ * que trae `genres` (objetos) en vez de `genre_ids`, además de otros
+ * campos (runtime, budget, revenue, status, tagline, imdb_id, credits, videos, etc.).
+ */
+export interface TmdbRawMovieDto {
+  readonly adult: boolean;
+  readonly backdrop_path: string | null; // null si no hay imagen
+  readonly genre_ids: ReadonlyArray<number>; // solo IDs; en detalle vienen objetos completos
+  readonly id: number;
+  readonly original_language: string; // código ISO 639-1, ej: "en"
+  readonly original_title: string;
+  readonly overview: string;
+  readonly popularity: number;
+  readonly poster_path: string | null; // ruta relativa, ej: "/abc123.jpg"
+  readonly release_date: string; // "YYYY-MM-DD" o "" si es desconocida
+  readonly title: string;
+  readonly video: boolean;
+  readonly vote_average: number;
+  readonly vote_count: number;
+}
+
+export interface TmdbRawGenreDto {
+  readonly id: number;
+  readonly name: string;
+}
+
+/**
+ * Respuesta cruda de un endpoint de detalle de TMDB (/movie/{id}).
+ * Contiene todos los campos de TmdbRawMovieDto, más otros campos extra.
+ * NOTA: este shape NO corresponde a la lista/búsqueda, que trae `genre_ids` (IDs) en vez de `genres` (objetos).
+ */
+export interface TmdbRawMovieDetailDto extends Omit<
+  TmdbRawMovieDto,
+  "genre_ids"
+> {
+  readonly genres: ReadonlyArray<TmdbRawGenreDto>;
+  readonly runtime: number | null;
+  readonly budget: number;
+  readonly revenue: number;
+  readonly status: TmdbMovieStatus;
+  readonly tagline: string | null;
+  readonly imdb_id: string | null;
+  readonly homepage: string | null;
+  readonly credits?: TmdbRawCreditsDto;
+  readonly videos?: TmdbRawVideosDto;
+}
+</file>
+
+<file path="src/api/tmdb/mappers/mapper.ts">
+import type {
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDto,
+  TmdbRawMovieDetailDto,
+  TmdbRawCastDto,
+  TmdbRawVideoDto,
+} from "../dto/movie.dto";
+import type {
+  Movie,
+  MovieDetail,
+  MoviePage,
+  Genre,
+  CastMember,
+  Video,
+} from "../../../types/movie";
+
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=";
+
+/** Construye una URL completa de imagen o null si no hay path. */
+function toImageUrl(
+  path: string | null,
+  size: "w200" | "w342" | "w500" | "original" = "w500",
+): string | null {
+  return path ? `${IMAGE_BASE_URL}/${size}${path}` : null;
+}
+
+/** TMDB manda "" cuando no conoce la fecha; lo normalizamos a null. */
+function toReleaseDate(raw: string): Date | null {
+  return raw ? new Date(raw) : null;
+}
+
+/**
+ * Convierte genre_ids (solo números) a objetos Genre completos,
+ * usando un catálogo de géneros ya cargado (ver nota más abajo).
+ */
+function mapGenreIds(
+  genreIds: ReadonlyArray<number>,
+  genreCatalog: ReadonlyMap<number, string>,
+): ReadonlyArray<Genre> {
+  return genreIds
+    .map((id) => {
+      const name = genreCatalog.get(id);
+      return name ? { id, name } : null;
+    })
+    .filter((genre): genre is Genre => genre !== null);
+}
+
+function mapGenres(
+  raw: ReadonlyArray<{ id: number; name: string }>,
+): ReadonlyArray<Genre> {
+  return raw.map(({ id, name }) => ({ id, name }));
+}
+
+function mapCastMember(raw: TmdbRawCastDto): CastMember {
+  return {
+    id: raw.id,
+    name: raw.name,
+    character: raw.character,
+    profileUrl: toImageUrl(raw.profile_path, "w200"),
+  };
+}
+
+function mapVideo(raw: TmdbRawVideoDto): Video {
+  return {
+    id: raw.id,
+    key: raw.key,
+    name: raw.name,
+    type: raw.type,
+    isOfficial: raw.official,
+    youtubeUrl:
+      raw.site === "YouTube" ? `${YOUTUBE_WATCH_URL}${raw.key}` : null,
+  };
+}
+
+/**
+ * Mapea una película de lista/búsqueda.
+ * Requiere el catálogo de géneros porque el DTO solo trae IDs sueltos.
+ */
+export function mapMovie(
+  raw: TmdbRawMovieDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): Movie {
+  return {
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenreIds(raw.genre_ids, genreCatalog),
+  };
+}
+
+export function mapMoviePage(
+  raw: TmdbMovieListResponseDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): MoviePage {
+  return {
+    page: raw.page,
+    totalPages: raw.total_pages,
+    totalResults: raw.total_results,
+    movies: raw.results.map((movie) => mapMovie(movie, genreCatalog)),
+  };
+}
+
+/**
+ * Mapea el detalle completo de una película.
+ * Aquí NO se necesita el catálogo de géneros porque el DTO
+ * ya trae genres como objetos completos ({id, name}).
+ */
+export function mapMovieDetail(raw: TmdbRawMovieDetailDto): MovieDetail {
+  return {
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenres(raw.genres),
+    runtimeMinutes: raw.runtime,
+    budget: raw.budget,
+    revenue: raw.revenue,
+    status: raw.status,
+    tagline: raw.tagline,
+    homepageUrl: raw.homepage,
+    cast: raw.credits?.cast.map(mapCastMember) ?? [],
+    videos: raw.videos?.results.map(mapVideo) ?? [],
+  };
+}
+</file>
+
+<file path="src/api/tmdb/validators/movie.validator.ts">
+import type {
+  TmdbRawMovieDto,
+  TmdbMovieListResponseDto,
+} from "../dto/movie.dto";
+
+/** Valida que un objeto sea un TmdbRawMovieDto */
+
+export function isTmdbRawMovieDto(value: unknown): value is TmdbRawMovieDto {
+  const dto = value as Record<string, unknown>;
+  return (
+    (typeof dto.adult === "boolean" && typeof dto.backdrop_path === "string") ||
+    (dto.backdrop_path === null &&
+      Array.isArray(dto.genre_ids) &&
+      typeof dto.id === "number" &&
+      typeof dto.original_language === "string" &&
+      typeof dto.original_title === "string" &&
+      typeof dto.overview === "string" &&
+      typeof dto.popularity === "number" &&
+      (typeof dto.poster_path === "string" || dto.poster_path === null) &&
+      typeof dto.release_date === "string" &&
+      typeof dto.title === "string" &&
+      typeof dto.video === "boolean" &&
+      typeof dto.vote_average === "number" &&
+      typeof dto.vote_count === "number")
+  );
+}
+
+/** Valida que un objeto sea un TmdbMovieListResponseDto */
+export function isTmdbMovieListResponseDto(
+  value: unknown,
+): value is TmdbMovieListResponseDto {
+  if (typeof value !== "object" || value === null) return false;
+
+  const dto = value as Record<string, unknown>;
+
+  return (
+    typeof dto.page === "number" &&
+    typeof dto.total_pages === "number" &&
+    typeof dto.total_results === "number" &&
+    Array.isArray(dto.results) &&
+    dto.results.every(isTmdbRawMovieDto)
+  );
+}
 </file>
 
 <file path="LICENSE">
@@ -248,6 +541,10 @@ export interface Task {
 }
 </file>
 
+<file path="src/utils/mapper.test.ts">
+
+</file>
+
 <file path="src/vite-env.d.ts">
 /// <reference types="vite/client" />
 
@@ -280,78 +577,6 @@ declare module "*.css";
     "typescript": "^5.7.0",
     "vite": "^6.0.0"
   }
-}
-</file>
-
-<file path="src/services/storage.ts">
-/**
- * Capa genérica sobre localStorage: serializa JSON al guardar y parsea al leer.
- * No asume que el valor sea un array; eso lo decide cada servicio (p. ej. favoritos).
- */
-
-/**
- * Guarda cualquier valor serializable en localStorage bajo `key`.
- * @param key - Clave del "cajón" en localStorage.
- * @param data - Objeto/array/número/etc. que JSON.stringify pueda convertir.
- */
-export const saveData = (key: string, data: unknown): void => {
-  if (!key || !data) return;
-  try {
-    // localStorage solo acepta strings; JSON.stringify convierte el valor a texto.
-    const serialized = JSON.stringify(data);
-    localStorage.setItem(key, serialized);
-  } catch (error) {
-    console.error("error saving to Localstorage", error);
-  }
-};
-
-/**
- * Lee y parsea JSON desde localStorage.
- * @param key - Clave a leer.
- * @returns El valor parseado, o `null` si no hay clave, hay error de parseo, o getItem falla conceptualmente (vacío).
- *          No devuelve `[]` aquí: un array vacío es decisión de quien interpreta los datos (p. ej. lista de favoritos).
- */
-export const getData = (key: string): unknown | null => {
-  const raw = localStorage.getItem(key);
-
-  // Sin clave o string vacío: no hay dato guardado.
-  if (raw === null || raw === "") {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch (error) {
-    console.error("error getting data from Localstorage", error);
-    return null;
-  }
-};
-</file>
-
-<file path="src/style.css">
-@import "tailwindcss";
-
-:root {
-    --font-sans: 'inter', system-ui, sans-serif;
-
-}
-
-/* Animación de entrada para imágenes */
-img[loading="lazy"] {
-  animation: img-fade-in 0.6s linears ease-out forwards;
-}
-
-@keyframes img-fade-in {
-  from { opacity: 0; filter: blur(5px); }
-  to { opacity: 1; filter: blur(0); }
-}
-</file>
-
-<file path="src/types/cast.ts">
-export interface CastMember {
-  name: string; // <=== Nombre del actor
-  character: string; // <=== Nombre del personaje que interpreta el actor
-  profilePath: string | null; // <=== URL del perfil del actor, o null si no hay imagen disponible
 }
 </file>
 
@@ -486,6 +711,70 @@ export const toggleFavorite = (movie: Movie): void => {
 };
 </file>
 
+<file path="src/services/storage.ts">
+/**
+ * Capa genérica sobre localStorage: serializa JSON al guardar y parsea al leer.
+ * No asume que el valor sea un array; eso lo decide cada servicio (p. ej. favoritos).
+ */
+
+/**
+ * Guarda cualquier valor serializable en localStorage bajo `key`.
+ * @param key - Clave del "cajón" en localStorage.
+ * @param data - Objeto/array/número/etc. que JSON.stringify pueda convertir.
+ */
+export const saveData = (key: string, data: unknown): void => {
+  if (!key || !data) return;
+  try {
+    // localStorage solo acepta strings; JSON.stringify convierte el valor a texto.
+    const serialized = JSON.stringify(data);
+    localStorage.setItem(key, serialized);
+  } catch (error) {
+    console.error("error saving to Localstorage", error);
+  }
+};
+
+/**
+ * Lee y parsea JSON desde localStorage.
+ * @param key - Clave a leer.
+ * @returns El valor parseado, o `null` si no hay clave, hay error de parseo, o getItem falla conceptualmente (vacío).
+ *          No devuelve `[]` aquí: un array vacío es decisión de quien interpreta los datos (p. ej. lista de favoritos).
+ */
+export const getData = (key: string): unknown | null => {
+  const raw = localStorage.getItem(key);
+
+  // Sin clave o string vacío: no hay dato guardado.
+  if (raw === null || raw === "") {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as unknown;
+  } catch (error) {
+    console.error("error getting data from Localstorage", error);
+    return null;
+  }
+};
+</file>
+
+<file path="src/style.css">
+@import "tailwindcss";
+
+:root {
+    --font-sans: 'inter', system-ui, sans-serif;
+
+}
+
+/* Animación de entrada para imágenes */
+img[loading="lazy"] {
+  animation: img-fade-in 0.6s linears ease-out forwards;
+}
+
+@keyframes img-fade-in {
+  from { opacity: 0; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+</file>
+
 <file path="index.html">
 <!doctype html>
 <html lang="es">
@@ -614,104 +903,75 @@ export const formatRunTime = (runtime: number): string => {
 };
 </file>
 
-<file path="src/utils/mapper.ts">
-import type { Movie } from "../types/movie";
-
-/**
- * Mapea los datos de la API a un formato más adecuado para la aplicación.
- * @param item - El objeto de película de la API de TMDB.
- * @returns - El objeto con las propiedades necesarias para nuestra interface Movie.
- */
-export const mapToMovieData = (item: any): Movie => {
-  // Aquí puedes realizar cualquier transformación necesaria.
-  return {
-    id: item.id.toString(), // <=== Nuestra api devuelve un número, pero nuestra interfaz Movie espera un string, así que lo convertimos.
-    title: item.title || "No title", // <=== Si no hay título, ponemos un valor por defecto.
-    releaseDate: item.release_date || "Fecha desconocida", // <=== Si no hay fecha de lanzamiento, ponemos un valor por defecto.
-    overview:
-      item.overview || "No hay descripción disponible para esta pelicula", // <=== Si no hay descripción, ponemos un valor por defecto.
-    rating: item.vote_average || 0, // <=== Si no hay rating, ponemos un valor por defecto.
-    posterUrl: item.poster_path
-      ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-      : "https://via.placeholder.com/500x750?text=No+Image", // <=== Si no hay poster , ponemos una imagen por defecto.
-    budget: item.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
-    cast: [], // <=== Inicialmente, la lista de actores está vacía.
-    director: "Director desconocido", // <=== Si no hay director, ponemos un valor por defecto.
-    revenue: 0, // <=== Inicialmente, la recaudación está en cero.
-    genres: [], // <=== Inicialmente, la lista de géneros está vacía.
-  };
-};
-
-/**
- * Este mapper solo se usa cuando entramos al detalle de una pelicula.
- * Toma los datos extra que no definimos en el mapper anterior, como el presupuesto, trailer, el elenco y el director.
- * Esto se hace para evitar hacer una petición extra a la API cada vez que mostramos una película en la lista, ya que esos datos no son necesarios en ese contexto.
- * Solo los obtenemos cuando el usuario entra al detalle de una película, donde sí necesitamos esa información.
- */
-export const mapToMovieDetails = (data: any): Partial<Movie> => {
-  // Buscamos el video que sea un trailer oficial, y que este en youtube.
-  const trailer = data.videos?.results.find(
-    (v: any) => v.type === "Trailer" && v.site === "YouTube",
-  );
-  const rawProviders = data["watch/providers"]?.results?.ES?.flatrate || [];
-
-  return {
-    revenue: data.revenue || 0, // <=== Si no hay recaudación, ponemos un valor por defecto.
-    budget: data.budget || 0, // <=== Si no hay presupuesto, ponemos un valor por defecto.
-    runtime: data.runtime || 0, // <=== Si no hay duración, ponemos un valor por defecto.
-    cast:
-      data.credits?.cast.slice(0, 5).map((actor: any) => ({
-        name: actor.name,
-        character: actor.character,
-        profilePath: actor.profile_path
-          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-          : null,
-      })) || [], // <=== Mapeamos el elenco, y si no hay elenco, ponemos una lista vacía.
-    watchProviders:
-      rawProviders.map((p: any) => ({
-        name: p.provider_name,
-        logo: p.logo_path
-          ? `https://image.tmdb.org/t/p/original${p.logo_path}`
-          : null,
-      })) || [], // <=== Mapeamos las plataformas de streaming, y si no hay plataformas, ponemos una lista vacía.
-    director:
-      data.credits?.crew.find((member: any) => member.job === "Director")
-        ?.name || "Director desconocido", // <=== Buscamos el director en el crew, y si no lo encontramos, ponemos un valor por defecto.
-    trailerkey: trailer ? trailer.key : null, // <=== Si encontramos un trailer, ponemos su key (que es el ID del video en youtube), si no, ponemos null.
-    genres: data.genres?.map((g: any) => g.name) || [], // <=== Mapeamos los géneros, y si no hay géneros, ponemos una lista vacía.
-  };
-};
-</file>
-
 <file path="src/types/movie.ts">
-import type { CastMember } from "./cast";
+export interface Genre {
+  readonly id: number;
+  readonly name: string;
+}
 
-export interface Movie {
-  id: string; // <=== Id unico para manejar la logica
-  title: string; // <=== Titulo de la pelicula
-  releaseDate: string; // <=== Fecha de estreno (ISO o texto que muestre la API)
-  budget: number; // <=== Presupuesto de la pelicula
-  cast: CastMember[]; // <=== Elenco de la pelicula
-  director: string; // <=== Director de la pelicula
-  rating: number; // <=== Calificacion de la pelicula
-  genres: string[]; // <=== Generos de la pelicula
-  posterUrl?: string; // <=== Poster de la pelicula
-  trailerkey?: string | null; // <=== Clave del trailer en YouTube (TMDB), o null si no hay
-  overview?: string; // <=== Descripcion de la pelicula
-  runtime?: number; // <=== Duracion de la pelicula
-  watchProviders?: { name: string; logo: string | null }[]; // <=== Plataformas (logo puede ser null si TMDB no envía imagen)
-  revenue: number; // <=== Recaudacion de la pelicula
+export interface CastMember {
+  readonly id: number;
+  readonly name: string;
+  readonly character: string;
+  readonly profileUrl: string | null;
+}
+
+export interface Video {
+  readonly id: string;
+  readonly key: string;
+  readonly name: string;
+  readonly type: string;
+  readonly isOfficial: boolean;
+  readonly youtubeUrl: string | null; // ya resuelto, listo para usar
 }
 
 /**
- * Interfaz para los datos de la API de TMDB Crudas (sin mapear), tal cual como viene los datos de la API.
- *
+ * Película tal como la consume el resto de la app.
+ * Corresponde a una entrada de lista/búsqueda (TmdbRawMovieDto).
  */
+export interface Movie {
+  readonly id: number;
+  readonly title: string;
+  readonly originalTitle: string;
+  readonly overview: string;
+  readonly posterUrl: string | null;
+  readonly backdropUrl: string | null;
+  readonly releaseDate: Date | null;
+  readonly rating: number; // antes vote_average
+  readonly voteCount: number;
+  readonly genres: ReadonlyArray<Genre>;
+}
+
+/**
+ * Película con el detalle completo.
+ * Corresponde al endpoint /movie/{id} (TmdbRawMovieDetailDto).
+ */
+export interface MovieDetail extends Omit<Movie, "genres"> {
+  readonly genres: ReadonlyArray<Genre>;
+  readonly runtimeMinutes: number | null;
+  readonly budget: number;
+  readonly revenue: number;
+  readonly status: string;
+  readonly tagline: string | null;
+  readonly homepageUrl: string | null;
+  readonly cast: ReadonlyArray<CastMember>;
+  readonly videos: ReadonlyArray<Video>;
+}
+
+/**
+ * Página de resultados, ya en formato de dominio.
+ */
+export interface MoviePage {
+  readonly page: number;
+  readonly totalPages: number;
+  readonly totalResults: number;
+  readonly movies: ReadonlyArray<Movie>;
+}
 </file>
 
 <file path="src/api/movieApi.ts">
 import { Movie } from "../types/movie";
-import { mapToMovieData } from "../utils/mapper";
+import { mapToMovieData } from "./tmdb/mappers/mapper";
 
 // --- Configuración fija del cliente TMDB (v3) --------------------------------
 // La clave viene del archivo .env como VITE_TMDB_API_KEY. Vite la inyecta en build;
@@ -1073,7 +1333,10 @@ export const renderMovieDetails = (movie: Movie, container: HTMLElement) => {
 import "./style.css"; // <== Importamos el archivo de estilos CSS para aplicar estilos a nuestra aplicación.
 import { fetchMovieDetails, searchMovies } from "./api/movieApi.ts";
 import { renderMovieDetails, renderMovies } from "./ui/render.ts"; // <=== Importamos la funcion de renderizado de peliculas.
-import { mapToMovieData, mapToMovieDetails } from "./utils/mapper.ts";
+import {
+  mapToMovieData,
+  mapToMovieDetails,
+} from "./api/tmdb/mappers/mapper.ts";
 import {
   toggleFavorite,
   isMovieFavorite,
