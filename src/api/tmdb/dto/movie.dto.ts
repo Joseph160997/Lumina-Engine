@@ -71,6 +71,10 @@ export interface TmdbRawMovieDto {
   readonly vote_count: number;
 }
 
+/**
+ * Genres tal cual viene en el JSON crudo de TMDB dentro de un detalle.
+ * NOTA: este shape NO corresponde a la lista/búsqueda, que trae `genre_ids` (IDs) en vez de `genres` (objetos).
+ */
 export interface TmdbRawGenreDto {
   readonly id: number;
   readonly name: string;
