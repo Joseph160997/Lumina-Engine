@@ -7,6 +7,7 @@ import type {
   TmdbRawVideoDto,
   TmdbRawCreditsDto,
   TmdbRawVideosDto,
+  TmdbGenreListResponseDto,
 } from "../dto/movie.dto";
 
 /** Valida que un objeto sea un TmdbRawMovieDto */
@@ -47,6 +48,17 @@ export function isTmdbMovieListResponseDto(
     Array.isArray(dto.results) &&
     dto.results.every(isTmdbRawMovieDto)
   );
+}
+
+/** Valida que un objeto sea un TmdbGenresResponseDto */
+export function isTmdbGenreListResponseDto(
+  value: unknown,
+): value is TmdbGenreListResponseDto {
+  if (typeof value !== "object" || value === null) return false;
+
+  const dto = value as Record<string, unknown>;
+
+  return Array.isArray(dto.genres) && dto.genres.every(isTmdbRawGenreDto);
 }
 
 /** Valida que un objeto sea un TmdbRawGenreDto ({ id, name }). */

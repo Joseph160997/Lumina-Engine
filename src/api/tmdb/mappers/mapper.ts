@@ -4,6 +4,7 @@ import type {
   TmdbRawMovieDetailDto,
   TmdbRawCastDto,
   TmdbRawVideoDto,
+  TmdbRawGenreDto,
 } from "../dto/movie.dto";
 import type {
   Movie,
@@ -46,6 +47,8 @@ function mapGenreIds(
     .filter((genre): genre is Genre => genre !== null);
 }
 
+/** Convierte un arreglo de géneros crudos de TMDB a objetos Genre de dominio.
+ */
 function mapGenres(
   raw: ReadonlyArray<{ id: number; name: string }>,
 ): ReadonlyArray<Genre> {
@@ -71,6 +74,15 @@ function mapVideo(raw: TmdbRawVideoDto): Video {
     youtubeUrl:
       raw.site === "YouTube" ? `${YOUTUBE_WATCH_URL}${raw.key}` : null,
   };
+}
+
+/** Crea un catálogo de géneros para mapear IDs a nombres. */
+export function buildGenreCatalog(
+  genres: ReadonlyArray<TmdbRawGenreDto>,
+): ReadonlyMap<number, string> {
+  return new Map(
+    genres.map((genre): [number, string] => [genre.id, genre.name]),
+  );
 }
 
 /**

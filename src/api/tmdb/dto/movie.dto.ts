@@ -38,6 +38,13 @@ export interface TmdbRawVideosDto {
 }
 
 /**
+ * Respuesta cruda de un endpoint de lista de genres de TMDB.
+ */
+export interface TmdbGenreListResponseDto {
+  readonly genres: ReadonlyArray<TmdbRawGenreDto>;
+}
+
+/**
  * Respuesta cruda de un endpoint de lista/búsqueda de TMDB.
  * Aplica a: /discover/movie, /search/movie, /movie/popular, /movie/top_rated, etc.
  */
