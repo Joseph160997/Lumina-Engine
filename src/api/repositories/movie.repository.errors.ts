@@ -22,3 +22,22 @@ export class MovieSearchUnavailableError extends Error {
     this.name = "MovieSearchUnavailableError";
   }
 }
+
+/**
+ * Se lanza cuando `getMovieDetail()` agota todas las estrategias
+ * disponibles para resolver los detalles de una película: ni la red respondió
+ * con éxito, ni existe una entrada en caché (ni siquiera vencida) para esa
+ * combinación exacta de movieId.
+ */
+export class MovieDetailUnavailableError extends Error {
+  constructor(
+    public readonly movieId: number,
+    cause?: unknown,
+  ) {
+    super(
+      `No se pudo obtener detalles para la película con ID ${movieId}: sin conexión y sin caché disponible.`,
+      { cause },
+    );
+    this.name = "MovieDetailUnavailableError";
+  }
+}

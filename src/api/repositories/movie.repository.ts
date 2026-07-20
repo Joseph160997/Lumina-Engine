@@ -1,14 +1,23 @@
-import type { MoviePage } from "../../types/movie";
+import type { MovieDetail, MoviePage } from "../../types/movie";
 import { httpClient } from "../http/httpClient";
 import {
   getRawCache,
   getValidCache,
   setCache,
 } from "../indexeddb/indexeddb-cache";
-import type { TmdbMovieListResponseDto } from "../tmdb/dto/movie.dto";
-import { mapMoviePage } from "../tmdb/mappers/mapper";
-import { isTmdbMovieListResponseDto } from "../tmdb/validators/movie.validator";
-import { MovieSearchUnavailableError } from "./movie.repositoriy.error";
+import type {
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDetailDto,
+} from "../tmdb/dto/movie.dto";
+import { mapMoviePage, mapMovieDetail } from "../tmdb/mappers/mapper";
+import {
+  isTmdbMovieListResponseDto,
+  isTmdbRawMovieDetailDto,
+} from "../tmdb/validators/movie.validator";
+import {
+  MovieDetailUnavailableError,
+  MovieSearchUnavailableError,
+} from "./movie.repository.errors";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3/";
@@ -86,4 +95,42 @@ export async function searchMovies(
 function buildSearchCacheKey(query: string, page: number): string {
   const normalizedQuery = query.trim().toLowerCase();
   return `${SEARCH_CACHE_KEY_PREFIX}-${normalizedQuery}-${page}`;
+}
+
+const MOVIE_DETAIL_CACHE_TTL_MS = 48 * 60 * 60 * 1000; // 48 horas
+
+export async function getMovieDetail(id: number): Promise<MovieDetail> {
+  const cacheKey = buildMovieDetailCacheKey(id);
+
+  const cached = await getValidCache<TmdbRawMovieDetailDto>(
+    cacheKey,
+    MOVIE_DETAIL_CACHE_TTL_MS,
+  );
+
+  if (cached) {
+    return mapMovieDetail(cached);
+  }
+
+  try {
+    const url = `${BASE_URL}movie/${id}?language=es-ES&append_to_response=videos,credits&include_video_language=es,en,null`;
+
+    const response = await httpClient<TmdbRawMovieDetailDto>(url, {
+      ...options,
+      validator: isTmdbRawMovieDetailDto,
+    });
+    await setCache(cacheKey, response);
+    return mapMovieDetail(response);
+  } catch (error) {
+    const rawCached = await getRawCache<TmdbRawMovieDetailDto>(cacheKey);
+
+    if (rawCached) {
+      return mapMovieDetail(rawCached.data);
+    }
+
+    throw new MovieDetailUnavailableError(id, error);
+  }
+}
+
+function buildMovieDetailCacheKey(id: number): string {
+  return `tmdb-movie-detail-${id}`;
 }
