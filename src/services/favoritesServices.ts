@@ -5,14 +5,14 @@ import type { Movie } from "../types/movie";
 const FAVS_KEY = "lumina_favorites";
 
 /**
- * Comprueba si un valor parseado puede tratarse como entrada de favorito (objeto con id string).
+ * Comprueba si un valor parseado puede tratarse como entrada de favorito (objeto con id numérico).
  * Así ignoramos entradas corruptas o tipos equivocados sin romper toda la lista.
  */
 const isFavoriteEntry = (item: unknown): item is Movie => {
   return (
     typeof item === "object" &&
     item !== null &&
-    typeof (item as Movie).id === "string"
+    typeof (item as Movie).id === "number"
   );
 };
 
@@ -31,10 +31,10 @@ export const getFavorites = (): Movie[] => {
 };
 
 /**
- * Indica si ya existe un favorito con ese id (comparación por string, igual que en toda la app).
+ * Indica si ya existe un favorito con ese id (comparación por número, igual que en toda la app).
  */
-export const isMovieFavorite = (movieId: string): boolean => {
-  return getFavorites().some((fav) => fav.id === movieId); // <=== some es un metodo que se utiliza para verificar si alguna pelicula en esa lista tiene el mismo id que el que nos han pasado.
+export const isMovieFavorite = (movieId: number): boolean => {
+  return getFavorites().some((fav) => fav.id === movieId);
 };
 
 /**
@@ -43,15 +43,15 @@ export const isMovieFavorite = (movieId: string): boolean => {
  */
 export const toggleFavorite = (movie: Movie): void => {
   const favorites = getFavorites();
-  const isFav = favorites.some((fav) => fav.id === movie.id); // <=== some es un metodo que se utiliza para verificar si alguna pelicula en esa lista tiene el mismo id que el que nos han pasado.
+  const isFav = favorites.some((fav) => fav.id === movie.id);
 
   if (isFav) {
-    const updatedFavs = favorites.filter((fav) => fav.id !== movie.id); // <=== filter es un metodo que se utiliza para filtrar la lista de favoritos para que no incluya esa pelicula.
-    saveData(FAVS_KEY, updatedFavs); // <=== saveData es una funcion que se utiliza para guardar la lista de favoritos en el localStorage.
+    const updatedFavs = favorites.filter((fav) => fav.id !== movie.id);
+    saveData(FAVS_KEY, updatedFavs);
   } else {
     // Agregar a favoritos: Si la pelicula no esta en favoritos, la agregamos.
-    const updatedFavs = [...favorites, movie]; // <=== [...favorites, movie] es una forma de crear una nueva lista de favoritos que incluye la pelicula que queremos agregar.
+    const updatedFavs = [...favorites, movie];
 
-    saveData(FAVS_KEY, updatedFavs); // <=== saveData es una funcion que se utiliza para guardar la lista de favoritos en el localStorage.
+    saveData(FAVS_KEY, updatedFavs);
   }
 };
