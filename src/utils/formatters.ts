@@ -10,14 +10,12 @@ export const formatCurrency = (amount: number): string => {
 };
 
 /**
- * Formatea una fecha (string ISO o similar) para mostrar en español.
- * ej. 2022-01-01 -> 01/01/2022
+ * Formatea una fecha (Date) para mostrar en español, o un mensaje si no hay dato.
+ * ej. new Date("2022-01-01") -> "1 ene 2022"
  */
-export const formatDate = (dateString: string): string => {
-  if (!dateString) return "Fecha no disponible";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) {
-    return dateString;
+export const formatDate = (date: Date | null): string => {
+  if (!date || Number.isNaN(date.getTime())) {
+    return "Fecha no disponible";
   }
   return date.toLocaleDateString("es-ES", {
     day: "numeric",
@@ -31,9 +29,9 @@ export const formatDate = (dateString: string): string => {
  * @param runtime - El tiempo total en minutos.
  * @returns String formateado, o mensaje si no hay dato.
  */
-export const formatRunTime = (runtime: number): string => {
+export const formatRunTime = (runtime: number | null): string => {
   // 1. Proteccion, si no hay tiempo es cero.
-  if (!runtime || runtime <= 0) return "Duración no disponible";
+  if (runtime === null || runtime <= 0) return "Duración no disponible";
 
   // 2. Lógica matematica:
   const hours = Math.floor(runtime / 60); // <=== Calcula las horas completas, Math.floor es una funcion que se utiliza para redondear un numero hacia abajo.
