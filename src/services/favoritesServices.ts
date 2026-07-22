@@ -17,9 +17,18 @@ const isFavoriteEntry = (item: unknown): item is Movie => {
 };
 
 /**
- * Lista de películas favoritas persistidas. Si no hay datos, JSON inválido o no es un array,
- * devuelve [] para que la UI siempre trabaje con un array.
+ * localStorage serializa Date a string ISO (JSON.parse no reconstruye
+ * instancias de Date). Esta función restaura la forma real de un Movie
+ * después de leerlo del storage, para que el resto de la app pueda
+ * confiar en que releaseDate es un Date real, tal como declara el tipo.
  */
+function reviveMovie(raw: Movie): Movie {
+  return {
+    ...raw,
+    releaseDate: raw.releaseDate ? new Date(raw.releaseDate) : null,
+  };
+}
+
 export const getFavorites = (): Movie[] => {
   const raw = getData(FAVS_KEY);
 
@@ -27,7 +36,7 @@ export const getFavorites = (): Movie[] => {
     return [];
   }
 
-  return raw.filter(isFavoriteEntry);
+  return raw.filter(isFavoriteEntry).map(reviveMovie);
 };
 
 /**
