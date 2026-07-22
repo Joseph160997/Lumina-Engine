@@ -7,7 +7,7 @@
 
 /* Animación de entrada para imágenes */
 img[loading="lazy"] {
-  animation: img-fade-in 0.6s linears ease-out forwards;
+  animation: img-fade-in 0.6s ease-out forwards;
 }
 
 @keyframes img-fade-in {

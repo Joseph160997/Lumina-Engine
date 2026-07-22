@@ -9,15 +9,18 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-/**
- * Formatea una fecha (Date) para mostrar en español, o un mensaje si no hay dato.
- * ej. new Date("2022-01-01") -> "1 ene 2022"
- */
-export const formatDate = (date: Date | null): string => {
-  if (!date || Number.isNaN(date.getTime())) {
+/** Convierte una fecha (Date) para mostrar en español, o un mensaje si no hay dato. */
+export const formatDate = (date: Date | string | null): string => {
+  if (!date) return "Fecha no disponible";
+
+  // Si viene como string (desde localStorage), convertir a Date
+  const parsed = typeof date === "string" ? new Date(date) : date;
+
+  if (Number.isNaN(parsed.getTime())) {
     return "Fecha no disponible";
   }
-  return date.toLocaleDateString("es-ES", {
+
+  return parsed.toLocaleDateString("es-ES", {
     day: "numeric",
     month: "short",
     year: "numeric",

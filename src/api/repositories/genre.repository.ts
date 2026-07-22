@@ -4,10 +4,7 @@ import {
   getValidCache,
   setCache,
 } from "../indexeddb/indexeddb-cache";
-import type {
-  TmdbGenreListResponseDto,
-  TmdbRawGenreDto,
-} from "../tmdb/dto/movie.dto";
+import type { TmdbGenreListResponseDto } from "../tmdb/dto/movie.dto";
 import { buildGenreCatalog } from "../tmdb/mappers/mapper";
 import { isTmdbGenreListResponseDto } from "../tmdb/validators/movie.validator";
 import { GenreCatalogUnavailableError } from "./genre.repository.errors";
@@ -39,7 +36,7 @@ export async function getGenreCatalog(): Promise<ReadonlyMap<number, string>> {
 
   // Si no hay un catálogo válido en caché, intento obtenerlo de la red.
   try {
-    const url = "https://api.themoviedb.org/3/genre/movie/list";
+    const url = "https://api.themoviedb.org/3/genre/movie/list?language=es-ES";
     const response = await httpClient<TmdbGenreListResponseDto>(url, {
       ...options,
       validator: isTmdbGenreListResponseDto,
@@ -48,15 +45,12 @@ export async function getGenreCatalog(): Promise<ReadonlyMap<number, string>> {
     // Si la respuesta es válida, la cacheo y devuelvo el catálogo mapeado.
     await setCache(GENRE_CACHE_KEY, response);
     return buildGenreCatalog(response.genres);
-  } catch (Error) {
-    // Si la petición a la red falla, intento obtener el catálogo crudo de la caché (aunque esté vencido).
+  } catch (error) {
     const rawCachedCatalog =
-      await getRawCache<ReadonlyArray<TmdbRawGenreDto>>(GENRE_CACHE_KEY);
+      await getRawCache<TmdbGenreListResponseDto>(GENRE_CACHE_KEY);
     if (rawCachedCatalog) {
-      // Si hay una entrada cruda en caché, la mapeo a un catálogo y lo devuelvo.
-      return buildGenreCatalog(rawCachedCatalog.data);
+      return buildGenreCatalog(rawCachedCatalog.data.genres);
     }
-    // Si no hay ninguna entrada en caché, lanzo un error de catálogo no disponible.
-    throw new GenreCatalogUnavailableError();
+    throw new GenreCatalogUnavailableError(error);
   }
 }

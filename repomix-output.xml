@@ -1,0 +1,2727 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+public/
+  favicon.svg
+  icons.svg
+src/
+  api/
+    http/
+      http-client.errors.ts
+      httpClient.ts
+    indexeddb/
+      indexeddb-cache.ts
+      indexeddb-client.errors.ts
+      indexedDbClient.ts
+    repositories/
+      genre.repository.errors.ts
+      genre.repository.ts
+      movie.repository.errors.ts
+      movie.repository.ts
+    tmdb/
+      dto/
+        movie.dto.ts
+      mappers/
+        mapper.ts
+      validators/
+        movie.validator.ts
+  assets/
+    hero.png
+    typescript.svg
+    vite.svg
+  controllers/
+    favoritesController.ts
+    modalController.ts
+    searchController.ts
+  services/
+    favoritesServices.ts
+    storage.ts
+  state/
+    appState.ts
+  types/
+    movie.ts
+    task.ts
+  ui/
+    render.ts
+  utils/
+    formatters.ts
+    mapper.test.ts
+  main.ts
+  style.css
+  vite-env.d.ts
+.gitignore
+index.html
+LICENSE
+package.json
+README.md
+tsconfig.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="public/favicon.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="public/icons.svg">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="bluesky-icon" viewBox="0 0 16 17">
+    <g clip-path="url(#bluesky-clip)"><path fill="#08060d" d="M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099"/></g>
+    <defs><clipPath id="bluesky-clip"><path fill="#fff" d="M.1.85h15.3v15.3H.1z"/></clipPath></defs>
+  </symbol>
+  <symbol id="discord-icon" viewBox="0 0 20 19">
+    <path fill="#08060d" d="M16.224 3.768a14.5 14.5 0 0 0-3.67-1.153c-.158.286-.343.67-.47.976a13.5 13.5 0 0 0-4.067 0c-.128-.306-.317-.69-.476-.976A14.4 14.4 0 0 0 3.868 3.77C1.546 7.28.916 10.703 1.231 14.077a14.7 14.7 0 0 0 4.5 2.306q.545-.748.965-1.587a9.5 9.5 0 0 1-1.518-.74q.191-.14.372-.293c2.927 1.369 6.107 1.369 8.999 0q.183.152.372.294-.723.437-1.52.74.418.838.963 1.588a14.6 14.6 0 0 0 4.504-2.308c.37-3.911-.63-7.302-2.644-10.309m-9.13 8.234c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.894 0 1.614.82 1.599 1.82.001 1-.705 1.82-1.6 1.82m5.91 0c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.893 0 1.614.82 1.599 1.82 0 1-.706 1.82-1.6 1.82"/>
+  </symbol>
+  <symbol id="documentation-icon" viewBox="0 0 21 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="m15.5 13.333 1.533 1.322c.645.555.967.833.967 1.178s-.322.623-.967 1.179L15.5 18.333m-3.333-5-1.534 1.322c-.644.555-.966.833-.966 1.178s.322.623.966 1.179l1.534 1.321"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M17.167 10.836v-4.32c0-1.41 0-2.117-.224-2.68-.359-.906-1.118-1.621-2.08-1.96-.599-.21-1.349-.21-2.848-.21-2.623 0-3.935 0-4.983.369-1.684.591-3.013 1.842-3.641 3.428C3 6.449 3 7.684 3 10.154v2.122c0 2.558 0 3.838.706 4.726q.306.383.713.671c.76.536 1.79.64 3.581.66"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M3 10a2.78 2.78 0 0 1 2.778-2.778c.555 0 1.209.097 1.748-.047.48-.129.854-.503.982-.982.145-.54.048-1.194.048-1.749a2.78 2.78 0 0 1 2.777-2.777"/>
+  </symbol>
+  <symbol id="github-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844" clip-rule="evenodd"/>
+  </symbol>
+  <symbol id="social-icon" viewBox="0 0 20 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M12.5 6.667a4.167 4.167 0 1 0-8.334 0 4.167 4.167 0 0 0 8.334 0"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M2.5 16.667a5.833 5.833 0 0 1 8.75-5.053m3.837.474.513 1.035c.07.144.257.282.414.309l.93.155c.596.1.736.536.307.965l-.723.73a.64.64 0 0 0-.152.531l.207.903c.164.715-.213.991-.84.618l-.872-.52a.63.63 0 0 0-.577 0l-.872.52c-.624.373-1.003.094-.84-.618l.207-.903a.64.64 0 0 0-.152-.532l-.723-.729c-.426-.43-.289-.864.306-.964l.93-.156a.64.64 0 0 0 .412-.31l.513-1.034c.28-.562.735-.562 1.012 0"/>
+  </symbol>
+  <symbol id="x-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M1.893 1.98c.052.072 1.245 1.769 2.653 3.77l2.892 4.114c.183.261.333.48.333.486s-.068.089-.152.183l-.522.593-.765.867-3.597 4.087c-.375.426-.734.834-.798.905a1 1 0 0 0-.118.148c0 .01.236.017.664.017h.663l.729-.83c.4-.457.796-.906.879-.999a692 692 0 0 0 1.794-2.038c.034-.037.301-.34.594-.675l.551-.624.345-.392a7 7 0 0 1 .34-.374c.006 0 .93 1.306 2.052 2.903l2.084 2.965.045.063h2.275c1.87 0 2.273-.003 2.266-.021-.008-.02-1.098-1.572-3.894-5.547-2.013-2.862-2.28-3.246-2.273-3.266.008-.019.282-.332 2.085-2.38l2-2.274 1.567-1.782c.022-.028-.016-.03-.65-.03h-.674l-.3.342a871 871 0 0 1-1.782 2.025c-.067.075-.405.458-.75.852a100 100 0 0 1-.803.91c-.148.172-.299.344-.99 1.127-.304.343-.32.358-.345.327-.015-.019-.904-1.282-1.976-2.808L6.365 1.85H1.8zm1.782.91 8.078 11.294c.772 1.08 1.413 1.973 1.425 1.984.016.017.241.02 1.05.017l1.03-.004-2.694-3.766L7.796 5.75 5.722 2.852l-1.039-.004-1.039-.004z" clip-rule="evenodd"/>
+  </symbol>
+</svg>
+</file>
+
+<file path="src/api/http/http-client.errors.ts">
+/**
+ * Jerarquía de errores para el cliente HTTP (`httpClient`).
+ *
+ * Todas las clases heredan de `HttpClientError`, lo que permite:
+ * 1. Distinguir errores propios del cliente HTTP de cualquier otro error
+ *    inesperado del código de negocio, vía `instanceof HttpClientError`.
+ * 2. Usar `kind` como discriminante en un `switch` exhaustivo verificado
+ *    en tiempo de compilación (ver `httpClient.ts` para el caso de uso).
+ *
+ * NOTA IMPORTANTE sobre narrowing: tipar una variable como `HttpClientError`
+ * (la clase abstracta) NO le permite a TypeScript expandirla automáticamente
+ * a la unión de sus subclases concretas — TypeScript no puede asumir que
+ * conoce todas las subclases que existen en el programa (mundo abierto).
+ * Por eso exportamos también `AnyHttpClientError`: una unión explícita y
+ * cerrada, que sí permite narrowing completo (acceso a `timeoutMs`, `status`,
+ * etc. dentro de cada `case` de un switch sobre `kind`).
+ */
+
+/** Valores posibles del discriminante `kind`, en un solo lugar reusable. */
+export type HttpClientErrorKind =
+  | "timeout"
+  | "cancelled"
+  | "http"
+  | "validation"
+  | "network";
+
+/**
+ * Clase base abstracta. No se instancia directamente — cada subclase
+ * fija su propio `kind` literal.
+ */
+export abstract class HttpClientError extends Error {
+  abstract readonly kind: HttpClientErrorKind;
+
+  constructor(
+    message: string,
+    public readonly url: string,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
+    this.name = this.constructor.name;
+  }
+}
+
+/**
+ * La petición excedió el tiempo límite configurado y fue abortada
+ * por el `AbortController` interno del cliente (no por el caller).
+ */
+export class TimeoutError extends HttpClientError {
+  readonly kind = "timeout" as const;
+
+  constructor(
+    url: string,
+    public readonly timeoutMs: number,
+  ) {
+    super(
+      `Petición abortada: se excedió el tiempo límite de ${timeoutMs}ms.`,
+      url,
+    );
+  }
+}
+
+/**
+ * La petición fue cancelada deliberadamente por el caller, a través
+ * de la `signal` externa pasada en `options`. No representa un fallo:
+ * es un resultado esperado (ej. cleanup de un `useEffect`, o una
+ * búsqueda descartada por una nueva).
+ */
+export class CancelledError extends HttpClientError {
+  readonly kind = "cancelled" as const;
+
+  constructor(url: string) {
+    super(`Petición cancelada por el caller: ${url}`, url);
+  }
+}
+
+/**
+ * El servidor respondió, pero con un status HTTP fuera del rango 2xx.
+ * Una sola clase parametrizada por `status` cubre el conjunto abierto
+ * de códigos HTTP sin necesidad de crear una clase nueva por cada código
+ * que TMDB pueda devolver.
+ */
+export class HttpError extends HttpClientError {
+  readonly kind = "http" as const;
+
+  constructor(
+    url: string,
+    public readonly status: number,
+    public readonly statusText: string,
+  ) {
+    super(`Error HTTP ${status}: ${statusText}`, url);
+  }
+
+  /** Azúcar sintáctica para diferenciar comportamiento sin nuevas clases. */
+  get isClientError(): boolean {
+    return this.status >= 400 && this.status < 500;
+  }
+
+  get isServerError(): boolean {
+    return this.status >= 500;
+  }
+}
+
+/**
+ * La respuesta llegó y es JSON válido, pero no cumple el shape
+ * esperado según el `validator` provisto por el consumidor.
+ *
+ * `rawData` es para debugging interno (logs, Sentry) — nunca debe
+ * mostrarse directamente al usuario final, ya que puede contener
+ * cualquier estructura devuelta por el servidor.
+ */
+export class ValidationError extends HttpClientError {
+  readonly kind = "validation" as const;
+
+  constructor(
+    url: string,
+    public readonly rawData: unknown,
+  ) {
+    super(
+      "La respuesta del servidor no coincide con el formato esperado.",
+      url,
+    );
+  }
+}
+
+/**
+ * `fetch` nunca llegó a producir una `Response` (DNS caído, sin
+ * conexión, error de CORS, etc.). El `TypeError` original de `fetch`
+ * se preserva vía `cause` para no perder contexto de diagnóstico.
+ */
+export class NetworkError extends HttpClientError {
+  readonly kind = "network" as const;
+
+  constructor(url: string, cause?: unknown) {
+    super(`Error de red al acceder a ${url}`, url, { cause });
+  }
+}
+
+/**
+ * Unión cerrada de todas las subclases concretas. Úsala (en vez de
+ * `HttpClientError` a secas) en cualquier punto donde necesites
+ * narrowing exhaustivo por `kind` con acceso a las propiedades
+ * específicas de cada subclase.
+ */
+export type AnyHttpClientError =
+  | TimeoutError
+  | CancelledError
+  | HttpError
+  | ValidationError
+  | NetworkError;
+</file>
+
+<file path="src/api/http/httpClient.ts">
+import {
+  CancelledError,
+  HttpError,
+  NetworkError,
+  TimeoutError,
+  ValidationError,
+  type AnyHttpClientError,
+} from "./http-client.errors";
+
+/**
+ * Realiza una petición HTTP utilizando fetch con validación y timeout.
+ * Lanza siempre una subclase de `HttpClientError` (ver `http-client.errors.ts`)
+ * para cualquier fallo relativo al ciclo de vida de la petición.
+ *
+ * Excepción: una URL malformada lanza un `TypeError` nativo, sincrónico,
+ * FUERA de esta jerarquía — representa un bug del caller (dev-time),
+ * no un resultado posible de una petición bien formada.
+ *
+ * @template T - El tipo de datos esperado en la respuesta.
+ * @param url - La URL a la que se realizará la petición.
+ * @param options - Opciones extendidas de RequestInit con un validador opcional.
+ * @param timeout - Tiempo máximo en milisegundos antes de abortar (default: 8000ms).
+ * @return Promise<T> - Se resuelve con los datos tipados como T o rechaza con AnyHttpClientError.
+ */
+export const httpClient = async <T>(
+  url: string,
+  options?: RequestInit & { validator?: (data: unknown) => data is T },
+  timeout: number = 8000,
+): Promise<T> => {
+  // Sin `if`: se valida siempre. Si esto lanza, es un bug de programación
+  // (URL mal construida), no un fallo de red — se propaga tal cual.
+  new URL(url);
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const signal = options?.signal
+      ? AbortSignal.any([controller.signal, options.signal])
+      : controller.signal;
+
+    const response = await fetch(url, { ...options, signal });
+
+    if (!response.ok) {
+      throw new HttpError(url, response.status, response.statusText);
+    }
+
+    // Se separa lectura de parseo para preservar el body crudo
+    // si el JSON.parse falla (response.json() no se puede releer).
+    const rawText = await response.text();
+    let data: unknown;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      throw new ValidationError(url, rawText);
+    }
+
+    if (options?.validator && !options.validator(data)) {
+      throw new ValidationError(url, data);
+    }
+
+    return data as T;
+  } catch (error: unknown) {
+    throw normalizeError(
+      error,
+      url,
+      timeout,
+      controller.signal,
+      options?.signal,
+    );
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+/**
+ * Convierte cualquier error atrapado (unknown) en una subclase concreta
+ * de `HttpClientError`. Recibe solo `internalSignal: AbortSignal` (no el
+ * `AbortController` completo) — Interface Segregation: la función solo
+ * necesita leer `.aborted`, no acceso a `.abort()` ni al resto de la API
+ * del controller. Como beneficio directo, un test unitario puede pasar
+ * un `AbortSignal` de prueba sin tener que construir un controller real.
+ */
+function normalizeError(
+  error: unknown,
+  url: string,
+  timeoutMs: number,
+  internalSignal: AbortSignal,
+  externalSignal: AbortSignal | null | undefined,
+): AnyHttpClientError {
+  // Ya viene clasificado desde el try — no volver a envolverlo.
+  if (error instanceof HttpError || error instanceof ValidationError) {
+    return error;
+  }
+
+  if (error instanceof DOMException && error.name === "AbortError") {
+    if (externalSignal?.aborted) {
+      return new CancelledError(url);
+    }
+    if (internalSignal.aborted) {
+      return new TimeoutError(url, timeoutMs);
+    }
+  }
+
+  if (error instanceof TypeError) {
+    return new NetworkError(url, error);
+  }
+
+  return new NetworkError(url, error);
+}
+</file>
+
+<file path="src/api/indexeddb/indexeddb-cache.ts">
+import { storage } from "./indexedDbClient";
+
+/**
+ * Envoltorio genérico para cachear cualquier dato T, guardando también
+ * el momento en que se cacheó — necesario para poder decidir después
+ * si esa entrada sigue siendo válida o ya expiró.
+ */
+export interface CacheEntry<T> {
+  data: T; // El dato a cachear.
+  cachedAt: number; // timestamp en milisegundos (Date.now()) de cuándo se guardó la entrada.
+}
+
+/** 24 horas, en milisegundos. Ajustable por llamada si algún endpoint lo necesita distinto. */
+const DEFAULT_TTL_MS = 1000 * 60 * 60 * 24;
+
+/**
+ * Determina si una entrada de caché sigue siendo válida según el TTL dado.
+ * Función pura: no hace I/O, no conoce IndexedDB — solo compara timestamps.
+ *
+ * El tipo de retorno `entry is CacheEntry<T>` es un type predicate: le
+ * permite a TypeScript "angostar" (narrow) el tipo de `entry` en el
+ * código que llama a esta función. Si `isCacheValid(entry)` devuelve
+ * `true`, TS sabe que `entry` NO es `undefined` de ahí en adelante,
+ * sin que tengas que volver a chequear vos mismo.
+ */
+export function isCacheValid<T>(
+  entry: CacheEntry<T> | undefined,
+  ttlMs: number = DEFAULT_TTL_MS,
+): entry is CacheEntry<T> {
+  if (!entry) return false;
+  const age = Date.now() - entry.cachedAt;
+  return age < ttlMs;
+}
+
+/**
+ * Busca una entrada cacheada por `key` y la devuelve SOLO si sigue
+ * siendo válida según el TTL. Si no existe o expiró, devuelve `undefined`
+ * — el consumidor decide qué hacer (típicamente: ir a buscarla a la API).
+ */
+export async function getValidCache<T>(
+  key: IDBValidKey,
+  ttlMs: number = DEFAULT_TTL_MS,
+): Promise<T | undefined> {
+  const entry = await storage.get<CacheEntry<T>>(key);
+  if (!isCacheValid(entry, ttlMs)) return undefined;
+  return entry.data;
+}
+
+/**
+ * Busca la entrada cruda de caché para una key, SIN chequear si venció.
+ * Devuelve `undefined` solo si nunca existió (o fue borrada).
+ *
+ * Uso previsto: fallback de última instancia cuando la petición a la API
+ * falló (ej. sin conexión) — preferible mostrar datos viejos, marcados
+ * como tales por quien orquesta la llamada, antes que no mostrar nada.
+ * Esta función NO sabe nada de la API ni de por qué se la está llamando
+ * — esa decisión vive en la capa que orquesta (el Repository), nunca acá.
+ */
+export async function getRawCache<T>(
+  key: IDBValidKey,
+): Promise<CacheEntry<T> | undefined> {
+  return storage.get<CacheEntry<T>>(key);
+}
+
+/**
+ * Guarda un dato en caché, envolviéndolo con el timestamp actual.
+ * Usa `storage.save`, que ya requiere una `key` explícita (out-of-line).
+ */
+export async function setCache<T>(key: IDBValidKey, data: T): Promise<void> {
+  const entry: CacheEntry<T> = {
+    data,
+    cachedAt: Date.now(),
+  };
+  return storage.save(entry, key);
+}
+</file>
+
+<file path="src/api/indexeddb/indexeddb-client.errors.ts">
+/**
+ * Jerarquía de errores para el wrapper de IndexedDB.
+ *
+ * Sigue el mismo patrón que `http-client.errors.ts`: una clase base
+ * abstracta con un discriminante `kind`, más una unión cerrada
+ * (`AnyIndexedDbError`) para narrowing exhaustivo en un `switch`.
+ *
+ * NOTA: `DbQuotaExceededError` se nombra con prefijo `Db` a propósito,
+ * para no colisionar conceptualmente con `QuotaExceededError`, que ya
+ * existe como DOMException nativa del navegador.
+ */
+
+/** Valores posibles del discriminante `kind`. */
+export type IndexedDbErrorKind =
+  | "open-failed"
+  | "blocked"
+  | "quota-exceeded"
+  | "transaction-failed";
+
+/** Operaciones puntuales que pueden fallar sobre un object store. */
+export type IndexedDbOperation = "save" | "get" | "delete" | "clear";
+
+/**
+ * Clase base abstracta. No se instancia directamente — cada subclase
+ * fija su propio `kind` literal.
+ */
+export abstract class IndexedDbError extends Error {
+  abstract readonly kind: IndexedDbErrorKind;
+
+  constructor(
+    message: string,
+    public readonly dbName: string,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
+    this.name = this.constructor.name;
+  }
+}
+
+/**
+ * `indexedDB.open()` falló antes de llegar a `onsuccess` u `onupgradeneeded`.
+ * Causas típicas: navegador sin soporte (Safari en incógnito histórico),
+ * corrupción del storage local, o el usuario denegó permisos de storage.
+ *
+ * Detectado en `request.onerror` del `open()`.
+ */
+export class DbOpenError extends IndexedDbError {
+  readonly kind = "open-failed" as const;
+
+  constructor(
+    dbName: string,
+    public readonly dbVersion: number,
+    cause?: unknown,
+  ) {
+    super(
+      `No se pudo abrir la base de datos "${dbName}" (v${dbVersion}).`,
+      dbName,
+      { cause },
+    );
+  }
+}
+
+/**
+ * La apertura quedó bloqueada porque otra pestaña tiene abierta una
+ * versión anterior de la misma DB y no permite completar el upgrade.
+ *
+ * Detectado en `request.onblocked()` del `open()`.
+ *
+ * IMPORTANTE: a diferencia de las otras 3, esto no es necesariamente
+ * un fallo terminal — el navegador puede seguir esperando a que la
+ * pestaña vieja se cierre. Se recomienda usarlo junto a un timeout
+ * en el wrapper (ej. "si sigue bloqueado tras N segundos, avisar
+ * al usuario"), no como rechazo inmediato de la promesa de apertura.
+ */
+export class DbBlockedError extends IndexedDbError {
+  readonly kind = "blocked" as const;
+
+  constructor(
+    dbName: string,
+    public readonly dbVersion: number,
+  ) {
+    super(
+      `Apertura de "${dbName}" (v${dbVersion}) bloqueada por otra pestaña ` +
+        `con una versión anterior abierta.`,
+      dbName,
+    );
+  }
+}
+
+/**
+ * Se superó la cuota de almacenamiento del origen al intentar escribir.
+ *
+ * Único error de esta jerarquía con una acción correctiva razonable:
+ * el consumidor puede decidir llamar a `clear()` sobre el store (o
+ * sobre entradas viejas/expiradas) y reintentar la operación.
+ */
+export class DbQuotaExceededError extends IndexedDbError {
+  readonly kind = "quota-exceeded" as const;
+
+  constructor(
+    dbName: string,
+    public readonly storeName: string,
+    cause?: unknown,
+  ) {
+    super(
+      `Cuota de almacenamiento excedida al escribir en "${storeName}" ` +
+        `de la base de datos "${dbName}".`,
+      dbName,
+      { cause },
+    );
+  }
+}
+
+/**
+ * Una operación puntual (get/save/delete/clear) falló dentro de una
+ * transacción — constraint violation, error interno del navegador, etc.
+ *
+ * Detectado en `transaction.onabort` o `transaction.onerror`.
+ */
+export class DbTransactionError extends IndexedDbError {
+  readonly kind = "transaction-failed" as const;
+
+  constructor(
+    dbName: string,
+    public readonly storeName: string,
+    public readonly operation: IndexedDbOperation,
+    cause?: unknown,
+  ) {
+    super(
+      `Falló la operación "${operation}" sobre "${storeName}" ` +
+        `en la base de datos "${dbName}".`,
+      dbName,
+      { cause },
+    );
+  }
+}
+
+/**
+ * Unión cerrada de todas las subclases concretas. Úsala para narrowing
+ * exhaustivo por `kind` en un `switch`, con acceso a las propiedades
+ * específicas de cada subclase.
+ */
+export type AnyIndexedDbError =
+  | DbOpenError
+  | DbBlockedError
+  | DbQuotaExceededError
+  | DbTransactionError;
+</file>
+
+<file path="src/api/indexeddb/indexedDbClient.ts">
+/**
+ * Servicio de persistencia utilizando la Web API nativa IndexedDB.
+ * Patrón Singleton (una sola conexión reutilizada) + Genéricos (CRUD
+ * reutilizable para cualquier forma de dato T).
+ * Todos los fallos se normalizan a subclases de `IndexedDbError`
+ * (ver `indexeddb-client.errors.ts`) — nunca se propaga un DOMException
+ * ni una excepción nativa sin clasificar, sea síncrona o asíncrona.
+ */
+import {
+  type AnyIndexedDbError,
+  type IndexedDbOperation,
+  DbBlockedError,
+  DbOpenError,
+  DbQuotaExceededError,
+  DbTransactionError,
+} from "./indexeddb-client.errors";
+
+const DB_NAME = "lumina-db";
+const DB_VERSION = 1;
+const STORE_NAME = "lumina-store";
+
+let dbInstance: IDBDatabase | null = null;
+
+/**
+ * Abre (o reutiliza) la conexión con la base de datos.
+ */
+const initDb = (): Promise<IDBDatabase> => {
+  if (dbInstance) return Promise.resolve(dbInstance);
+
+  return new Promise((resolve, reject) => {
+    const request = window.indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+
+    request.onsuccess = () => {
+      dbInstance = request.result;
+      resolve(dbInstance);
+    };
+
+    request.onerror = () => {
+      reject(new DbOpenError(DB_NAME, DB_VERSION, request.error));
+    };
+
+    request.onblocked = () => {
+      reject(new DbBlockedError(DB_NAME, DB_VERSION));
+    };
+  });
+};
+
+/**
+ * Clasifica CUALQUIER fallo —evento nativo async o excepción síncrona—
+ * en la subclase correcta de `IndexedDbError`. Recibe `unknown` (no
+ * `DOMException | null`) porque se reutiliza en dos contextos distintos:
+ * errores que llegan vía evento (`onerror`, siempre DOMException) y
+ * excepciones síncronas atrapadas con try/catch (pueden ser cualquier cosa).
+ */
+const toStoreError = (
+  cause: unknown,
+  operation: IndexedDbOperation,
+): AnyIndexedDbError => {
+  if (cause instanceof DOMException && cause.name === "QuotaExceededError") {
+    return new DbQuotaExceededError(DB_NAME, STORE_NAME, cause);
+  }
+  return new DbTransactionError(DB_NAME, STORE_NAME, operation, cause);
+};
+
+/** Convierte un IDBRequest (get) en una Promise tipada. */
+const requestToPromise = <T>(
+  request: IDBRequest<T>,
+  operation: IndexedDbOperation,
+): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(toStoreError(request.error, operation));
+  });
+};
+
+/** Convierte una IDBTransaction (put/delete/clear) en una Promise<void>. */
+const transactionToPromise = (
+  transaction: IDBTransaction,
+  operation: IndexedDbOperation,
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    transaction.oncomplete = () => resolve();
+    transaction.onabort = () =>
+      reject(toStoreError(transaction.error, operation));
+    transaction.onerror = () =>
+      reject(toStoreError(transaction.error, operation));
+  });
+};
+
+/**
+ * API pública de persistencia IndexedDB, con operaciones CRUD genéricas
+ * (save/get/delete/clear) y normalización de errores a subclases de
+ * `IndexedDbError` (ver `indexeddb-client.errors.ts`).
+ */
+export const storage = {
+  async save<T>(item: T, key: IDBValidKey): Promise<void> {
+    const db = await initDb();
+
+    let transaction: IDBTransaction;
+    try {
+      transaction = db.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).put(item, key);
+    } catch (error) {
+      throw toStoreError(error, "save");
+    }
+
+    return transactionToPromise(transaction, "save");
+  },
+
+  async get<T>(key: IDBValidKey): Promise<T | undefined> {
+    const db = await initDb();
+
+    let request: IDBRequest<T | undefined>;
+    try {
+      const transaction = db.transaction(STORE_NAME, "readonly");
+      request = transaction.objectStore(STORE_NAME).get(key);
+    } catch (error) {
+      throw toStoreError(error, "get");
+    }
+
+    return requestToPromise(request, "get");
+  },
+
+  async delete(key: IDBValidKey): Promise<void> {
+    const db = await initDb();
+
+    let transaction: IDBTransaction;
+    try {
+      transaction = db.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).delete(key);
+    } catch (error) {
+      throw toStoreError(error, "delete");
+    }
+
+    return transactionToPromise(transaction, "delete");
+  },
+
+  async clear(): Promise<void> {
+    const db = await initDb();
+
+    let transaction: IDBTransaction;
+    try {
+      transaction = db.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).clear();
+    } catch (error) {
+      throw toStoreError(error, "clear");
+    }
+
+    return transactionToPromise(transaction, "clear");
+  },
+};
+</file>
+
+<file path="src/api/repositories/genre.repository.errors.ts">
+/**
+ * Se lanza cuando `getGenreCatalog()` agota todas las estrategias
+ * disponibles para resolver el catálogo de géneros: ni la red respondió
+ * con éxito, ni existe una entrada en caché (ni siquiera vencida) que
+ * sirva como último recurso.
+ *
+ * A diferencia de `HttpClientError` o `IndexedDbError`, esto no describe
+ * el fallo de una pieza de infraestructura puntual — es una regla de
+ * negocio de esta capa: sin catálogo de géneros no se puede mapear
+ * ninguna película correctamente, así que preferimos fallar de forma
+ * explícita y tipada antes que devolver un Map vacío que oculte el
+ * problema en silencio.
+ */
+export class GenreCatalogUnavailableError extends Error {
+  constructor(cause?: unknown) {
+    super(
+      "No se pudo obtener el catálogo de géneros: sin conexión y sin caché disponible.",
+      { cause },
+    );
+    this.name = "GenreCatalogUnavailableError";
+  }
+}
+</file>
+
+<file path="src/api/repositories/genre.repository.ts">
+import { httpClient } from "../http/httpClient";
+import {
+  getRawCache,
+  getValidCache,
+  setCache,
+} from "../indexeddb/indexeddb-cache";
+import type {
+  TmdbGenreListResponseDto,
+  TmdbRawGenreDto,
+} from "../tmdb/dto/movie.dto";
+import { buildGenreCatalog } from "../tmdb/mappers/mapper";
+import { isTmdbGenreListResponseDto } from "../tmdb/validators/movie.validator";
+import { GenreCatalogUnavailableError } from "./genre.repository.errors";
+
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
+const options = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
+  },
+};
+
+const GENRE_CACHE_KEY = "tmdb-genre-catalog";
+const GENRE_CATALOG_TTL_MS = 15 * 24 * 60 * 60 * 1000; // 15 días
+
+export async function getGenreCatalog(): Promise<ReadonlyMap<number, string>> {
+  // Primero intento obtener el catálogo de géneros desde la caché válida.
+  const cachedCatalog = await getValidCache<TmdbGenreListResponseDto>(
+    GENRE_CACHE_KEY,
+    GENRE_CATALOG_TTL_MS,
+  );
+
+  if (cachedCatalog) {
+    // Si hay un catálogo válido en caché, lo mapeo a un ReadonlyMap y lo devuelvo.
+    return buildGenreCatalog(cachedCatalog.genres);
+  }
+
+  // Si no hay un catálogo válido en caché, intento obtenerlo de la red.
+  try {
+    const url = "https://api.themoviedb.org/3/genre/movie/list";
+    const response = await httpClient<TmdbGenreListResponseDto>(url, {
+      ...options,
+      validator: isTmdbGenreListResponseDto,
+    });
+
+    // Si la respuesta es válida, la cacheo y devuelvo el catálogo mapeado.
+    await setCache(GENRE_CACHE_KEY, response);
+    return buildGenreCatalog(response.genres);
+  } catch (Error) {
+    // Si la petición a la red falla, intento obtener el catálogo crudo de la caché (aunque esté vencido).
+    const rawCachedCatalog =
+      await getRawCache<ReadonlyArray<TmdbRawGenreDto>>(GENRE_CACHE_KEY);
+    if (rawCachedCatalog) {
+      // Si hay una entrada cruda en caché, la mapeo a un catálogo y lo devuelvo.
+      return buildGenreCatalog(rawCachedCatalog.data);
+    }
+    // Si no hay ninguna entrada en caché, lanzo un error de catálogo no disponible.
+    throw new GenreCatalogUnavailableError();
+  }
+}
+</file>
+
+<file path="src/api/repositories/movie.repository.errors.ts">
+/**
+ * Se lanza cuando `searchMovies()` agota todas las estrategias
+ * disponibles para resolver una búsqueda: ni la red respondió con éxito,
+ * ni existe una entrada en caché (ni siquiera vencida) para esa
+ * combinación exacta de query + page.
+ *
+ * Guarda `query` y `page` como propiedades propias (no solo dentro del
+ * mensaje) para que quien atrape este error pueda, por ejemplo, mostrar
+ * "no se pudo completar tu búsqueda de 'batman'" sin tener que parsear
+ * el string del mensaje.
+ */
+export class MovieSearchUnavailableError extends Error {
+  constructor(
+    public readonly query: string,
+    public readonly page: number,
+    cause?: unknown,
+  ) {
+    super(
+      `No se pudo obtener resultados para "${query}" (página ${page}): sin conexión y sin caché disponible.`,
+      { cause },
+    );
+    this.name = "MovieSearchUnavailableError";
+  }
+}
+
+/**
+ * Se lanza cuando `getMovieDetail()` agota todas las estrategias
+ * disponibles para resolver los detalles de una película: ni la red respondió
+ * con éxito, ni existe una entrada en caché (ni siquiera vencida) para esa
+ * combinación exacta de movieId.
+ */
+export class MovieDetailUnavailableError extends Error {
+  constructor(
+    public readonly movieId: number,
+    cause?: unknown,
+  ) {
+    super(
+      `No se pudo obtener detalles para la película con ID ${movieId}: sin conexión y sin caché disponible.`,
+      { cause },
+    );
+    this.name = "MovieDetailUnavailableError";
+  }
+}
+</file>
+
+<file path="src/assets/typescript.svg">
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="32" height="32" viewBox="0 0 256 256"><path fill="#007ACC" d="M0 128v128h256V0H0z"/><path fill="#FFF" d="m56.612 128.85l-.081 10.483h33.32v94.68h23.568v-94.68h33.321v-10.28c0-5.69-.122-10.444-.284-10.566c-.122-.162-20.4-.244-44.983-.203l-44.74.122l-.121 10.443Zm149.955-10.742c6.501 1.625 11.459 4.51 16.01 9.224c2.357 2.52 5.851 7.111 6.136 8.208c.08.325-11.053 7.802-17.798 11.988c-.244.162-1.22-.894-2.317-2.52c-3.291-4.795-6.745-6.867-12.028-7.233c-7.76-.528-12.759 3.535-12.718 10.321c0 1.992.284 3.17 1.097 4.795c1.707 3.536 4.876 5.649 14.832 9.956c18.326 7.883 26.168 13.084 31.045 20.48c5.445 8.249 6.664 21.415 2.966 31.208c-4.063 10.646-14.14 17.879-28.323 20.276c-4.388.772-14.79.65-19.504-.203c-10.28-1.828-20.033-6.908-26.047-13.572c-2.357-2.6-6.949-9.387-6.664-9.874c.122-.163 1.178-.813 2.356-1.504c1.138-.65 5.446-3.129 9.509-5.485l7.355-4.267l1.544 2.276c2.154 3.29 6.867 7.801 9.712 9.305c8.167 4.307 19.383 3.698 24.909-1.26c2.357-2.153 3.332-4.388 3.332-7.68c0-2.966-.366-4.266-1.91-6.501c-1.99-2.845-6.054-5.242-17.595-10.24c-13.206-5.69-18.895-9.224-24.096-14.832c-3.007-3.25-5.852-8.452-7.03-12.8c-.975-3.617-1.22-12.678-.447-16.335c2.723-12.76 12.353-21.659 26.25-24.3c4.51-.853 14.994-.528 19.424.569Z"/></svg>
+</file>
+
+<file path="src/assets/vite.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="47" fill="none" aria-labelledby="vite-logo-title" viewBox="0 0 77 47"><title id="vite-logo-title">Vite</title><style>.parenthesis{fill:#000}@media (prefers-color-scheme:dark){.parenthesis{fill:#fff}}</style><path fill="#9135ff" d="M40.151 45.71c-.663.844-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.493c-.92 0-1.457-1.04-.92-1.788l7.479-10.471c1.07-1.498 0-3.578-1.842-3.578H15.443c-.92 0-1.456-1.04-.92-1.788l9.696-13.576c.213-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.472c-1.07 1.497 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.087.89 1.83L40.153 45.712z"/><mask id="a" width="48" height="47" x="14" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M40.047 45.71c-.663.843-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.389c-.92 0-1.457-1.04-.92-1.788l7.479-10.472c1.07-1.497 0-3.578-1.842-3.578H15.34c-.92 0-1.456-1.04-.92-1.788l9.696-13.575c.213-.297.556-.474.92-.474H53.93c.92 0 1.456 1.04.92 1.788L47.37 13.03c-1.07 1.498 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.088.89 1.831L40.049 45.712z"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#eee6ff" rx="5.508" ry="14.704" transform="rotate(269.814 20.96 11.29)scale(-1 1)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#eee6ff" rx="10.399" ry="29.851" transform="rotate(89.814 -16.902 -8.275)scale(1 -1)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#8900ff" rx="5.508" ry="30.487" transform="rotate(89.814 -19.197 -7.127)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.928 4.177)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.738 5.52)scale(1 -1)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#eee6ff" rx="14.072" ry="22.078" transform="rotate(93.35 31.245 55.578)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx="14.592" cy="9.743" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(39.51 14.592 9.743)"/></g><g filter="url(#k)"><ellipse cx="61.728" cy="-5.321" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 61.728 -5.32)"/></g><g filter="url(#l)"><ellipse cx="55.618" cy="7.104" fill="#00c2ff" rx="5.971" ry="9.665" transform="rotate(37.892 55.618 7.104)"/></g><g filter="url(#m)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#n)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#o)"><ellipse cx="49.857" cy="30.678" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 49.857 30.678)"/></g><g filter="url(#p)"><ellipse cx="52.623" cy="33.171" fill="#00c2ff" rx="5.971" ry="15.297" transform="rotate(37.892 52.623 33.17)"/></g></g><path d="M6.919 0c-9.198 13.166-9.252 33.575 0 46.789h6.215c-9.25-13.214-9.196-33.623 0-46.789zm62.424 0h-6.215c9.198 13.166 9.252 33.575 0 46.789h6.215c9.25-13.214 9.196-33.623 0-46.789" class="parenthesis"/><defs><filter id="b" width="60.045" height="41.654" x="-5.564" y="16.92" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-40.407" y="-6.762" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-35.435" y="2.801" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-30.84" y="20.8" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-29.307" y="21.949" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="29.961" y="-17.13" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-13.43" y="-22.082" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="34.321" y="-37.644" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="38.847" y="-10.552" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="22.45" y="-1.645" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="32.919" y="11.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="src/controllers/favoritesController.ts">
+import type { Movie } from "../types/movie";
+import { getCurrentMovies } from "../state/appState";
+import {
+  getFavorites,
+  isMovieFavorite,
+  toggleFavorite,
+} from "../services/favoritesServices";
+
+/**
+ * Alterna el estado de favorito de una película por su id, y devuelve
+ * si ahora es favorita o no. No toca el DOM — quien llama decide qué
+ * íconos actualizar (grid, modal, ambos, ninguno).
+ */
+export function toggleMovieFavorite(movieId: number): boolean {
+  const movie = findMovieById(movieId);
+  if (!movie) return isMovieFavorite(movieId);
+
+  toggleFavorite(movie);
+  return isMovieFavorite(movieId);
+}
+
+/**
+ * Busca una película por id primero en lo que está mostrándose ahora
+ * (grid o resultados de búsqueda), y si no aparece ahí, en favoritos
+ * — cubre el caso del modal abierto sobre una película que ya era
+ * favorita desde antes de esta sesión.
+ */
+function findMovieById(movieId: number): Movie | undefined {
+  return (
+    getCurrentMovies().find((movie) => movie.id === movieId) ??
+    getFavorites().find((movie) => movie.id === movieId)
+  );
+}
+
+/** Actualiza el botón de favoritos en la barra de navegación */
+export function refreshFavoritesButton(button: HTMLButtonElement): void {
+  const favorites = getFavorites();
+
+  if (favorites.length > 0) {
+    button.classList.remove("hidden");
+    button.innerText = `❤️ Mis favoritos (${favorites.length})`;
+  } else {
+    button.classList.add("hidden");
+  }
+}
+</file>
+
+<file path="src/controllers/modalController.ts">
+import { getMovieDetail } from "../api/repositories/movie.repository";
+import { renderMovieDetails } from "../ui/render";
+
+/**
+ * Abre el modal y carga el detalle de una película. No conoce el Event
+ * que disparó la apertura (click en "Detalles") — solo necesita el id
+ * y el contenedor donde pintar, igual que performSearch no conoce el
+ * Event del formulario.
+ */
+export async function openMovieDetail(
+  movieId: number,
+  modal: HTMLElement,
+  contentContainer: HTMLElement,
+): Promise<void> {
+  modal.classList.remove("hidden");
+
+  contentContainer.innerHTML = `
+    <div class="flex flex-col items-center justify-center p-10">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+      <p class="text-slate-400 font-medium">Cargando Detalles...</p>
+    </div>
+  `;
+
+  try {
+    const movieDetail = await getMovieDetail(movieId);
+    renderMovieDetails(movieDetail, contentContainer);
+  } catch (error) {
+    console.error("Error al cargar el detalle de la película:", error);
+    contentContainer.innerHTML = `
+      <div class="flex flex-col items-center justify-center p-10 text-center">
+        <p class="text-red-500 font-medium mb-4">Error al cargar los detalles.</p>
+        <button id="close-modal-error" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Cerrar</button>
+      </div>
+    `;
+  }
+}
+
+/**
+ * Cierra el modal y limpia su contenido. No decide CUÁNDO cerrar (eso
+ * depende de interpretar en qué elemento hizo click el usuario, lógica
+ * que vive en main.ts) — solo ejecuta la acción una vez que ya se decidió.
+ */
+export function closeModal(
+  modal: HTMLElement,
+  contentContainer: HTMLElement,
+): void {
+  modal.classList.add("hidden");
+  contentContainer.innerHTML = "";
+}
+</file>
+
+<file path="src/controllers/searchController.ts">
+import { searchMovies } from "../api/repositories/movie.repository";
+import { renderMovies } from "../ui/render";
+import {
+  getResolvedGenreCatalog,
+  setCurrentMovies,
+  setLastSearchMovies,
+} from "../state/appState";
+
+const DEFAULT_PAGE = 1;
+
+/** Busca peliculas y las muestra
+ * @param {string} query - La cadena de búsqueda ingresada por el usuario.
+ * @param {HTMLElement} container - El contenedor donde se mostrarán los resultados.
+ * @returns {Promise<void>} - Una promesa que se resuelve cuando la búsqueda y renderizado se completan.
+ */
+export async function performSearch(
+  query: string,
+  container: HTMLElement,
+): Promise<void> {
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) return;
+
+  try {
+    const genreCatalog = getResolvedGenreCatalog();
+    const result = await searchMovies(trimmedQuery, DEFAULT_PAGE, genreCatalog);
+
+    setCurrentMovies(result.movies);
+    setLastSearchMovies(result.movies);
+    renderMovies(result.movies, container);
+  } catch (error) {
+    console.error("Error al buscar películas:", error);
+    renderMovies([], container); // reutiliza el estado vacío ya existente
+  }
+}
+</file>
+
+<file path="src/state/appState.ts">
+import type { Movie } from "../types/movie";
+
+// Estado privado del módulo — nadie fuera de este archivo puede tocarlo directo.
+let currentMovies: ReadonlyArray<Movie> = [];
+let lastSearchMovies: ReadonlyArray<Movie> = [];
+let isViewingFavorites = false;
+let genreCatalog: ReadonlyMap<number, string> = new Map();
+
+// --- Películas mostradas actualmente en el grid ---
+export function getCurrentMovies(): ReadonlyArray<Movie> {
+  return currentMovies;
+}
+export function setCurrentMovies(movies: ReadonlyArray<Movie>): void {
+  currentMovies = movies;
+}
+
+// --- Películas mostradas en la última búsqueda ---
+export function getLastSearchMovies(): ReadonlyArray<Movie> {
+  return lastSearchMovies;
+}
+export function setLastSearchMovies(movies: ReadonlyArray<Movie>): void {
+  lastSearchMovies = movies;
+}
+
+// --- Indica si estamos viendo favoritos o no ---
+export function getIsViewingFavorites(): boolean {
+  return isViewingFavorites;
+}
+export function setIsViewingFavorites(value: boolean): void {
+  isViewingFavorites = value;
+}
+
+// --- Catalogo de generos ---
+export function getResolvedGenreCatalog(): ReadonlyMap<number, string> {
+  return genreCatalog;
+}
+export function setResolvedGenreCatalog(
+  value: ReadonlyMap<number, string>,
+): void {
+  genreCatalog = value;
+}
+</file>
+
+<file path="src/types/task.ts">
+export interface Task {
+  id: string; // <=== El 'DNI' de la tarea
+  title: string; // <=== El nombre de la tarea
+  completed: boolean; // <=== El estado de la tarea
+  category: "movie" | "subscription" | "general"; // <=== La categoría de la tarea
+  cost?: number; // <=== El costo de la tarea  lleva "?" para indicar que es opcional
+  dueDate?: string; // <=== La fecha de vencimiento de la tarea
+}
+</file>
+
+<file path="src/utils/mapper.test.ts">
+
+</file>
+
+<file path="src/vite-env.d.ts">
+/// <reference types="vite/client" />
+
+// Este archivo es para declarar los tipos de las variables de entorno que vamos a usar en nuestro proyecto.
+// Esto es necesario para que TypeScript no nos de errores cuando intentemos acceder a estas variables a través de import.meta.env.
+// Aquí declaramos que tenemos una variable de entorno llamada VITE_TMDB_API_KEY, la cual es una string.
+interface ImportMetaEnv {
+  readonly VITE_TMDB_API_KEY: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+declare module "*.css";
+</file>
+
+<file path="LICENSE">
+MIT License
+
+Copyright (c) 2026 Joseph Ortega
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</file>
+
+<file path="README.md">
+# 🎬 Lumina Engine | Movie Discovery Platform
+
+## 📚 Tabla de Contenidos
+
+- [📋 Inicio](#inicio)
+- [📚 Tabla de Contenidos](#tabla-de-contenidos)
+- [🛠️ Stack Tecnológico](#stack-tecnológico)
+- [🏗️ Arquitectura del Sistema](#arquitectura-del-sistema)
+- [📦 Componentes](#componentes)
+- [📝 Documentación](#documentación)
+- [🚀 Ejecución](#ejecución)
+- [🛠️ Instalación](#instalación)
+- [📝 Configuración](#configuración)
+- [🤝 Colaboración](#colaboración)
+- [📝 Licencia](#licencia)
+
+## 📋 Inicio
+
+Lumina Engine es una plataforma de descubrimiento de películas construida con Vanilla TypeScript y Tailwind CSS. El proyecto proporciona una interfaz moderna para buscar películas, ver detalles detallados y gestionar una lista personalizada de películas favoritas con persistencia en almacenamiento local.
+
+## 🛠️ Stack Tecnológico
+
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- Fetch API
+- The Movie Database (TMDB) API
+- LocalStorage API
+
+## 🏗️ Arquitectura del Sistema
+
+La arquitectura de Lumina Engine está diseñada para ser modular, mantenible y escalable.
+
+- **Service-Mapper Pattern**: separa la obtención de datos de la API de su transformación y presentación en la UI.
+- **UI Composition**: `src/main.ts` orquesta la carga de componentes, los estados de búsqueda y la renderización de películas.
+- **Favorites Management**: servicio de favoritos con persistencia automática en `localStorage`.
+- **Debouncing**: búsqueda optimizada que evita llamadas innecesarias a la API.
+
+## 📦 Componentes
+
+- `movieApi`: acceso directo a The Movie Database API para búsqueda y detalles de películas.
+- `favoritesServices`: gestión de películas favoritas con persistencia en `localStorage`.
+- `storage`: abstracción para manejo de `localStorage`.
+- `render`: renderización dinámica de películas, detalles y modal.
+- `mapper`: transformación de respuestas de API a modelos de dominio.
+- `formatters`: funciones de utilidad para formato de datos.
+
+## 📝 Documentación
+
+La documentación del proyecto se apoya en los comentarios del código fuente y la estructura de carpetas de `src`. Los principales puntos de interés son:
+
+- `src/main.ts`: orquestación principal de la aplicación y gestión de eventos.
+- `src/api/movieApi.ts`: integración con TMDB API.
+- `src/services`: lógica de datos y gestión de favoritos.
+- `src/ui/render.ts`: renderización de componentes.
+- `src/utils`: funciones auxiliares y mapeos de datos.
+- `src/types`: definiciones de tipos TypeScript.
+
+## 🚀 Ejecución
+
+1. Clonar el repositorio: `git clone https://github.com/Joseph160997/lumina-engine.git`
+2. Instalar dependencias: `pnpm install`
+3. Ejecutar en modo desarrollo: `pnpm run dev`
+4. Compilar para producción: `pnpm run build`
+
+## 🛠️ Instalación
+
+1. Clonar el repositorio: `git clone https://github.com/Joseph160997/lumina-engine.git`
+2. Navegar al directorio: `cd lumina-engine`
+3. Instalar dependencias: `pnpm install`
+
+## 📝 Configuración
+
+1. **`src/main.ts`**: ajusta los selectores del DOM y la lógica de eventos.
+2. **`src/api/movieApi.ts`**: configura la clave de API de TMDB y los endpoints.
+3. **`src/services/favoritesServices.ts`**: personaliza la gestión de favoritos.
+4. **`src/ui/render.ts`**: modifica las plantillas de renderizado de componentes.
+5. **Variables de entorno**: asegúrate de configurar tu clave de API de TMDB.
+
+## 🤝 Colaboración
+
+Las contribuciones son bienvenidas. Puedes colaborar mediante:
+
+- **Issues**: reporte de bugs o solicitud de nuevas funcionalidades.
+- **Pull Requests**: mejoras de código, nuevas características o correcciones.
+
+Algunas áreas de mejora sugeridas:
+
+- Filtrado avanzado de películas
+- Sistema de puntuaciones y reseñas
+- Tema oscuro/claro persistente
+- Paginación mejorada
+- Integración con más fuentes de datos
+
+## 📝 Licencia
+
+Este proyecto está publicado bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para ver los términos completos de uso, modificación y distribución.
+</file>
+
+<file path="src/api/tmdb/mappers/mapper.ts">
+import type {
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDto,
+  TmdbRawMovieDetailDto,
+  TmdbRawCastDto,
+  TmdbRawVideoDto,
+  TmdbRawGenreDto,
+} from "../dto/movie.dto";
+import type {
+  Movie,
+  MovieDetail,
+  MoviePage,
+  Genre,
+  CastMember,
+  Video,
+} from "../../../types/movie";
+
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=";
+
+/** Construye una URL completa de imagen o null si no hay path. */
+function toImageUrl(
+  path: string | null,
+  size: "w200" | "w342" | "w500" | "original" = "w500",
+): string | null {
+  return path ? `${IMAGE_BASE_URL}/${size}${path}` : null;
+}
+
+/** TMDB manda "" cuando no conoce la fecha; lo normalizamos a null. */
+function toReleaseDate(raw: string): Date | null {
+  return raw ? new Date(raw) : null;
+}
+
+/**
+ * Convierte genre_ids (solo números) a objetos Genre completos,
+ * usando un catálogo de géneros ya cargado (ver nota más abajo).
+ */
+function mapGenreIds(
+  genreIds: ReadonlyArray<number>,
+  genreCatalog: ReadonlyMap<number, string>,
+): ReadonlyArray<Genre> {
+  return genreIds
+    .map((id) => {
+      const name = genreCatalog.get(id);
+      return name ? { id, name } : null;
+    })
+    .filter((genre): genre is Genre => genre !== null);
+}
+
+/** Convierte un arreglo de géneros crudos de TMDB a objetos Genre de dominio.
+ */
+function mapGenres(
+  raw: ReadonlyArray<{ id: number; name: string }>,
+): ReadonlyArray<Genre> {
+  return raw.map(({ id, name }) => ({ id, name }));
+}
+
+function mapCastMember(raw: TmdbRawCastDto): CastMember {
+  return {
+    id: raw.id,
+    name: raw.name,
+    character: raw.character,
+    profileUrl: toImageUrl(raw.profile_path, "w200"),
+  };
+}
+
+function mapVideo(raw: TmdbRawVideoDto): Video {
+  return {
+    id: raw.id,
+    key: raw.key,
+    name: raw.name,
+    type: raw.type,
+    isOfficial: raw.official,
+    youtubeUrl:
+      raw.site === "YouTube" ? `${YOUTUBE_WATCH_URL}${raw.key}` : null,
+  };
+}
+
+/** Crea un catálogo de géneros para mapear IDs a nombres. */
+export function buildGenreCatalog(
+  genres: ReadonlyArray<TmdbRawGenreDto>,
+): ReadonlyMap<number, string> {
+  return new Map(
+    genres.map((genre): [number, string] => [genre.id, genre.name]),
+  );
+}
+
+/**
+ * Mapea una película de lista/búsqueda.
+ * Requiere el catálogo de géneros porque el DTO solo trae IDs sueltos.
+ */
+export function mapMovie(
+  raw: TmdbRawMovieDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): Movie {
+  return {
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenreIds(raw.genre_ids, genreCatalog),
+  };
+}
+
+export function mapMoviePage(
+  raw: TmdbMovieListResponseDto,
+  genreCatalog: ReadonlyMap<number, string>,
+): MoviePage {
+  return {
+    page: raw.page,
+    totalPages: raw.total_pages,
+    totalResults: raw.total_results,
+    movies: raw.results.map((movie) => mapMovie(movie, genreCatalog)),
+  };
+}
+
+/**
+ * Mapea el detalle completo de una película.
+ * Aquí NO se necesita el catálogo de géneros porque el DTO
+ * ya trae genres como objetos completos ({id, name}).
+ */
+export function mapMovieDetail(raw: TmdbRawMovieDetailDto): MovieDetail {
+  return {
+    id: raw.id,
+    title: raw.title,
+    originalTitle: raw.original_title,
+    overview: raw.overview,
+    posterUrl: toImageUrl(raw.poster_path),
+    backdropUrl: toImageUrl(raw.backdrop_path, "original"),
+    releaseDate: toReleaseDate(raw.release_date),
+    rating: raw.vote_average,
+    voteCount: raw.vote_count,
+    genres: mapGenres(raw.genres),
+    runtimeMinutes: raw.runtime,
+    budget: raw.budget,
+    revenue: raw.revenue,
+    status: raw.status,
+    tagline: raw.tagline,
+    homepageUrl: raw.homepage,
+    cast: raw.credits?.cast.map(mapCastMember) ?? [],
+    videos: raw.videos?.results.map(mapVideo) ?? [],
+  };
+}
+</file>
+
+<file path="package.json">
+{
+  "name": "lumina-engine",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Vite Client Types */
+    "types": ["vite/client"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/vite-env.d.ts"
+  ]
+}
+</file>
+
+<file path="vite.config.ts">
+import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+</file>
+
+<file path="src/api/repositories/movie.repository.ts">
+import type { MovieDetail, MoviePage } from "../../types/movie";
+import { httpClient } from "../http/httpClient";
+import {
+  getRawCache,
+  getValidCache,
+  setCache,
+} from "../indexeddb/indexeddb-cache";
+import type {
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDetailDto,
+} from "../tmdb/dto/movie.dto";
+import { mapMoviePage, mapMovieDetail } from "../tmdb/mappers/mapper";
+import {
+  isTmdbMovieListResponseDto,
+  isTmdbRawMovieDetailDto,
+} from "../tmdb/validators/movie.validator";
+import {
+  MovieDetailUnavailableError,
+  MovieSearchUnavailableError,
+} from "./movie.repository.errors";
+
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const BASE_URL = "https://api.themoviedb.org/3/";
+
+const options = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
+  },
+};
+
+const SEARCH_CACHE_KEY_PREFIX = "tmdb-search";
+const SEARCH_CACHE_TTL_MS = 2 * 60 * 60 * 1000; // 2 horas
+
+/**
+ * Busca películas por texto en TMDB, con estrategia de cache-first:
+ * 1. Si hay una respuesta cacheada y vigente para esta query+page, se sirve
+ *    sin tocar la red.
+ * 2. Si no, se pide a la API, se valida, se cachea el DTO crudo (no el
+ *    MoviePage ya mapeado — ver nota en el mapper sobre por qué) y se
+ *    devuelve mapeado con el catálogo de géneros vigente.
+ * 3. Si la red falla, se sirve el último cache disponible aunque esté
+ *    vencido, antes de fallar por completo.
+ *
+ * @param query - Texto de búsqueda ingresado por el usuario.
+ * @param page - Número de página de resultados (TMDB pagina de a 20).
+ * @param genreCatalog - Catálogo de géneros ya resuelto (ver getGenreCatalog),
+ *   inyectado en vez de resuelto internamente para no acoplar este
+ *   repository al de géneros y evitar resolverlo más de una vez por sesión.
+ */
+export async function searchMovies(
+  query: string,
+  page: number,
+  genreCatalog: ReadonlyMap<number, string>,
+): Promise<MoviePage> {
+  const cacheKey = buildSearchCacheKey(query, page);
+
+  const cached = await getValidCache<TmdbMovieListResponseDto>(
+    cacheKey,
+    SEARCH_CACHE_TTL_MS,
+  );
+
+  if (cached) {
+    return mapMoviePage(cached, genreCatalog);
+  }
+
+  try {
+    const url = `${BASE_URL}search/movie?query=${encodeURIComponent(query)}&page=${page}&language=es-ES`;
+
+    const response = await httpClient<TmdbMovieListResponseDto>(url, {
+      ...options,
+      validator: isTmdbMovieListResponseDto,
+    });
+
+    await setCache(cacheKey, response);
+    return mapMoviePage(response, genreCatalog);
+  } catch (error) {
+    const rawCached = await getRawCache<TmdbMovieListResponseDto>(cacheKey);
+
+    if (rawCached) {
+      return mapMoviePage(rawCached.data, genreCatalog);
+    }
+
+    throw new MovieSearchUnavailableError(query, page, error);
+  }
+}
+
+/**
+ * Construye una clave de caché única por búsqueda: mismo prefijo para
+ * todas las búsquedas (facilita reconocerlas/depurarlas en DevTools),
+ * más la query normalizada (para que "Batman" y "batman" compartan
+ * entrada) y la página, ya que son resultados distintos entre sí.
+ */
+function buildSearchCacheKey(query: string, page: number): string {
+  const normalizedQuery = query.trim().toLowerCase();
+  return `${SEARCH_CACHE_KEY_PREFIX}-${normalizedQuery}-${page}`;
+}
+
+const MOVIE_DETAIL_CACHE_TTL_MS = 48 * 60 * 60 * 1000; // 48 horas
+
+export async function getMovieDetail(id: number): Promise<MovieDetail> {
+  const cacheKey = buildMovieDetailCacheKey(id);
+
+  const cached = await getValidCache<TmdbRawMovieDetailDto>(
+    cacheKey,
+    MOVIE_DETAIL_CACHE_TTL_MS,
+  );
+
+  if (cached) {
+    return mapMovieDetail(cached);
+  }
+
+  try {
+    const url = `${BASE_URL}movie/${id}?language=es-ES&append_to_response=videos,credits&include_video_language=es,en,null`;
+
+    const response = await httpClient<TmdbRawMovieDetailDto>(url, {
+      ...options,
+      validator: isTmdbRawMovieDetailDto,
+    });
+    await setCache(cacheKey, response);
+    return mapMovieDetail(response);
+  } catch (error) {
+    const rawCached = await getRawCache<TmdbRawMovieDetailDto>(cacheKey);
+
+    if (rawCached) {
+      return mapMovieDetail(rawCached.data);
+    }
+
+    throw new MovieDetailUnavailableError(id, error);
+  }
+}
+
+function buildMovieDetailCacheKey(id: number): string {
+  return `tmdb-movie-detail-${id}`;
+}
+</file>
+
+<file path="src/api/tmdb/dto/movie.dto.ts">
+type TmdbMovieStatus =
+  | "Rumored"
+  | "Planned"
+  | "In Production"
+  | "Post Production"
+  | "Released"
+  | "Canceled";
+
+export interface TmdbRawVideoDto {
+  readonly id: string;
+  readonly key: string; // ID de YouTube, ej: "dQw4w9WgXcQ"
+  readonly name: string;
+  readonly site: "YouTube" | "Vimeo";
+  readonly type:
+    | "Trailer"
+    | "Teaser"
+    | "Clip"
+    | "Featurette"
+    | "Behind the Scenes"
+    | "Bloopers";
+  readonly official: boolean;
+}
+
+export interface TmdbRawCastDto {
+  readonly id: number;
+  readonly name: string;
+  readonly character: string;
+  readonly profile_path: string | null;
+}
+
+// Sub-recursos que TMDB solo incluye si pides append_to_response=credits,videos
+export interface TmdbRawCreditsDto {
+  readonly cast: ReadonlyArray<TmdbRawCastDto>;
+}
+
+export interface TmdbRawVideosDto {
+  readonly results: ReadonlyArray<TmdbRawVideoDto>;
+}
+
+/**
+ * Respuesta cruda de un endpoint de lista de genres de TMDB.
+ */
+export interface TmdbGenreListResponseDto {
+  readonly genres: ReadonlyArray<TmdbRawGenreDto>;
+}
+
+/**
+ * Respuesta cruda de un endpoint de lista/búsqueda de TMDB.
+ * Aplica a: /discover/movie, /search/movie, /movie/popular, /movie/top_rated, etc.
+ */
+export interface TmdbMovieListResponseDto {
+  readonly page: number;
+  readonly results: ReadonlyArray<TmdbRawMovieDto>;
+  readonly total_pages: number;
+  readonly total_results: number;
+}
+
+/**
+ * Película tal cual viene en el JSON crudo de TMDB dentro de una lista.
+ * NOTA: este shape NO corresponde al endpoint de detalle (/movie/{id}),
+ * que trae `genres` (objetos) en vez de `genre_ids`, además de otros
+ * campos (runtime, budget, revenue, status, tagline, imdb_id, credits, videos, etc.).
+ */
+export interface TmdbRawMovieDto {
+  readonly adult: boolean;
+  readonly backdrop_path: string | null; // null si no hay imagen
+  readonly genre_ids: ReadonlyArray<number>; // solo IDs; en detalle vienen objetos completos
+  readonly id: number;
+  readonly original_language: string; // código ISO 639-1, ej: "en"
+  readonly original_title: string;
+  readonly overview: string;
+  readonly popularity: number;
+  readonly poster_path: string | null; // ruta relativa, ej: "/abc123.jpg"
+  readonly release_date: string; // "YYYY-MM-DD" o "" si es desconocida
+  readonly title: string;
+  readonly video: boolean;
+  readonly vote_average: number;
+  readonly vote_count: number;
+}
+
+/**
+ * Genres tal cual viene en el JSON crudo de TMDB dentro de un detalle.
+ * NOTA: este shape NO corresponde a la lista/búsqueda, que trae `genre_ids` (IDs) en vez de `genres` (objetos).
+ */
+export interface TmdbRawGenreDto {
+  readonly id: number;
+  readonly name: string;
+}
+
+/**
+ * Respuesta cruda de un endpoint de detalle de TMDB (/movie/{id}).
+ * Contiene todos los campos de TmdbRawMovieDto, más otros campos extra.
+ * NOTA: este shape NO corresponde a la lista/búsqueda, que trae `genre_ids` (IDs) en vez de `genres` (objetos).
+ */
+export interface TmdbRawMovieDetailDto extends Omit<
+  TmdbRawMovieDto,
+  "genre_ids"
+> {
+  readonly genres: ReadonlyArray<TmdbRawGenreDto>;
+  readonly runtime: number | null;
+  readonly budget: number;
+  readonly revenue: number;
+  readonly status: TmdbMovieStatus;
+  readonly tagline: string | null;
+  readonly imdb_id: string | null;
+  readonly homepage: string | null;
+  readonly credits?: TmdbRawCreditsDto;
+  readonly videos?: TmdbRawVideosDto;
+}
+</file>
+
+<file path="src/api/tmdb/validators/movie.validator.ts">
+import type {
+  TmdbRawMovieDto,
+  TmdbMovieListResponseDto,
+  TmdbRawMovieDetailDto,
+  TmdbRawGenreDto,
+  TmdbRawCastDto,
+  TmdbRawVideoDto,
+  TmdbRawCreditsDto,
+  TmdbRawVideosDto,
+  TmdbGenreListResponseDto,
+} from "../dto/movie.dto";
+
+/** Valida que un objeto sea un TmdbRawMovieDto */
+export function isTmdbRawMovieDto(value: unknown): value is TmdbRawMovieDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return (
+    typeof dto.adult === "boolean" &&
+    (typeof dto.backdrop_path === "string" || dto.backdrop_path === null) &&
+    Array.isArray(dto.genre_ids) &&
+    typeof dto.id === "number" &&
+    typeof dto.original_language === "string" &&
+    typeof dto.original_title === "string" &&
+    typeof dto.overview === "string" &&
+    typeof dto.popularity === "number" &&
+    (typeof dto.poster_path === "string" || dto.poster_path === null) &&
+    typeof dto.release_date === "string" &&
+    typeof dto.title === "string" &&
+    typeof dto.video === "boolean" &&
+    typeof dto.vote_average === "number" &&
+    typeof dto.vote_count === "number"
+  );
+}
+
+/** Valida que un objeto sea un TmdbMovieListResponseDto */
+export function isTmdbMovieListResponseDto(
+  value: unknown,
+): value is TmdbMovieListResponseDto {
+  if (typeof value !== "object" || value === null) return false;
+
+  const dto = value as Record<string, unknown>;
+
+  return (
+    typeof dto.page === "number" &&
+    typeof dto.total_pages === "number" &&
+    typeof dto.total_results === "number" &&
+    Array.isArray(dto.results) &&
+    dto.results.every(isTmdbRawMovieDto)
+  );
+}
+
+/** Valida que un objeto sea un TmdbGenresResponseDto */
+export function isTmdbGenreListResponseDto(
+  value: unknown,
+): value is TmdbGenreListResponseDto {
+  if (typeof value !== "object" || value === null) return false;
+
+  const dto = value as Record<string, unknown>;
+
+  return Array.isArray(dto.genres) && dto.genres.every(isTmdbRawGenreDto);
+}
+
+/** Valida que un objeto sea un TmdbRawGenreDto ({ id, name }). */
+export function isTmdbRawGenreDto(value: unknown): value is TmdbRawGenreDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return typeof dto.id === "number" && typeof dto.name === "string";
+}
+
+/** Valida que un objeto sea un TmdbRawCastDto. */
+export function isTmdbRawCastDto(value: unknown): value is TmdbRawCastDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return (
+    typeof dto.id === "number" &&
+    typeof dto.name === "string" &&
+    typeof dto.character === "string" &&
+    (typeof dto.profile_path === "string" || dto.profile_path === null)
+  );
+}
+
+/**
+ * Sets con los valores literales válidos de `site` y `type` en TmdbRawVideoDto.
+ * Evitan repetir comparaciones `===` en cadena y sirven como única fuente
+ * de verdad si TMDB agrega un nuevo tipo de video en el futuro.
+ */
+const VALID_VIDEO_SITES = new Set<TmdbRawVideoDto["site"]>([
+  "YouTube",
+  "Vimeo",
+]);
+
+const VALID_VIDEO_TYPES = new Set<TmdbRawVideoDto["type"]>([
+  "Trailer",
+  "Teaser",
+  "Clip",
+  "Featurette",
+  "Behind the Scenes",
+  "Bloopers",
+]);
+
+/** Valida que un objeto sea un TmdbRawVideoDto (incluye sus string literals). */
+export function isTmdbRawVideoDto(value: unknown): value is TmdbRawVideoDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return (
+    typeof dto.id === "string" &&
+    typeof dto.key === "string" &&
+    typeof dto.name === "string" &&
+    typeof dto.site === "string" &&
+    VALID_VIDEO_SITES.has(dto.site as TmdbRawVideoDto["site"]) &&
+    typeof dto.type === "string" &&
+    VALID_VIDEO_TYPES.has(dto.type as TmdbRawVideoDto["type"]) &&
+    typeof dto.official === "boolean"
+  );
+}
+
+/**
+ * Valida el sub-recurso `credits`. Es OPCIONAL en TmdbRawMovieDetailDto:
+ * `undefined` es válido (TMDB no lo manda si no se pidió con append_to_response).
+ * Si está presente, sí debe tener la forma correcta.
+ */
+function isTmdbRawCreditsDto(value: unknown): value is TmdbRawCreditsDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return Array.isArray(dto.cast) && dto.cast.every(isTmdbRawCastDto);
+}
+
+/** Mismo criterio que `isTmdbRawCreditsDto`, pero para `videos`. */
+function isTmdbRawVideosDto(value: unknown): value is TmdbRawVideosDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  return Array.isArray(dto.results) && dto.results.every(isTmdbRawVideoDto);
+}
+
+/**
+ * Valida que un objeto sea un TmdbRawMovieDetailDto completo.
+ *
+ * Reutiliza `isTmdbRawMovieDto` para los campos heredados de la lista
+ * (title, overview, vote_average, etc.) en vez de repetirlos: si TMDB
+ * cambia esa forma base, un solo lugar se actualiza.
+ *
+ * `credits` y `videos` son opcionales: `undefined` pasa; si están
+ * presentes, deben cumplir su propio shape.
+ */
+export function isTmdbRawMovieDetailDto(
+  value: unknown,
+): value is TmdbRawMovieDetailDto {
+  if (typeof value !== "object" || value === null) return false;
+  const dto = value as Record<string, unknown>;
+
+  // TmdbRawMovieDetailDto = Omit<TmdbRawMovieDto, "genre_ids"> + campos propios.
+  // isTmdbRawMovieDto exige genre_ids, que el detail NO tiene (tiene "genres"
+  // en su lugar) — por eso no podemos llamarla directo sobre `dto` completo,
+  // chequeamos los campos heredados salvo genre_ids explícitamente acá.
+  const hasBaseFields =
+    typeof dto.adult === "boolean" &&
+    (typeof dto.backdrop_path === "string" || dto.backdrop_path === null) &&
+    typeof dto.id === "number" &&
+    typeof dto.original_language === "string" &&
+    typeof dto.original_title === "string" &&
+    typeof dto.overview === "string" &&
+    typeof dto.popularity === "number" &&
+    (typeof dto.poster_path === "string" || dto.poster_path === null) &&
+    typeof dto.release_date === "string" &&
+    typeof dto.title === "string" &&
+    typeof dto.video === "boolean" &&
+    typeof dto.vote_average === "number" &&
+    typeof dto.vote_count === "number";
+
+  const hasDetailFields =
+    Array.isArray(dto.genres) &&
+    dto.genres.every(isTmdbRawGenreDto) &&
+    (typeof dto.runtime === "number" || dto.runtime === null) &&
+    typeof dto.budget === "number" &&
+    typeof dto.revenue === "number" &&
+    typeof dto.status === "string" &&
+    (typeof dto.tagline === "string" || dto.tagline === null) &&
+    (typeof dto.imdb_id === "string" || dto.imdb_id === null) &&
+    (typeof dto.homepage === "string" || dto.homepage === null);
+
+  const hasValidCredits =
+    dto.credits === undefined || isTmdbRawCreditsDto(dto.credits);
+
+  const hasValidVideos =
+    dto.videos === undefined || isTmdbRawVideosDto(dto.videos);
+
+  return hasBaseFields && hasDetailFields && hasValidCredits && hasValidVideos;
+}
+</file>
+
+<file path="src/services/storage.ts">
+/**
+ * Capa genérica sobre localStorage: serializa JSON al guardar y parsea al leer.
+ * No asume que el valor sea un array; eso lo decide cada servicio (p. ej. favoritos).
+ */
+
+/**
+ * Guarda cualquier valor serializable en localStorage bajo `key`.
+ * @param key - Clave del "cajón" en localStorage.
+ * @param data - Objeto/array/número/etc. que JSON.stringify pueda convertir.
+ */
+export const saveData = (key: string, data: unknown): void => {
+  if (!key || !data) return;
+  try {
+    // localStorage solo acepta strings; JSON.stringify convierte el valor a texto.
+    const serialized = JSON.stringify(data);
+    localStorage.setItem(key, serialized);
+  } catch (error) {
+    console.error("error saving to Localstorage", error);
+  }
+};
+
+/**
+ * Lee y parsea JSON desde localStorage.
+ * @param key - Clave a leer.
+ * @returns El valor parseado, o `null` si no hay clave, hay error de parseo, o getItem falla conceptualmente (vacío).
+ *          No devuelve `[]` aquí: un array vacío es decisión de quien interpreta los datos (p. ej. lista de favoritos).
+ */
+export const getData = (key: string): unknown | null => {
+  const raw = localStorage.getItem(key);
+
+  // Sin clave o string vacío: no hay dato guardado.
+  if (raw === null || raw === "") {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as unknown;
+  } catch (error) {
+    console.error("error getting data from Localstorage", error);
+    return null;
+  }
+};
+</file>
+
+<file path="src/style.css">
+@import "tailwindcss";
+
+:root {
+    --font-sans: 'inter', system-ui, sans-serif;
+
+}
+
+/* Animación de entrada para imágenes */
+img[loading="lazy"] {
+  animation: img-fade-in 0.6s linears ease-out forwards;
+}
+
+@keyframes img-fade-in {
+  from { opacity: 0; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+</file>
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.env
+</file>
+
+<file path="src/services/favoritesServices.ts">
+import { getData, saveData } from "./storage";
+import type { Movie } from "../types/movie";
+
+/** Clave única en localStorage para no mezclar con otras apps del mismo origen. */
+const FAVS_KEY = "lumina_favorites";
+
+/**
+ * Comprueba si un valor parseado puede tratarse como entrada de favorito (objeto con id numérico).
+ * Así ignoramos entradas corruptas o tipos equivocados sin romper toda la lista.
+ */
+const isFavoriteEntry = (item: unknown): item is Movie => {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    typeof (item as Movie).id === "number"
+  );
+};
+
+/**
+ * Lista de películas favoritas persistidas. Si no hay datos, JSON inválido o no es un array,
+ * devuelve [] para que la UI siempre trabaje con un array.
+ */
+export const getFavorites = (): Movie[] => {
+  const raw = getData(FAVS_KEY);
+
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw.filter(isFavoriteEntry);
+};
+
+/**
+ * Indica si ya existe un favorito con ese id (comparación por número, igual que en toda la app).
+ */
+export const isMovieFavorite = (movieId: number): boolean => {
+  return getFavorites().some((fav) => fav.id === movieId);
+};
+
+/**
+ * Añade o quita la película de favoritos. Una sola lectura de lista con `getFavorites()` y
+ * el `some` se hace sobre esa misma lista (evita leer y parsear localStorage dos veces).
+ */
+export const toggleFavorite = (movie: Movie): void => {
+  const favorites = getFavorites();
+  const isFav = favorites.some((fav) => fav.id === movie.id);
+
+  if (isFav) {
+    const updatedFavs = favorites.filter((fav) => fav.id !== movie.id);
+    saveData(FAVS_KEY, updatedFavs);
+  } else {
+    // Agregar a favoritos: Si la pelicula no esta en favoritos, la agregamos.
+    const updatedFavs = [...favorites, movie];
+
+    saveData(FAVS_KEY, updatedFavs);
+  }
+};
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lumina-engine</title>
+  </head>
+ <body class="bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white min-h-screen font-sans">
+  <div id="app" class="container mx-auto px-4 py-12">
+    
+    <header class="mb-16 text-center"> 
+      <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400 mb-4">
+        LUMINA ENGINE
+      </h1>
+      <p class="text-slate-400 text-lg md:text-xl font-light tracking-wide italic">
+        Tu base de datos de cine personal
+      </p>
+      <nav class="mt-6 flex justify-center gap-4">
+
+      <button id="btn-favorites" class="hidden font-bold text-lg px-6 py-3 bg-slate-800 border border-slate-600 text-white rounded-lg hover:scale-110 hover:bg-slate-300 transition-all flex cursor-pointer items-center gap-2"><span>❤️</span>Mis Favoritos</button>
+      <button id="btn-back" class="hidden font-bold text-lg px-6 py-3 bg-indigo-400 text-white rounded-lg hover:scale-110 hover:bg-indigo-600 transition-all flex cursor-pointer items-center gap-2"><span>🔙</span>Volver</button>
+    </nav>
+    </header>
+
+    <section class="max-w-2xl mx-auto mb-16">
+      <form id="search-form" class="flex flex-col sm:flex-row gap-4 items-center">
+        
+        <div class="relative w-full group">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl  pointer-events-none group-focus-within:scale-110 transition-transform duration-300">
+            🔎
+          </span>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Busca una película..." 
+            class="w-full p-4 pl-12 rounded-2xl bg-slate-500 border border-slate-700 backdrop-blur-sm font-bold text-lg placeholder:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all shadow-2xl hover:bg-white/10"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-500/20 active:scale-95 transition-all whitespace-nowrap"
+        >
+          Buscar
+        </button>
+      </form>
+    </section>
+
+    <main id="movie-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    </main>
+  </div> 
+
+
+  <div id="movie-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl relative border border-slate-700">
+
+      <button id="modal-close" class="absolute top-2 right-4 text-slate-400 hover:text-white cursor-pointer text-2xl shadow-2xl bg-slate-700 hover:scale-110 hover:bg-red-800 rounded-full transition-all z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div id="modal-content" class="p-6">
+        
+      </div>
+    </div>
+  </div>
+
+
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
+</file>
+
+<file path="src/utils/formatters.ts">
+/**
+ * Convierte un número en un string con formato de moneda.
+ * (USD por defecto) ej. 1000 -> $1,000.00
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+};
+
+/**
+ * Formatea una fecha (Date) para mostrar en español, o un mensaje si no hay dato.
+ * ej. new Date("2022-01-01") -> "1 ene 2022"
+ */
+export const formatDate = (date: Date | null): string => {
+  if (!date || Number.isNaN(date.getTime())) {
+    return "Fecha no disponible";
+  }
+  return date.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+/**
+ * Convierte minutos totales en un formato de horas y minutos. Ej. 125 -> 2h 5m
+ * @param runtime - El tiempo total en minutos.
+ * @returns String formateado, o mensaje si no hay dato.
+ */
+export const formatRunTime = (runtime: number | null): string => {
+  // 1. Proteccion, si no hay tiempo es cero.
+  if (runtime === null || runtime <= 0) return "Duración no disponible";
+
+  // 2. Lógica matematica:
+  const hours = Math.floor(runtime / 60); // <=== Calcula las horas completas, Math.floor es una funcion que se utiliza para redondear un numero hacia abajo.
+  const minutes = runtime % 60; // <=== Calcula los minutos restantes, % es el operador modulo, que se utiliza para obtener el resto de la division.
+
+  // 3. Si no hay horas, solo minutos; si no hay minutos, solo horas.
+  if (hours === 0) return `${minutes}m`;
+
+  if (minutes === 0) return `${hours}h`;
+
+  return `${hours}h ${minutes}m`;
+};
+</file>
+
+<file path="src/types/movie.ts">
+export interface Genre {
+  readonly id: number;
+  readonly name: string;
+}
+
+export interface CastMember {
+  readonly id: number;
+  readonly name: string;
+  readonly character: string;
+  readonly profileUrl: string | null;
+}
+
+export interface Video {
+  readonly id: string;
+  readonly key: string;
+  readonly name: string;
+  readonly type: string;
+  readonly isOfficial: boolean;
+  readonly youtubeUrl: string | null; // ya resuelto, listo para usar
+}
+
+/**
+ * Película tal como la consume el resto de la app.
+ * Corresponde a una entrada de lista/búsqueda (TmdbRawMovieDto).
+ */
+export interface Movie {
+  readonly id: number;
+  readonly title: string;
+  readonly originalTitle: string;
+  readonly overview: string;
+  readonly posterUrl: string | null;
+  readonly backdropUrl: string | null;
+  readonly releaseDate: Date | null;
+  readonly rating: number; // antes vote_average
+  readonly voteCount: number;
+  readonly genres: ReadonlyArray<Genre>;
+}
+
+/**
+ * Película con el detalle completo.
+ * Corresponde al endpoint /movie/{id} (TmdbRawMovieDetailDto).
+ */
+export interface MovieDetail extends Omit<Movie, "genres"> {
+  readonly genres: ReadonlyArray<Genre>;
+  readonly runtimeMinutes: number | null;
+  readonly budget: number;
+  readonly revenue: number;
+  readonly status: string;
+  readonly tagline: string | null;
+  readonly homepageUrl: string | null;
+  readonly cast: ReadonlyArray<CastMember>;
+  readonly videos: ReadonlyArray<Video>;
+}
+
+/**
+ * Página de resultados, ya en formato de dominio.
+ */
+export interface MoviePage {
+  readonly page: number;
+  readonly totalPages: number;
+  readonly totalResults: number;
+  readonly movies: ReadonlyArray<Movie>;
+}
+</file>
+
+<file path="src/ui/render.ts">
+import type { Movie, MovieDetail, Video } from "../types/movie.ts";
+import {
+  formatCurrency,
+  formatDate,
+  formatRunTime,
+} from "../utils/formatters.ts";
+import { isMovieFavorite } from "../services/favoritesServices.ts";
+
+/** Evita que comillas o `<>` en textos de la API rompan el HTML o abran XSS al usar innerHTML. */
+const escapeHtml = (text: string): string =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+const DEFAULT_POSTER = "https://via.placeholder.com/500x750?text=No+Image";
+const DEFAULT_PROFILE = "https://via.placeholder.com/185x278?text=No+Photo";
+
+/**
+ * Devuelve la URL final del poster. `posterUrl` ya viene resuelta como URL
+ * absoluta desde el mapper (o `null` si TMDB no tiene imagen) — acá solo
+ * se decide qué mostrar cuando no hay dato.
+ */
+export const getPosterUrl = (posterUrl: string | null): string => {
+  return posterUrl ?? DEFAULT_POSTER;
+};
+
+/**
+ * Grilla de películas: vacío con mensaje, o tarjetas con favorito y botón detalle.
+ */
+export const renderMovies = (
+  movies: ReadonlyArray<Movie>,
+  container: HTMLElement,
+): void => {
+  if (!container) return;
+
+  if (movies.length === 0) {
+    container.innerHTML = `
+    <div class="col-span-full flex flex-col items-center justify-center py-20 text-center animate-fade-in">
+      <div class="bg-slate-400/50 p-6 rounded-full mb-6">
+        <span class="text-6xl">🔍</span>
+      </div>
+      <h2 class="text-2xl font-bold text-white mb-2">No se encontraron resultados</h2>
+      <p class="text-slate-400 font-bold max-w-md mx-auto">No hay películas que coincidan con tu búsqueda. Intenta con otro título o verifica la ortografía.</p>
+      <button type="button" class="empty-state-reload mt-8 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-300 transition-colors">Volver a Buscar</button>
+    </div>
+    `;
+    return;
+  }
+
+  const htmlContent = movies
+    .map((movie) => {
+      const titleSafe = escapeHtml(movie.title);
+      const favorite = isMovieFavorite(movie.id);
+      const dateLabel = formatDate(movie.releaseDate);
+
+      return `
+       <div class="group relative bg-slate-800 rounded-lg overflow-hidden shadow-lg transition-all hover:scale-105 hover:-translate-y-2">
+         <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" loading="lazy" class="w-full aspect-2/3 object-cover group-hover:scale-105 transition-transform">
+         <button type="button" data-id="${movie.id}" class="favorite-btn absolute top-3 right-3 p-2 rounded-full bg-slate-900/60 backdrop-blur-md border border-slate-700 hover:scale-110 transition-transform">
+           <span class="heart-icon ${favorite ? "text-red-500" : "text-slate-300"} text-xl">${favorite ? "❤️" : "🤍"}</span>
+         </button>
+         <div class="p-4">
+          <h3 class="text-white text-lg font-bold truncate">${titleSafe}</h3>
+           <p class="text-slate-400 text-sm">${escapeHtml(dateLabel)}</p>
+           <button type="button" data-id="${movie.id}" class="details-btn mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-amber-500 transition-colors">Detalles</button>
+         </div>
+       </div>
+       `;
+    })
+    .join("");
+
+  container.innerHTML = htmlContent;
+};
+
+/**
+ * Busca, dentro de los videos de una película, el mejor candidato para
+ * mostrar como trailer principal. Prioridad: Trailer oficial de YouTube >
+ * cualquier Trailer de YouTube > cualquier video de YouTube > ninguno.
+ * Devuelve `null` si no hay ningún video utilizable (no es de YouTube,
+ * o no hay videos en absoluto).
+ */
+function findMainTrailer(videos: ReadonlyArray<Video>): Video | null {
+  const youtubeVideos = videos.filter((video) => video.youtubeUrl !== null);
+
+  const officialTrailer = youtubeVideos.find(
+    (video) => video.type === "Trailer" && video.isOfficial,
+  );
+  if (officialTrailer) return officialTrailer;
+
+  const anyTrailer = youtubeVideos.find((video) => video.type === "Trailer");
+  if (anyTrailer) return anyTrailer;
+
+  return youtubeVideos[0] ?? null;
+}
+
+/**
+ * `Video.youtubeUrl` viene en formato "watch?v=..." (el link normal, para
+ * abrir en una pestaña) porque es la forma más neutral del dato de dominio.
+ * El formato "embed/..." que necesita un <iframe> es una necesidad puntual
+ * de esta vista, así que la conversión vive acá y no en el mapper.
+ */
+function toEmbedUrl(youtubeUrl: string): string {
+  const videoId = youtubeUrl.split("v=")[1];
+  return `https://www.youtube.com/embed/${videoId}`;
+}
+
+/**
+ * Contenido del modal de detalle (overview, métricas, reparto, trailer).
+ */
+export const renderMovieDetails = (
+  movie: MovieDetail,
+  container: HTMLElement,
+): void => {
+  if (!container) return;
+
+  const titleSafe = escapeHtml(movie.title);
+  const overviewSafe = escapeHtml(movie.overview ?? "");
+  const favorite = isMovieFavorite(movie.id);
+  const releaseLabel = escapeHtml(formatDate(movie.releaseDate));
+  const runtimeLabel = formatRunTime(movie.runtimeMinutes);
+
+  const genresHtml = movie.genres
+    .map(
+      (genre) => `
+      <span class="px-3 py-1 bg-blue-500/50 text-blue-500 border border-blue-500/50 text-xs font-bold rounded-full hover:bg-blue-500/10 transition-colors hover:text-white cursor-pointer">
+        ${escapeHtml(genre.name)}
+      </span>`,
+    )
+    .join("");
+
+  const castHtml =
+    movie.cast.length > 0
+      ? `
+     <div class="mt-10">
+      <h3 class="text-xl font-bold text-white mb-6 border-l-4 border-blue-600 pl-4 uppercase tracking-tight">Reparto Principal</h3>
+      <div class="flex gap-6 overflow-x-auto pb-6 custom-scrollbar">
+      ${movie.cast
+        .map((actor) => {
+          const nameSafe = escapeHtml(actor.name);
+          const charSafe = escapeHtml(actor.character);
+          const photo = actor.profileUrl ?? DEFAULT_PROFILE;
+          return `
+        <div class="shrink-0 w-32 group">
+        <div class="relative overflow-hidden rounded-lg mb-3 shadow-lg aspect-2/3">
+          <img src="${photo}" alt="${nameSafe}" loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:-scale-110"/>
+        </div>
+        <p class="text-white text-sm font-bold leading-tight truncate">${nameSafe}</p>
+        <p class="text-slate-500 text-xs mt-1 truncate">${charSafe}</p>
+        </div>`;
+        })
+        .join("")}
+      </div>
+      </div>
+     `
+      : "<p class='mt-10 text-slate-500 text-sm italic'>No hay información de reparto disponible.</p>";
+
+  const mainTrailer = findMainTrailer(movie.videos);
+
+  const trailerHtml = mainTrailer?.youtubeUrl
+    ? `
+    <h3 class="text-xl font-bold text-white mb-4">Trailer Oficial</h3>
+    <iframe class="w-full aspect-video rounded-lg shadow-lg" src="${toEmbedUrl(mainTrailer.youtubeUrl)}" title="Trailer de ${titleSafe}" allowfullscreen></iframe>
+    `
+    : "<p class='text-slate-500 italic'>No hay trailer disponible para esta película.</p>";
+
+  const htmlContent = `
+  <div class="sticky top-0 z-20 flex justify-baseline mb-4">
+  <button type="button" data-id="${movie.id}" class="modal-favorite-btn p-3 py-3 rounded-full bg-slate-600/50 backdrop-blur-md border border-slate-400 shadow-2xl hover:scale-110 transition-all cursor-pointer">
+    <span class="modal-heart-icon ${favorite ? "text-red-500" : "text-slate-300"} text-2xl">${favorite ? "❤️" : "🤍"}</span>
+  </button>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-8">
+   <img src="${getPosterUrl(movie.posterUrl)}" alt="${titleSafe}" loading="lazy" class="w-full md:w-64 rounded-xl shadow-2xl border border-slate-700"/>
+
+    <div class="flex-1">
+      <h2 class="text-4xl font-black mb-4 text-white tracking-tight">${titleSafe}</h2>
+
+      <div class="flex flex-wrap gap-2 mb-6">
+        ${genresHtml}
+      </div>
+
+      <p class="text-lg text-slate-300 leading-relaxed mb-8 italic">"${overviewSafe}"</p>
+
+        <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
+        <span class="block text-blue-500 font-bold text-[10px] uppercase mb-1">Lanzamiento</span>
+        <p class="text-white font-medium">${releaseLabel}</p>
+        </div>
+
+        <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
+        <span class="block text-yellow-500 font-bold text-[10px] uppercase mb-1">Rating</span>
+        <p class="text-white font-medium">✨ ${movie.rating.toFixed(1)} / 10</p>
+        </div>
+
+        <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700">
+        <span class="block text-emerald-500 font-bold text-[10px] uppercase mb-1">Duración</span>
+        <p class="text-white font-medium">⏱️ ${runtimeLabel}</p>
+        </div>
+
+        <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-800">
+        <span class="text-[10px] uppercase tracking-widest text-red-400 font-bold block mb-1">Presupuesto</span>
+        <p class="text-emerald-100 font-mono text-sm md:text-lg font-semibold truncate" title="${escapeHtml(formatCurrency(movie.budget))}">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
+        </div>
+
+        <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 min-w-0">
+        <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold block mb-1">Ingresos</span>
+        <p class="text-blue-100 font-mono text-sm md:text-lg font-semibold truncate" title="${escapeHtml(formatCurrency(movie.revenue))}">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
+        </div>
+        </div>
+      </div>
+      </div>
+
+        ${castHtml}
+
+      <div class="mt-8">
+      ${trailerHtml}
+      </div>
+   `;
+
+  container.innerHTML = htmlContent;
+};
+</file>
+
+<file path="src/main.ts">
+import "./style.css";
+import { getGenreCatalog } from "./api/repositories/genre.repository";
+import {
+  refreshFavoritesButton,
+  toggleMovieFavorite,
+} from "./controllers/favoritesController";
+import { openMovieDetail, closeModal } from "./controllers/modalController";
+import { performSearch } from "./controllers/searchController";
+import { getFavorites } from "./services/favoritesServices";
+import {
+  getIsViewingFavorites,
+  getLastSearchMovies,
+  setCurrentMovies,
+  setIsViewingFavorites,
+  setResolvedGenreCatalog,
+} from "./state/appState";
+import { renderMovies } from "./ui/render";
+
+// Elementos de búsqueda y grilla.
+const movieGrid = document.getElementById("movie-grid") as HTMLElement;
+const searchForm = document.getElementById("search-form") as HTMLFormElement;
+const searchInput = document.getElementById("search-input") as HTMLInputElement;
+
+// Navegación entre búsqueda y favoritos.
+const btnFavorites = document.getElementById(
+  "btn-favorites",
+) as HTMLButtonElement;
+const btnBack = document.getElementById("btn-back") as HTMLButtonElement;
+
+// Modal de detalle.
+const movieModal = document.getElementById("movie-modal") as HTMLElement;
+const btnCloseModal = document.getElementById(
+  "modal-close",
+) as HTMLButtonElement;
+const modalContent = document.getElementById("modal-content") as HTMLElement;
+
+/** Extrae y valida el id numérico desde el data-id de un elemento del DOM. */
+function getMovieIdFromElement(element: HTMLElement | null): number | null {
+  if (!element) return null;
+  const idString = element.getAttribute("data-id");
+  if (!idString) return null;
+  const id = parseInt(idString, 10);
+  return Number.isNaN(id) ? null : id;
+}
+
+async function initApp(): Promise<void> {
+  try {
+    const genreCatalog = await getGenreCatalog();
+    setResolvedGenreCatalog(genreCatalog);
+  } catch (error) {
+    console.error("Error al obtener el catálogo de géneros:", error);
+  }
+
+  refreshFavoritesButton(btnFavorites);
+}
+
+initApp();
+
+let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+// Búsqueda con debounce al escribir: evita llamar a la API en cada tecla.
+const handleInputSearch = (event: Event): void => {
+  const target = event.target as HTMLInputElement;
+  const query = target.value;
+
+  clearTimeout(debounceTimer);
+
+  if (query.trim().length < 3) return;
+
+  debounceTimer = window.setTimeout(() => {
+    performSearch(query, movieGrid);
+  }, 500);
+};
+
+// Búsqueda al enviar el formulario.
+const handleSearch = (event: Event): void => {
+  event.preventDefault();
+  performSearch(searchInput.value, movieGrid);
+};
+
+// Abrir modal al hacer click en "Detalles" de una película.
+const handleOpenModal = (movieId: number): void => {
+  openMovieDetail(movieId, movieModal, modalContent);
+};
+
+// Cerrar modal al hacer click en el backdrop o en el botón de cerrar.
+const handleCloseModal = (event: Event): void => {
+  const target = event.target as HTMLElement;
+  const clickedBackdrop = target === movieModal;
+  const clickedClose =
+    target === btnCloseModal || Boolean(target.closest("#modal-close"));
+
+  if (clickedBackdrop || clickedClose) {
+    closeModal(movieModal, modalContent);
+  }
+};
+
+// Favoritos, error de carga, y cualquier otro click dentro del modal.
+modalContent.addEventListener("click", (event) => {
+  const target = event.target as HTMLElement;
+
+  const errorCloseBtn = target.closest("#close-modal-error");
+  if (errorCloseBtn) {
+    closeModal(movieModal, modalContent);
+    return;
+  }
+
+  const favBtn = target.closest(".modal-favorite-btn") as HTMLElement | null;
+  if (favBtn) {
+    const movieId = getMovieIdFromElement(favBtn);
+    if (movieId === null) return;
+
+    const isFavorite = toggleMovieFavorite(movieId);
+
+    const icon = favBtn.querySelector(".modal-heart-icon") as HTMLElement;
+    if (icon) {
+      icon.textContent = isFavorite ? "❤️" : "🤍";
+      icon.classList.toggle("text-red-500", isFavorite);
+      icon.classList.toggle("text-slate-300", !isFavorite);
+    }
+
+    const gridBtn = movieGrid.querySelector(
+      `.favorite-btn[data-id="${movieId}"]`,
+    ) as HTMLElement | null;
+    if (gridBtn) {
+      const gridIcon = gridBtn.querySelector(".heart-icon") as HTMLElement;
+      if (gridIcon) {
+        gridIcon.textContent = isFavorite ? "❤️" : "🤍";
+        gridIcon.classList.toggle("text-red-500", isFavorite);
+        gridIcon.classList.toggle("text-slate-300", !isFavorite);
+      }
+    }
+
+    if (getIsViewingFavorites()) {
+      const updatedFavorites = getFavorites();
+      setCurrentMovies(updatedFavorites);
+      renderMovies(updatedFavorites, movieGrid);
+    }
+
+    refreshFavoritesButton(btnFavorites);
+    return;
+  }
+
+  event.stopPropagation();
+});
+
+// Favoritos y detalles dentro del grid.
+movieGrid.addEventListener("click", (event) => {
+  const target = event.target as HTMLElement;
+
+  if (target.closest(".empty-state-reload")) {
+    window.location.reload();
+    return;
+  }
+
+  const favBtn = target.closest(".favorite-btn") as HTMLElement | null;
+  if (favBtn) {
+    event.stopPropagation();
+
+    const movieId = getMovieIdFromElement(favBtn);
+    if (movieId === null) return;
+
+    const isFavorite = toggleMovieFavorite(movieId);
+
+    const icon = favBtn.querySelector(".heart-icon") as HTMLElement;
+    if (icon) {
+      icon.textContent = isFavorite ? "❤️" : "🤍";
+      icon.classList.toggle("text-red-500", isFavorite);
+      icon.classList.toggle("text-slate-300", !isFavorite);
+    }
+
+    if (getIsViewingFavorites()) {
+      const updatedFavorites = getFavorites();
+      setCurrentMovies(updatedFavorites);
+      renderMovies(updatedFavorites, movieGrid);
+    }
+
+    refreshFavoritesButton(btnFavorites);
+    return;
+  }
+
+  const detailsBtn = target.closest(".details-btn") as HTMLElement | null;
+  if (detailsBtn) {
+    event.stopPropagation();
+
+    const movieId = getMovieIdFromElement(detailsBtn);
+    if (movieId === null) return;
+
+    handleOpenModal(movieId);
+  }
+});
+
+btnFavorites.addEventListener("click", () => {
+  const favorites = getFavorites();
+
+  if (favorites.length > 0) {
+    setCurrentMovies(favorites);
+    renderMovies(favorites, movieGrid);
+
+    btnFavorites.classList.add("hidden");
+    btnBack.classList.remove("hidden");
+    searchForm.classList.add("opacity-50", "pointer-events-none");
+
+    setIsViewingFavorites(true);
+  }
+});
+
+btnBack.addEventListener("click", () => {
+  const lastSearch = getLastSearchMovies();
+
+  setCurrentMovies(lastSearch);
+  renderMovies(lastSearch, movieGrid);
+
+  btnBack.classList.add("hidden");
+  refreshFavoritesButton(btnFavorites);
+  searchForm.classList.remove("opacity-50", "pointer-events-none");
+
+  setIsViewingFavorites(false);
+});
+
+// Eventos
+searchForm.addEventListener("submit", handleSearch);
+searchInput.addEventListener("input", handleInputSearch);
+movieModal.addEventListener("click", handleCloseModal);
+</file>
+
+</files>
