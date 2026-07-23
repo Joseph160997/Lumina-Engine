@@ -18,11 +18,7 @@
 
 /** Valores posibles del discriminante `kind`, en un solo lugar reusable. */
 export type HttpClientErrorKind =
-  | "timeout"
-  | "cancelled"
-  | "http"
-  | "validation"
-  | "network";
+  "timeout" | "cancelled" | "http" | "validation" | "network";
 
 /**
  * Clase base abstracta. No se instancia directamente — cada subclase
@@ -142,8 +138,4 @@ export class NetworkError extends HttpClientError {
  * específicas de cada subclase.
  */
 export type AnyHttpClientError =
-  | TimeoutError
-  | CancelledError
-  | HttpError
-  | ValidationError
-  | NetworkError;
+  TimeoutError | CancelledError | HttpError | ValidationError | NetworkError;

@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 :root {
-    --font-sans: 'inter', system-ui, sans-serif;
-
+  --font-sans: "inter", system-ui, sans-serif;
 }
 
 /* Animación de entrada para imágenes */
@@ -11,7 +10,12 @@ img[loading="lazy"] {
 }
 
 @keyframes img-fade-in {
-  from { opacity: 0; filter: blur(5px); }
-  to { opacity: 1; filter: blur(0); }
+  from {
+    opacity: 0;
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
 }
-

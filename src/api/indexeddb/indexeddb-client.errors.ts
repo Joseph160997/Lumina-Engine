@@ -12,10 +12,7 @@
 
 /** Valores posibles del discriminante `kind`. */
 export type IndexedDbErrorKind =
-  | "open-failed"
-  | "blocked"
-  | "quota-exceeded"
-  | "transaction-failed";
+  "open-failed" | "blocked" | "quota-exceeded" | "transaction-failed";
 
 /** Operaciones puntuales que pueden fallar sobre un object store. */
 export type IndexedDbOperation = "save" | "get" | "delete" | "clear";
@@ -141,7 +138,4 @@ export class DbTransactionError extends IndexedDbError {
  * específicas de cada subclase.
  */
 export type AnyIndexedDbError =
-  | DbOpenError
-  | DbBlockedError
-  | DbQuotaExceededError
-  | DbTransactionError;
+  DbOpenError | DbBlockedError | DbQuotaExceededError | DbTransactionError;

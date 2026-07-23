@@ -6,69 +6,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>lumina-engine</title>
   </head>
- <body class="bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white min-h-screen font-sans">
-  <div id="app" class="container mx-auto px-4 py-12">
-    
-    <header class="mb-16 text-center"> 
-      <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400 mb-4">
-        LUMINA ENGINE
-      </h1>
-      <p class="text-slate-400 text-lg md:text-xl font-light tracking-wide italic">
-        Tu base de datos de cine personal
-      </p>
-      <nav class="mt-6 flex justify-center gap-4">
-
-      <button id="btn-favorites" class="hidden font-bold text-lg px-6 py-3 bg-slate-800 border border-slate-600 text-white rounded-lg hover:scale-110 hover:bg-slate-300 transition-all flex cursor-pointer items-center gap-2"><span>❤️</span>Mis Favoritos</button>
-      <button id="btn-back" class="hidden font-bold text-lg px-6 py-3 bg-indigo-400 text-white rounded-lg hover:scale-110 hover:bg-indigo-600 transition-all flex cursor-pointer items-center gap-2"><span>🔙</span>Volver</button>
-    </nav>
-    </header>
-
-    <section class="max-w-2xl mx-auto mb-16">
-      <form id="search-form" class="flex flex-col sm:flex-row gap-4 items-center">
-        
-        <div class="relative w-full group">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl  pointer-events-none group-focus-within:scale-110 transition-transform duration-300">
-            🔎
-          </span>
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Busca una película..." 
-            class="w-full p-4 pl-12 rounded-2xl bg-slate-500 border border-slate-700 backdrop-blur-sm font-bold text-lg placeholder:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all shadow-2xl hover:bg-white/10"
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-500/20 active:scale-95 transition-all whitespace-nowrap"
+  <body
+    class="bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white min-h-screen font-sans"
+  >
+    <div id="app" class="container mx-auto px-4 py-12">
+      <header class="mb-16 text-center">
+        <h1
+          class="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400 mb-4"
         >
-          Buscar
+          LUMINA ENGINE
+        </h1>
+        <p
+          class="text-slate-400 text-lg md:text-xl font-light tracking-wide italic"
+        >
+          Tu base de datos de cine personal
+        </p>
+        <nav class="mt-6 flex justify-center gap-4">
+          <button
+            id="btn-favorites"
+            class="hidden font-bold text-lg px-6 py-3 bg-slate-800 border border-slate-600 text-white rounded-lg hover:scale-110 hover:bg-slate-300 transition-all flex cursor-pointer items-center gap-2"
+          >
+            <span>❤️</span>Mis Favoritos
+          </button>
+          <button
+            id="btn-back"
+            class="hidden font-bold text-lg px-6 py-3 bg-indigo-400 text-white rounded-lg hover:scale-110 hover:bg-indigo-600 transition-all flex cursor-pointer items-center gap-2"
+          >
+            <span>🔙</span>Volver
+          </button>
+        </nav>
+      </header>
+
+      <section class="max-w-2xl mx-auto mb-16">
+        <form
+          id="search-form"
+          class="flex flex-col sm:flex-row gap-4 items-center"
+        >
+          <div class="relative w-full group">
+            <span
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none group-focus-within:scale-110 transition-transform duration-300"
+            >
+              🔎
+            </span>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Busca una película..."
+              class="w-full p-4 pl-12 rounded-2xl bg-slate-500 border border-slate-700 backdrop-blur-sm font-bold text-lg placeholder:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all shadow-2xl hover:bg-white/10"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-500/20 active:scale-95 transition-all whitespace-nowrap"
+          >
+            Buscar
+          </button>
+        </form>
+      </section>
+
+      <main
+        id="movie-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+      ></main>
+    </div>
+
+    <div
+      id="movie-modal"
+      class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4"
+    >
+      <div
+        class="bg-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl relative border border-slate-700"
+      >
+        <button
+          id="modal-close"
+          class="absolute top-2 right-4 text-slate-400 hover:text-white cursor-pointer text-2xl shadow-2xl bg-slate-700 hover:scale-110 hover:bg-red-800 rounded-full transition-all z-10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
-      </form>
-    </section>
 
-    <main id="movie-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-    </main>
-  </div> 
-
-
-  <div id="movie-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4">
-    <div class="bg-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl relative border border-slate-700">
-
-      <button id="modal-close" class="absolute top-2 right-4 text-slate-400 hover:text-white cursor-pointer text-2xl shadow-2xl bg-slate-700 hover:scale-110 hover:bg-red-800 rounded-full transition-all z-10">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      <div id="modal-content" class="p-6">
-        
+        <div id="modal-content" class="p-6"></div>
       </div>
     </div>
-  </div>
 
-
-
-  <script type="module" src="/src/main.ts"></script>
-</body>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
