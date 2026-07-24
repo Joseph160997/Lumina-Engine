@@ -1,0 +1,41 @@
+name: CI
+
+# ¿Cuándo se ejecuta?
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint, Format, Build & Test
+    runs-on: ubuntu-latest # Máquina virtual limpia en cada ejecución
+
+    steps:
+      # 1. Descarga tu código en la máquina virtual
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Instala Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm" # Cachea node_modules para que sea más rápido
+
+      # 3. Instala dependencias
+      - name: Install dependencies
+        run: npm ci # 'ci' es más estricto que 'install' — usa el package-lock exacto
+
+      # 4. Verifica el formato
+      - name: Check formatting
+        run: npm run format:check
+
+      # 5. Corre el linter
+      - name: Lint
+        run: npm run lint
+
+      # 6. Compila TypeScript y Vite
+      - name: Build
+        run: npm run build
