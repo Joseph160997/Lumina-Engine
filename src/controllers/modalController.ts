@@ -14,9 +14,10 @@ export async function openMovieDetail(
 ): Promise<void> {
   modal.classList.remove("hidden");
 
+  // ✅ PALETA: spinner de carga ámbar (antes border-blue-500)
   contentContainer.innerHTML = `
     <div class="flex flex-col items-center justify-center p-10">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400 mb-4"></div>
       <p class="text-slate-400 font-medium">Cargando Detalles...</p>
     </div>
   `;
@@ -26,10 +27,12 @@ export async function openMovieDetail(
     renderMovieDetails(movieDetail, contentContainer);
   } catch (error) {
     console.error("Error al cargar el detalle de la película:", error);
+    // ✅ PALETA: botón de error ámbar (antes bg-blue-600).
+    // El id "close-modal-error" se conserva — main.ts lo usa para cerrar.
     contentContainer.innerHTML = `
       <div class="flex flex-col items-center justify-center p-10 text-center">
-        <p class="text-red-500 font-medium mb-4">Error al cargar los detalles.</p>
-        <button id="close-modal-error" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Cerrar</button>
+        <p class="text-red-400 font-medium mb-4">Error al cargar los detalles.</p>
+        <button id="close-modal-error" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl transition-colors cursor-pointer">Cerrar</button>
       </div>
     `;
   }
