@@ -1,5 +1,6 @@
 import type { Movie } from "../types/movie";
 import { getCurrentMovies } from "../state/appState";
+import { getHeroMovies } from "../state/heroState";
 import {
   getFavorites,
   isMovieFavorite,
@@ -20,26 +21,17 @@ export function toggleMovieFavorite(movieId: number): boolean {
 }
 
 /**
- * Busca una película por id primero en lo que está mostrándose ahora
- * (grid o resultados de búsqueda), y si no aparece ahí, en favoritos
- * — cubre el caso del modal abierto sobre una película que ya era
- * favorita desde antes de esta sesión.
+ * Busca una película por id en las tres fuentes donde puede estar
+ * mostrándose actualmente:
+ *
+ * 1. currentMovies  → grid de resultados de búsqueda (appState)
+ * 2. heroMovies     → carrusel del hero (heroState)
+ * 3. favorites      → ya guardada en localStorage (services)
  */
 function findMovieById(movieId: number): Movie | undefined {
   return (
     getCurrentMovies().find((movie) => movie.id === movieId) ??
+    getHeroMovies().find((movie) => movie.id === movieId) ??
     getFavorites().find((movie) => movie.id === movieId)
   );
-}
-
-/** Actualiza el botón de favoritos en la barra de navegación */
-export function refreshFavoritesButton(button: HTMLButtonElement): void {
-  const favorites = getFavorites();
-
-  if (favorites.length > 0) {
-    button.classList.remove("hidden");
-    button.innerText = `❤️ Mis favoritos (${favorites.length})`;
-  } else {
-    button.classList.add("hidden");
-  }
 }
