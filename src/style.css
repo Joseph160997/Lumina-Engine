@@ -1,10 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: "inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
 }
 
-/* Animación de entrada para imágenes */
+/* ── Scrollbar personalizado ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+/* ── Animación de entrada para imágenes lazy ── */
 img[loading="lazy"] {
   animation: img-fade-in 0.6s ease-out forwards;
 }
@@ -13,9 +29,81 @@ img[loading="lazy"] {
   from {
     opacity: 0;
     filter: blur(5px);
+    transform: scale(1.02);
   }
   to {
     opacity: 1;
     filter: blur(0);
+    transform: scale(1);
   }
+}
+
+/* ── Animación de entrada para tarjetas ── */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.movie-card {
+  animation: card-enter 0.5s ease-out both;
+}
+
+/* Stagger: cada tarjeta entra con un pequeño retraso */
+.movie-card:nth-child(1) {
+  animation-delay: 0.03s;
+}
+.movie-card:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.movie-card:nth-child(3) {
+  animation-delay: 0.09s;
+}
+.movie-card:nth-child(4) {
+  animation-delay: 0.12s;
+}
+.movie-card:nth-child(5) {
+  animation-delay: 0.15s;
+}
+.movie-card:nth-child(6) {
+  animation-delay: 0.18s;
+}
+.movie-card:nth-child(7) {
+  animation-delay: 0.21s;
+}
+.movie-card:nth-child(8) {
+  animation-delay: 0.24s;
+}
+.movie-card:nth-child(9) {
+  animation-delay: 0.27s;
+}
+.movie-card:nth-child(10) {
+  animation-delay: 0.3s;
+}
+
+/* ── Animación del modal ── */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+#movie-modal:not(.hidden) > div {
+  animation: modal-in 0.3s ease-out;
+}
+
+/* ── Selección de texto ── */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: white;
 }

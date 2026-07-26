@@ -2,75 +2,309 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lumina-engine</title>
-  </head>
-  <body
-    class="bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white min-h-screen font-sans"
-  >
-    <div id="app" class="container mx-auto px-4 py-12">
-      <header class="mb-16 text-center">
-        <h1
-          class="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400 mb-4"
-        >
-          LUMINA ENGINE
-        </h1>
-        <p
-          class="text-slate-400 text-lg md:text-xl font-light tracking-wide italic"
-        >
-          Tu base de datos de cine personal
-        </p>
-        <nav class="mt-6 flex justify-center gap-4">
-          <button
-            id="btn-favorites"
-            class="hidden font-bold text-lg px-6 py-3 bg-slate-800 border border-slate-600 text-white rounded-lg hover:scale-110 hover:bg-slate-300 transition-all flex cursor-pointer items-center gap-2"
-          >
-            <span>❤️</span>Mis Favoritos
-          </button>
-          <button
-            id="btn-back"
-            class="hidden font-bold text-lg px-6 py-3 bg-indigo-400 text-white rounded-lg hover:scale-110 hover:bg-indigo-600 transition-all flex cursor-pointer items-center gap-2"
-          >
-            <span>🔙</span>Volver
-          </button>
-        </nav>
-      </header>
 
-      <section class="max-w-2xl mx-auto mb-16">
-        <form
-          id="search-form"
-          class="flex flex-col sm:flex-row gap-4 items-center"
-        >
+    <!-- SEO Básico -->
+    <title>Lumina Engine | Buscador de Películas - TMDB</title>
+    <meta
+      name="description"
+      content="Explora, descubre y guarda tus películas favoritas. Buscador de cine con datos de TMDB. Sinopsis, reparto, trailers y más."
+    />
+    <meta name="author" content="Joseph Ortega" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://lumina-engine.vercel.app/" />
+
+    <!-- Theme color para móviles (barra del navegador) -->
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Discord) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Lumina Engine | Buscador de Películas" />
+    <meta
+      property="og:description"
+      content="Explora, descubre y guarda tus películas favoritas en una experiencia cinematográfica inmersiva."
+    />
+    <meta
+      property="og:image"
+      content="https://lumina-engine.vercel.app/og-image.png"
+    />
+    <meta property="og:url" content="https://lumina-engine.vercel.app/" />
+    <meta property="og:site_name" content="Lumina Engine" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Lumina Engine | Buscador de Películas"
+    />
+    <meta
+      name="twitter:description"
+      content="Explora, descubre y guarda tus películas favoritas."
+    />
+    <meta
+      name="twitter:image"
+      content="https://lumina-engine.vercel.app/og-image.png"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- Preconnect para rendimiento -->
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" />
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-slate-950 text-white min-h-screen font-sans flex flex-col">
+    <!-- ═══════════════════ NAVBAR (fixed) ═══════════════════ -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-40 border-b border-white/5 bg-slate-950/70 backdrop-blur-xl"
+    >
+      <div
+        class="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4"
+      >
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2.5 shrink-0 group">
+          <span
+            class="text-2xl transition-transform duration-300 group-hover:rotate-12"
+            >⚡</span
+          >
+          <span
+            class="text-xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400"
+          >
+            LUMINA
+          </span>
+        </a>
+
+        <!-- Búsqueda (centro, crece en desktop) -->
+        <form id="search-form" class="flex-1 max-w-xl flex items-center gap-2">
           <div class="relative w-full group">
             <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none group-focus-within:scale-110 transition-transform duration-300"
+              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors pointer-events-none"
             >
-              🔎
+              <svg
+                class="w-4.5 h-4.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                />
+              </svg>
             </span>
             <input
               type="text"
               id="search-input"
-              placeholder="Busca una película..."
-              class="w-full p-4 pl-12 rounded-2xl bg-slate-500 border border-slate-700 backdrop-blur-sm font-bold text-lg placeholder:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all shadow-2xl hover:bg-white/10"
+              placeholder="Buscar películas..."
+              autocomplete="off"
+              class="w-full h-10 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-sm font-medium placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
             />
           </div>
-
           <button
             type="submit"
-            class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-500/20 active:scale-95 transition-all whitespace-nowrap"
+            class="hidden sm:flex h-10 px-5 items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer"
           >
             Buscar
           </button>
         </form>
-      </section>
 
-      <main
-        id="movie-grid"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-      ></main>
-    </div>
+        <!-- Acciones (derecha) -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            id="btn-favorites"
+            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200 cursor-pointer"
+          >
+            <span class="text-base">❤️</span>
+            <span class="hidden md:inline">Favoritos</span>
+          </button>
+          <button
+            type="button"
+            id="btn-back"
+            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-sm font-semibold text-indigo-300 hover:text-white hover:bg-indigo-600/40 transition-all duration-200 cursor-pointer"
+          >
+            <span class="text-base">←</span>
+            <span class="hidden md:inline">Volver</span>
+          </button>
+        </div>
+      </div>
+    </nav>
 
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <header class="relative pt-16 overflow-hidden">
+      <!-- Fondo decorativo -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-[128px]"
+        ></div>
+        <div
+          class="absolute top-10 right-1/4 w-72 h-72 bg-cyan-500/10 rounded-full blur-[100px]"
+        ></div>
+        <div
+          class="absolute -bottom-20 left-1/2 -translate-x-1/2 w-150 h-40 bg-purple-600/10 rounded-full blur-[80px]"
+        ></div>
+      </div>
+
+      <div
+        class="relative container mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center"
+      >
+        <p
+          class="text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-indigo-400 mb-4"
+        >
+          Movie Discovery Platform
+        </p>
+        <h1
+          class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-white via-indigo-200 to-cyan-300 mb-5 leading-[1.1]"
+        >
+          LUMINA ENGINE
+        </h1>
+        <p
+          class="text-slate-400 text-base sm:text-lg md:text-xl font-light max-w-lg mx-auto leading-relaxed"
+        >
+          Tu base de datos de cine personal. Busca, descubre y guarda tus
+          películas favoritas.
+        </p>
+
+        <!-- Stats decorativos -->
+        <div
+          class="mt-10 flex items-center justify-center gap-8 sm:gap-12 text-center"
+        >
+          <div>
+            <p class="text-2xl sm:text-3xl font-black text-white">500K+</p>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+              Películas
+            </p>
+          </div>
+          <div class="w-px h-10 bg-white/10"></div>
+          <div>
+            <p class="text-2xl sm:text-3xl font-black text-white">4K</p>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+              Calidad
+            </p>
+          </div>
+          <div class="w-px h-10 bg-white/10"></div>
+          <div>
+            <p class="text-2xl sm:text-3xl font-black text-white">∞</p>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+              Favoritos
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Degradado hacia el main -->
+      <div
+        class="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-slate-950 to-transparent"
+      ></div>
+    </header>
+
+    <!-- ═══════════════════ MAIN ═══════════════════ -->
+    <main class="flex-1">
+      <div class="container mx-auto px-4 sm:px-6 pb-20">
+        <!-- Encabezado de sección -->
+        <div class="flex items-center gap-3 mb-8">
+          <div
+            class="w-1 h-7 rounded-full bg-linear-to-b from-indigo-500 to-cyan-500"
+          ></div>
+          <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Resultados
+          </h2>
+        </div>
+
+        <!-- Grid de películas -->
+        <div
+          id="movie-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6"
+        ></div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="border-t border-white/5 bg-slate-950">
+      <div class="container mx-auto px-4 sm:px-6 py-10">
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-6"
+        >
+          <!-- Logo + tagline -->
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">⚡</span>
+            <span
+              class="text-lg font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400"
+            >
+              LUMINA ENGINE
+            </span>
+          </div>
+
+          <!-- Tech stack -->
+          <div class="flex items-center gap-4 text-slate-600 text-sm">
+            <span class="hover:text-slate-400 transition-colors"
+              >TypeScript</span
+            >
+            <span class="text-slate-800">•</span>
+            <span class="hover:text-slate-400 transition-colors">Vite</span>
+            <span class="text-slate-800">•</span>
+            <span class="hover:text-slate-400 transition-colors"
+              >Tailwind CSS</span
+            >
+            <span class="text-slate-800">•</span>
+            <span class="hover:text-slate-400 transition-colors">TMDB API</span>
+          </div>
+        </div>
+
+        <div
+          class="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600"
+        >
+          <p class="flex items-center gap-1.5">
+            © 2026 Lumina Engine. Hecho con ❤️ por
+            <a
+              href="https://github.com/Joseph160997/lumina-engine"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-slate-400 hover:text-white font-medium transition-colors duration-200 group"
+            >
+              <svg
+                class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors duration-200"
+                viewBox="0 0 19 19"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Joseph Ortega
+            </a>
+          </p>
+          <p>
+            Datos proporcionados por
+            <a
+              href="https://www.themoviedb.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-indigo-500 hover:text-indigo-400 transition-colors font-medium"
+            >
+              The Movie Database
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════ MODAL (intocado) ═══════════════════ -->
     <div
       id="movie-modal"
       class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4"
@@ -80,7 +314,7 @@
       >
         <button
           id="modal-close"
-          class="absolute top-2 right-4 text-slate-400 hover:text-white cursor-pointer text-2xl shadow-2xl bg-slate-700 hover:scale-110 hover:bg-red-800 rounded-full transition-all z-10"
+          class="absolute top-3 right-3 z-10 p-2 rounded-full bg-slate-800/80 backdrop-blur-sm text-slate-400 hover:text-white hover:bg-red-600 transition-all duration-200 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +322,7 @@
             viewBox="0 0 24 24"
             stroke-width="2"
             stroke="currentColor"
-            class="w-8 h-8"
+            class="w-5 h-5"
           >
             <path
               stroke-linecap="round"

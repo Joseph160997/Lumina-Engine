@@ -116,7 +116,14 @@ modalContent.addEventListener("click", (event) => {
     if (icon) {
       icon.textContent = isFavorite ? "❤️" : "🤍";
       icon.classList.toggle("text-red-500", isFavorite);
-      icon.classList.toggle("text-slate-300", !isFavorite);
+      icon.classList.toggle("text-slate-400", !isFavorite);
+    }
+
+    const label = favBtn.querySelector(".modal-fav-label") as HTMLElement;
+    if (label) {
+      label.textContent = isFavorite
+        ? "Quitar de Favoritos"
+        : "Agregar a Favoritos";
     }
 
     const gridBtn = movieGrid.querySelector(
@@ -190,7 +197,8 @@ movieGrid.addEventListener("click", (event) => {
   }
 });
 
-btnFavorites.addEventListener("click", () => {
+btnFavorites.addEventListener("click", (event) => {
+  event.preventDefault();
   const favorites = getFavorites();
 
   if (favorites.length > 0) {
@@ -205,7 +213,8 @@ btnFavorites.addEventListener("click", () => {
   }
 });
 
-btnBack.addEventListener("click", () => {
+btnBack.addEventListener("click", (event) => {
+  event.preventDefault();
   const lastSearch = getLastSearchMovies();
 
   setCurrentMovies(lastSearch);
