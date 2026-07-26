@@ -7,7 +7,7 @@ import {
 import { isMovieFavorite } from "../services/favoritesServices.ts";
 
 /** Evita que comillas o `<>` en textos de la API rompan el HTML o abran XSS al usar innerHTML. */
-const escapeHtml = (text: string): string =>
+export const escapeHtml = (text: string): string =>
   text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -36,21 +36,22 @@ export const renderMovies = (
   if (!container) return;
 
   if (movies.length === 0) {
+    // ✅ PALETA: empty-state migrado de indigo → ámbar
     container.innerHTML = `
     <div class="col-span-full flex flex-col items-center justify-center py-24 text-center">
       <div class="relative mb-8">
         <div class="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
           <span class="text-4xl">🎬</span>
         </div>
-        <div class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center">
-          <span class="text-xs">?</span>
+        <div class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center">
+          <span class="text-xs text-amber-300">?</span>
         </div>
       </div>
       <h2 class="text-2xl font-bold text-white mb-3">Sin resultados</h2>
       <p class="text-slate-500 font-medium max-w-sm mx-auto leading-relaxed mb-8">
         No encontramos películas para tu búsqueda. Prueba con otro título o verifica la ortografía.
       </p>
-      <button type="button" class="empty-state-reload px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/20 active:scale-95 transition-all duration-200 cursor-pointer">
+      <button type="button" class="empty-state-reload px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 text-sm font-bold rounded-xl shadow-lg shadow-amber-400/25 active:scale-95 transition-all duration-200 cursor-pointer">
         Intentar de nuevo
       </button>
     </div>
@@ -65,8 +66,11 @@ export const renderMovies = (
       const dateLabel = formatDate(movie.releaseDate);
       const rating = movie.rating.toFixed(1);
 
+      // ✅ PALETA: hover border/shadow y botón detalles migrados a ámbar.
+      // El botón "Ver detalles" ahora es ámbar con texto oscuro (contraste
+      // correcto sobre ámbar) en vez de indigo con texto blanco.
       return `
-      <article class="movie-card group relative bg-slate-900/60 rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 hover:-translate-y-1.5">
+      <article class="movie-card group relative bg-slate-900/60 rounded-2xl overflow-hidden border border-white/5 hover:border-amber-400/40 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-amber-400/10 transition-all duration-300 hover:-translate-y-1.5">
         <!-- Poster -->
         <div class="relative aspect-2/3 overflow-hidden">
           <img
@@ -90,7 +94,7 @@ export const renderMovies = (
             data-id="${movie.id}"
             class="favorite-btn absolute top-3 right-3 p-2 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 hover:scale-110 hover:bg-black/70 transition-all duration-200 cursor-pointer"
           >
-            <span class="heart-icon ${favorite ? "text-red-500" : "text-slate-300"} text-lg leading-none">${favorite ? "❤️" : "🤍"}</span>
+            <span class="heart-icon ${favorite ? "text-red-500" : "text-slate-400"} text-lg leading-none">${favorite ? "❤️" : "🤍"}</span>
           </button>
 
           <!-- Botón detalles (aparece en hover) -->
@@ -98,7 +102,7 @@ export const renderMovies = (
             <button
               type="button"
               data-id="${movie.id}"
-              class="details-btn w-full py-2.5 rounded-xl bg-indigo-600/90 backdrop-blur-sm hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg transition-colors duration-200 cursor-pointer"
+              class="details-btn w-full py-2.5 rounded-xl bg-amber-400/95 backdrop-blur-sm hover:bg-amber-300 text-slate-950 text-sm font-bold shadow-lg transition-colors duration-200 cursor-pointer"
             >
               Ver detalles
             </button>
@@ -119,11 +123,7 @@ export const renderMovies = (
 };
 
 /**
- * Busca, dentro de los videos de una película, el mejor candidato para
- * mostrar como trailer principal. Prioridad: Trailer oficial de YouTube >
- * cualquier Trailer de YouTube > cualquier video de YouTube > ninguno.
- * Devuelve `null` si no hay ningún video utilizable (no es de YouTube,
- * o no hay videos en absoluto).
+ * Busca el mejor trailer (oficial de YouTube优先) — sin cambios.
  */
 function findMainTrailer(videos: ReadonlyArray<Video>): Video | null {
   const youtubeVideos = videos.filter((video) => video.youtubeUrl !== null);
@@ -139,19 +139,22 @@ function findMainTrailer(videos: ReadonlyArray<Video>): Video | null {
   return youtubeVideos[0] ?? null;
 }
 
-/**
- * `Video.youtubeUrl` viene en formato "watch?v=..." (el link normal, para
- * abrir en una pestaña) porque es la forma más neutral del dato de dominio.
- * El formato "embed/..." que necesita un <iframe> es una necesidad puntual
- * de esta vista, así que la conversión vive acá y no en el mapper.
- */
 function toEmbedUrl(youtubeUrl: string): string {
   const videoId = youtubeUrl.split("v=")[1];
   return `https://www.youtube.com/embed/${videoId}`;
 }
 
 /**
- * Contenido del modal de detalle (overview, métricas, reparto, trailer).
+ * 🎬 MODAL REDISEÑADO — página de película estilo streaming.
+ *
+ * Cambios clave respecto a la versión anterior:
+ * 1. Usa `backdropUrl` como banner cinematográfico (antes se desperdiciaba).
+ * 2. El póster se superpone al borde inferior del banner (patrón Netflix/Disney+).
+ * 3. El rating es un anillo de progreso SVG (antes, texto en una caja).
+ * 4. Título en Bebas Neue (font-display) para jerarquía de cartelera.
+ * 5. Métricas de taquilla reducidas a lo esencial (Presupuesto/Ingresos);
+ *    estreno, duración y estado suben a la fila de meta junto al anillo.
+ * 6. Paleta 100% ámbar (antes indigo).
  */
 export const renderMovieDetails = (
   movie: MovieDetail,
@@ -161,14 +164,26 @@ export const renderMovieDetails = (
 
   const titleSafe = escapeHtml(movie.title);
   const overviewSafe = escapeHtml(movie.overview ?? "");
+  const taglineSafe = movie.tagline ? escapeHtml(movie.tagline) : "";
   const favorite = isMovieFavorite(movie.id);
   const releaseLabel = escapeHtml(formatDate(movie.releaseDate));
   const runtimeLabel = formatRunTime(movie.runtimeMinutes);
+  const rating = movie.rating.toFixed(1);
+
+  // ── Geometría del anillo de rating (SVG) ──
+  // Circunferencia = 2πr. El dashoffset "esconde" la parte proporcional
+  // a (10 - rating), dejando visible solo el arco del rating.
+  const RING_RADIUS = 24;
+  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+  const ringOffset = RING_CIRCUMFERENCE * (1 - Math.min(movie.rating, 10) / 10);
+
+  // El banner usa el backdrop; si TMDB no tiene, cae al póster.
+  const backdropSrc = movie.backdropUrl ?? getPosterUrl(movie.posterUrl);
 
   const genresHtml = movie.genres
     .map(
       (genre) => `
-      <span class="px-3 py-1 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-xs font-semibold rounded-full">
+      <span class="px-3 py-1 bg-amber-400/10 text-amber-300 border border-amber-400/25 text-xs font-semibold rounded-full">
         ${escapeHtml(genre.name)}
       </span>`,
     )
@@ -178,8 +193,8 @@ export const renderMovieDetails = (
     movie.cast.length > 0
       ? `
      <div class="mt-10">
-      <h3 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-        <span class="w-1 h-5 rounded-full bg-linear-to-b from-indigo-500 to-cyan-500 inline-block"></span>
+      <h3 class="text-lg font-bold text-white mb-5 flex items-center gap-2.5">
+        <span class="w-1 h-5 rounded-full bg-amber-400 inline-block"></span>
         Reparto Principal
       </h3>
       <div class="flex gap-4 overflow-x-auto pb-4" style="scrollbar-width: thin;">
@@ -208,7 +223,7 @@ export const renderMovieDetails = (
   const trailerHtml = mainTrailer?.youtubeUrl
     ? `
     <div class="mt-10">
-      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2.5">
         <span class="w-1 h-5 rounded-full bg-linear-to-b from-red-500 to-amber-500 inline-block"></span>
         Tráiler
       </h3>
@@ -217,75 +232,94 @@ export const renderMovieDetails = (
       </div>
     </div>
     `
-    : "<p class='text-slate-500 italic'>No hay trailer disponible para esta película.</p>";
+    : "<p class='text-slate-500 italic'>No hay trailer disponible para esta filmeria.</p>";
 
   const htmlContent = `
-  <!-- Layout principal -->
-  <div class="flex flex-col md:flex-row gap-6 sm:gap-8">
-    <!-- Poster + botón favorito -->
-    <div class="shrink-0 mx-auto md:mx-0 flex flex-col items-center">
-      <img
-        src="${getPosterUrl(movie.posterUrl)}"
-        alt="${titleSafe}"
-        loading="lazy"
-        class="w-48 sm:w-56 md:w-60 rounded-2xl shadow-2xl shadow-black/50 border border-white/10"
-      />
-
-      <!-- Botón Favorito del Modal -->
-      <button
-        type="button"
-        data-id="${movie.id}"
-        class="modal-favorite-btn mt-4 w-full p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-all flex items-center justify-center gap-2 font-semibold text-slate-200 cursor-pointer"
-      >
-        <span class="modal-heart-icon text-xl ${favorite ? "text-red-500" : "text-slate-400"}">${favorite ? "❤️" : "🤍"}</span>
-        <span class="modal-fav-label">${favorite ? "Quitar de Favoritos" : "Agregar a Favoritos"}</span>
-      </button>
-    </div>
-
-    <!-- Info -->
-    <div class="flex-1 min-w-0">
-      <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-white mb-3 leading-tight">${titleSafe}</h2>
-
-      ${movie.tagline ? `<p class="text-slate-500 text-sm italic mb-4">"${escapeHtml(movie.tagline)}"</p>` : ""}
-
-      <div class="flex flex-wrap gap-2 mb-6">
-        ${genresHtml}
-      </div>
-
-      <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8">${overviewSafe}</p>
-
-      <!-- Métricas -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-1">Estreno</span>
-          <p class="text-white text-sm font-semibold">${releaseLabel}</p>
-        </div>
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-1">Rating</span>
-          <p class="text-white text-sm font-semibold">★ ${movie.rating.toFixed(1)} <span class="text-slate-500 font-normal">/ 10</span></p>
-        </div>
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-1">Duración</span>
-          <p class="text-white text-sm font-semibold">${runtimeLabel}</p>
-        </div>
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-red-400 font-bold mb-1">Presupuesto</span>
-          <p class="text-white text-sm font-semibold truncate" title="${escapeHtml(formatCurrency(movie.budget))}">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
-        </div>
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-cyan-400 font-bold mb-1">Ingresos</span>
-          <p class="text-white text-sm font-semibold truncate" title="${escapeHtml(formatCurrency(movie.revenue))}">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
-        </div>
-        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
-          <span class="block text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Estado</span>
-          <p class="text-white text-sm font-semibold truncate">${escapeHtml(movie.status)}</p>
-        </div>
-      </div>
-    </div>
+  <!-- ══ Banner backdrop (rompe el padding del modal con -mx-6 -mt-6) ══ -->
+  <div class="relative h-44 sm:h-60 -mx-6 -mt-6 overflow-hidden rounded-t-2xl">
+    <img
+      src="${backdropSrc}"
+      alt=""
+      aria-hidden="true"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <!-- Scrim inferior: funde el banner con el fondo del modal (slate-900) -->
+    <div class="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/35 to-slate-950/30"></div>
   </div>
 
-  ${castHtml}
-  ${trailerHtml}
+  <!-- ══ Cuerpo: póster superpuesto + información ══ -->
+  <div class="pb-2">
+    <div class="flex flex-col sm:flex-row gap-5 sm:gap-7">
+
+      <!-- Columna póster + favorito (se superpone al banner con -mt) -->
+      <div class="shrink-0 w-32 sm:w-44 -mt-14 sm:-mt-20 relative z-10 mx-auto sm:mx-0 flex flex-col gap-3">
+        <img
+          src="${getPosterUrl(movie.posterUrl)}"
+          alt="${titleSafe}"
+          loading="lazy"
+          class="w-full rounded-xl ring-1 ring-white/15 shadow-2xl shadow-black/60"
+        />
+        <!-- Botón favorito (clases intactas para main.ts) -->
+        <button
+  type="button"
+  data-id="${movie.id}"
+  class="modal-favorite-btn mt-4 w-full p-3 rounded-xl bg-amber-400 hover:bg-amber-300 transition-all flex items-center justify-center gap-2 font-bold text-slate-950 shadow-lg shadow-amber-400/20 cursor-pointer"
+>
+          <span class="modal-heart-icon text-lg ${favorite ? "text-red-500" : "text-slate-400"}">${favorite ? "❤️" : "🤍"}</span>
+          <span class="modal-fav-label text-xs sm:text-sm">${favorite ? "Quitar" : "Favoritos"}</span>
+        </button>
+      </div>
+
+      <!-- Columna de información -->
+      <div class="flex-1 min-w-0 sm:pt-3 text-center sm:text-left">
+        <h2 class="font-display text-4xl sm:text-5xl leading-none text-slate-50 tracking-wide mb-4">${titleSafe}</h2>
+
+        <!-- Meta: anillo de rating + estreno + duración + estado -->
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2 text-sm font-semibold text-slate-200 mb-4">
+          <!-- Anillo de rating -->
+          <div class="relative w-12 h-12 shrink-0" title="Puntuación ${rating}/10">
+            <svg class="w-12 h-12 -rotate-90" viewBox="0 0 56 56" aria-hidden="true">
+              <circle cx="28" cy="28" r="${RING_RADIUS}" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="4.5"/>
+              <circle cx="28" cy="28" r="${RING_RADIUS}" fill="none" stroke="#fbbf24" stroke-width="4.5"
+                stroke-linecap="round"
+                stroke-dasharray="${RING_CIRCUMFERENCE.toFixed(1)}"
+                stroke-dashoffset="${ringOffset.toFixed(1)}"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-amber-300">${rating}</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span>${releaseLabel}</span>
+            <span class="text-slate-500">•</span>
+            <span>${runtimeLabel}</span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-300">${escapeHtml(movie.status)}</span>
+          </div>
+        </div>
+
+        <!-- Géneros -->
+        <div class="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">${genresHtml}</div>
+
+        ${taglineSafe ? `<p class="text-amber-200/80 text-sm italic mb-3">"${taglineSafe}"</p>` : ""}
+
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">${overviewSafe || "Sin sinopsis disponible."}</p>
+
+        <!-- Taquilla -->
+        <div class="grid grid-cols-2 gap-3 mt-5 max-w-md mx-auto sm:mx-0">
+          <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
+            <span class="block text-[10px] uppercase tracking-widest text-red-400 font-bold mb-1">Presupuesto</span>
+            <p class="text-white text-sm font-semibold truncate">${movie.budget > 0 ? formatCurrency(movie.budget) : "N/A"}</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
+            <span class="block text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-1">Ingresos</span>
+            <p class="text-white text-sm font-semibold truncate">${movie.revenue > 0 ? formatCurrency(movie.revenue) : "N/A"}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${castHtml}
+    ${trailerHtml}
+  </div>
   `;
 
   container.innerHTML = htmlContent;
