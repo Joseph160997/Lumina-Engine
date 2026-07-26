@@ -15,6 +15,7 @@ import {
   isTmdbRawMovieDetailDto,
 } from "../tmdb/validators/movie.validator";
 import {
+  FeaturedMoviesUnavailableError,
   MovieDetailUnavailableError,
   MovieSearchUnavailableError,
 } from "./movie.repository.errors";
@@ -133,4 +134,35 @@ export async function getMovieDetail(id: number): Promise<MovieDetail> {
 
 function buildMovieDetailCacheKey(id: number): string {
   return `tmdb-movie-detail-${id}`;
+}
+
+const FEATURED_CACHE_KEY = "tmdb-featured-week";
+const FEATURED_TTL_MS = 6 * 60 * 60 * 1000; // 6 horas
+
+/**
+ * Películas en tendencia de la semana, para el hero rotatorio.
+ * Misma estrategia cache-first que searchMovies.
+ */
+export async function getFeaturedMovies(
+  genreCatalog: ReadonlyMap<number, string>,
+): Promise<MoviePage> {
+  const cached = await getValidCache<TmdbMovieListResponseDto>(
+    FEATURED_CACHE_KEY,
+    FEATURED_TTL_MS,
+  );
+  if (cached) return mapMoviePage(cached, genreCatalog);
+
+  try {
+    const url = `${BASE_URL}trending/movie/week?language=es-ES`;
+    const response = await httpClient<TmdbMovieListResponseDto>(url, {
+      ...options,
+      validator: isTmdbMovieListResponseDto,
+    });
+    await setCache(FEATURED_CACHE_KEY, response);
+    return mapMoviePage(response, genreCatalog);
+  } catch (error) {
+    const raw = await getRawCache<TmdbMovieListResponseDto>(FEATURED_CACHE_KEY);
+    if (raw) return mapMoviePage(raw.data, genreCatalog);
+    throw new FeaturedMoviesUnavailableError(error);
+  }
 }
