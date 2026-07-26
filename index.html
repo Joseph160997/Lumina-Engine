@@ -55,16 +55,19 @@
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://image.tmdb.org" />
 
-    <!-- Fuentes -->
+    <!-- Fuentes: Bebas Neue (display/títulos) + Manrope (cuerpo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
   </head>
+
   <body class="bg-slate-950 text-white min-h-screen font-sans flex flex-col">
-    <!-- ═══════════════════ NAVBAR (fixed) ═══════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════
+         NAVBAR — Único nav. Paleta ámbar (marquesina de cine).
+         ═══════════════════════════════════════════════════════════ -->
     <nav
       class="fixed top-0 left-0 right-0 z-40 border-b border-white/5 bg-slate-950/70 backdrop-blur-xl"
     >
@@ -74,12 +77,10 @@
         <!-- Logo -->
         <a href="#" class="flex items-center gap-2.5 shrink-0 group">
           <span
-            class="text-2xl transition-transform duration-300 group-hover:rotate-12"
-            >⚡</span
+            class="text-2xl transition-transform duration-300 group-hover:-rotate-12"
+            >🎬</span
           >
-          <span
-            class="text-xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400"
-          >
+          <span class="font-display text-2xl tracking-widest text-amber-400">
             LUMINA
           </span>
         </a>
@@ -88,7 +89,7 @@
         <form id="search-form" class="flex-1 max-w-xl flex items-center gap-2">
           <div class="relative w-full group">
             <span
-              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors pointer-events-none"
+              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-amber-400 transition-colors pointer-events-none"
             >
               <svg
                 class="w-4.5 h-4.5"
@@ -109,12 +110,12 @@
               id="search-input"
               placeholder="Buscar películas..."
               autocomplete="off"
-              class="w-full h-10 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-sm font-medium placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
+              class="w-full h-10 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-sm font-medium placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
             />
           </div>
           <button
             type="submit"
-            class="hidden sm:flex h-10 px-5 items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer"
+            class="hidden sm:flex h-10 px-5 items-center justify-center rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-sm font-bold shadow-lg shadow-amber-400/20 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer"
           >
             Buscar
           </button>
@@ -122,6 +123,11 @@
 
         <!-- Acciones (derecha) -->
         <div class="flex items-center gap-2 shrink-0">
+          <!-- ✅ CAMBIO: Agregado `flex` a la clase.
+               ¿Por qué? refreshFavoritesButton() hace classList.remove("hidden")
+               para mostrar este botón. Sin `flex`, al quitar `hidden` el botón
+               queda sin display:flex y los hijos (❤️ + texto) no se alinean.
+               Tailwind v4: `items-center` NO implica `display:flex`. -->
           <button
             type="button"
             id="btn-favorites"
@@ -130,10 +136,12 @@
             <span class="text-base">❤️</span>
             <span class="hidden md:inline">Favoritos</span>
           </button>
+
+          <!-- ✅ CAMBIO: Mismo fix — agregado `flex` -->
           <button
             type="button"
             id="btn-back"
-            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-sm font-semibold text-indigo-300 hover:text-white hover:bg-indigo-600/40 transition-all duration-200 cursor-pointer"
+            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-sm font-semibold text-amber-300 hover:text-white hover:bg-amber-400/25 transition-all duration-200 cursor-pointer"
           >
             <span class="text-base">←</span>
             <span class="hidden md:inline">Volver</span>
@@ -142,82 +150,93 @@
       </div>
     </nav>
 
-    <!-- ═══════════════════ HERO ═══════════════════ -->
-    <header class="relative pt-16 overflow-hidden">
-      <!-- Fondo decorativo -->
-      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div
-          class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-[128px]"
-        ></div>
-        <div
-          class="absolute top-10 right-1/4 w-72 h-72 bg-cyan-500/10 rounded-full blur-[100px]"
-        ></div>
-        <div
-          class="absolute -bottom-20 left-1/2 -translate-x-1/2 w-150 h-40 bg-purple-600/10 rounded-full blur-[80px]"
-        ></div>
-      </div>
+    <!-- ═══════════════════════════════════════════════════════════
+         HERO — Backdrop rotatorio de películas en tendencia.
+         Sin cambios respecto a lo que ya tenías.
+    ═══════════════════════════════════════════════════════════ -->
+    <header
+      id="hero"
+      class="film-grain relative min-h-[82vh] flex items-end overflow-hidden"
+    >
+      <!-- Capas de backdrop (crossfade A/B) -->
+      <img id="hero-bg-a" alt="" aria-hidden="true" class="hero-bg" />
+      <img id="hero-bg-b" alt="" aria-hidden="true" class="hero-bg" />
 
+      <!-- Scrims para legibilidad (degradados funcionales, no decorativos) -->
       <div
-        class="relative container mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center"
-      >
-        <p
-          class="text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-indigo-400 mb-4"
-        >
-          Movie Discovery Platform
-        </p>
-        <h1
-          class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-white via-indigo-200 to-cyan-300 mb-5 leading-[1.1]"
-        >
-          LUMINA ENGINE
-        </h1>
-        <p
-          class="text-slate-400 text-base sm:text-lg md:text-xl font-light max-w-lg mx-auto leading-relaxed"
-        >
-          Tu base de datos de cine personal. Busca, descubre y guarda tus
-          películas favoritas.
-        </p>
+        class="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/75 to-slate-950/10"
+      ></div>
+      <div
+        class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/20 to-slate-950/40"
+      ></div>
 
-        <!-- Stats decorativos -->
-        <div
-          class="mt-10 flex items-center justify-center gap-8 sm:gap-12 text-center"
-        >
-          <div>
-            <p class="text-2xl sm:text-3xl font-black text-white">500K+</p>
-            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-              Películas
-            </p>
-          </div>
-          <div class="w-px h-10 bg-white/10"></div>
-          <div>
-            <p class="text-2xl sm:text-3xl font-black text-white">4K</p>
-            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-              Calidad
-            </p>
-          </div>
-          <div class="w-px h-10 bg-white/10"></div>
-          <div>
-            <p class="text-2xl sm:text-3xl font-black text-white">∞</p>
-            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-              Favoritos
-            </p>
+      <!-- Contenido anclado a la izquierda, como afiche -->
+      <div
+        class="relative z-10 container mx-auto px-4 sm:px-6 pt-32 pb-16 sm:pb-20"
+      >
+        <div id="hero-copy" class="hero-copy max-w-2xl">
+          <p
+            class="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.35em] text-amber-400 mb-4"
+          >
+            <span class="inline-block w-8 h-px bg-amber-400"></span>
+            Destacado esta semana
+          </p>
+
+          <h1
+            id="hero-title"
+            class="font-display text-6xl sm:text-7xl lg:text-8xl leading-[0.95] text-slate-50 mb-4 drop-shadow-lg"
+          >
+            &nbsp;
+          </h1>
+
+          <div
+            id="hero-meta"
+            class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-slate-200 mb-4"
+          ></div>
+
+          <p
+            id="hero-overview"
+            class="text-slate-300/90 text-sm sm:text-base leading-relaxed max-w-xl mb-7 line-clamp-3"
+          ></p>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              id="hero-cta"
+              class="px-7 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm shadow-lg shadow-amber-400/25 active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              ▶ Ver detalles
+            </button>
+            <button
+              type="button"
+              id="hero-fav"
+              class="flex items-center gap-2 px-6 py-3 rounded-xl border border-amber-400 text-amber-300 hover:bg-amber-400/10 font-bold text-sm transition-all duration-200 cursor-pointer"
+            >
+              <span class="hero-fav-icon text-base">🤍</span>
+              <span class="hero-fav-label">Agregar a favoritos</span>
+            </button>
           </div>
         </div>
-      </div>
 
-      <!-- Degradado hacia el main -->
-      <div
-        class="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-slate-950 to-transparent"
-      ></div>
+        <!-- Indicadores de cartelera -->
+        <div class="mt-10 flex items-center gap-3">
+          <span class="font-display tracking-[0.25em] text-xs text-slate-500"
+            >CARTELERA</span
+          >
+          <div id="hero-ticks" class="flex items-center gap-2"></div>
+        </div>
+      </div>
     </header>
 
-    <!-- ═══════════════════ MAIN ═══════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN — Grid de resultados de búsqueda.
+         Sin cambios.
+    ═══════════════════════════════════════════════════════════ -->
     <main class="flex-1">
       <div class="container mx-auto px-4 sm:px-6 pb-20">
         <!-- Encabezado de sección -->
         <div class="flex items-center gap-3 mb-8">
-          <div
-            class="w-1 h-7 rounded-full bg-linear-to-b from-indigo-500 to-cyan-500"
-          ></div>
+          <div class="w-1 h-7 rounded-full bg-amber-400"></div>
           <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
             Resultados
           </h2>
@@ -231,7 +250,9 @@
       </div>
     </main>
 
-    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════
+         FOOTER — Sin cambios por ahora (la paleta se unifica en Fase 2).
+    ═══════════════════════════════════════════════════════════ -->
     <footer class="border-t border-white/5 bg-slate-950">
       <div class="container mx-auto px-4 sm:px-6 py-10">
         <div
@@ -240,9 +261,8 @@
           <!-- Logo + tagline -->
           <div class="flex items-center gap-2.5">
             <span class="text-xl">⚡</span>
-            <span
-              class="text-lg font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400"
-            >
+            <!-- DESPUÉS (sólido ámbar + tipografía de marquesina, igual que el nav) -->
+            <span class="font-display text-2xl tracking-widest text-amber-400">
               LUMINA ENGINE
             </span>
           </div>
@@ -295,7 +315,7 @@
               href="https://www.themoviedb.org/"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-indigo-500 hover:text-indigo-400 transition-colors font-medium"
+              class="text-amber-400 hover:text-amber-300 transition-colors font-medium"
             >
               The Movie Database
             </a>
@@ -304,7 +324,9 @@
       </div>
     </footer>
 
-    <!-- ═══════════════════ MODAL (intocado) ═══════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════
+         MODAL — para detalles de las películas.
+    ═══════════════════════════════════════════════════════════ -->
     <div
       id="movie-modal"
       class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4"
