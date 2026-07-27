@@ -72,22 +72,27 @@
       class="fixed top-0 left-0 right-0 z-40 border-b border-white/5 bg-slate-950/70 backdrop-blur-xl"
     >
       <div
-        class="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4"
+        class="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3 sm:gap-4"
       >
-        <!-- Logo -->
-        <a href="#" class="flex items-center gap-2.5 shrink-0 group">
+        <!-- Logo: ícono siempre, texto solo en sm+ (libera espacio al input en móvil) -->
+        <a href="#" class="flex items-center gap-2 sm:gap-2.5 shrink-0 group">
           <span
             class="text-2xl transition-transform duration-300 group-hover:-rotate-12"
             >🎬</span
           >
-          <span class="font-display text-2xl tracking-widest text-amber-400">
+          <span
+            class="hidden sm:inline font-display text-2xl tracking-widest text-amber-400"
+          >
             LUMINA
           </span>
         </a>
 
-        <!-- Búsqueda (centro, crece en desktop) -->
-        <form id="search-form" class="flex-1 max-w-xl flex items-center gap-2">
-          <div class="relative w-full group">
+        <!-- Búsqueda: flex-1 + min-w-0 para que flex se encoja correctamente -->
+        <form
+          id="search-form"
+          class="flex-1 min-w-0 max-w-xl flex items-center gap-2"
+        >
+          <div class="relative w-full min-w-0 group">
             <span
               class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-amber-400 transition-colors pointer-events-none"
             >
@@ -121,30 +126,26 @@
           </button>
         </form>
 
-        <!-- Acciones (derecha) -->
+        <!-- Acciones: estructura ESTABLE (sin texto plano destructivo) -->
         <div class="flex items-center gap-2 shrink-0">
-          <!-- ✅ CAMBIO: Agregado `flex` a la clase.
-               ¿Por qué? refreshFavoritesButton() hace classList.remove("hidden")
-               para mostrar este botón. Sin `flex`, al quitar `hidden` el botón
-               queda sin display:flex y los hijos (❤️ + texto) no se alinean.
-               Tailwind v4: `items-center` NO implica `display:flex`. -->
+          <!-- ✅ Botón favoritos: ❤️ + contador (siempre) + "Favoritos" (solo lg+) -->
           <button
             type="button"
             id="btn-favorites"
-            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200 cursor-pointer"
+            class="hidden flex items-center gap-1.5 h-10 px-3 sm:px-4 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200 cursor-pointer"
           >
-            <span class="text-base">❤️</span>
-            <span class="hidden md:inline">Favoritos</span>
+            <span class="text-base leading-none">❤️</span>
+            <span class="fav-count tabular-nums">0</span>
+            <span class="hidden lg:inline">Favoritos</span>
           </button>
 
-          <!-- ✅ CAMBIO: Mismo fix — agregado `flex` -->
           <button
             type="button"
             id="btn-back"
-            class="hidden flex items-center gap-1.5 h-10 px-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-sm font-semibold text-amber-300 hover:text-white hover:bg-amber-400/25 transition-all duration-200 cursor-pointer"
+            class="hidden flex items-center gap-1.5 h-10 px-3 sm:px-4 rounded-xl bg-amber-400/10 border border-amber-400/30 text-sm font-semibold text-amber-300 hover:text-white hover:bg-amber-400/25 transition-all duration-200 cursor-pointer"
           >
-            <span class="text-base">←</span>
-            <span class="hidden md:inline">Volver</span>
+            <span class="text-base leading-none">←</span>
+            <span class="hidden lg:inline">Volver</span>
           </button>
         </div>
       </div>

@@ -98,7 +98,7 @@ export const renderMovies = (
           </button>
 
           <!-- Botón detalles (aparece en hover) -->
-          <div class="absolute bottom-3 left-3 right-3 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+<div class="absolute bottom-3 left-3 right-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
             <button
               type="button"
               data-id="${movie.id}"
