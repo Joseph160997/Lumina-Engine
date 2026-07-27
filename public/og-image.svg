@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="18%" r="75%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="star" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <pattern id="perf" width="72" height="44" patternUnits="userSpaceOnUse">
+      <rect x="22" y="4" width="28" height="36" rx="7" fill="#1e293b"/>
+    </pattern>
+  </defs>
+
+  <!-- Fondo de sala + resplandor ámbar -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Tira de película (arriba y abajo) -->
+  <rect x="0" y="26" width="1200" height="44" fill="url(#perf)"/>
+  <rect x="0" y="560" width="1200" height="44" fill="url(#perf)"/>
+
+  <!-- Estrella de favoritos -->
+  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        transform="translate(840,170) scale(12.5)" fill="url(#star)" opacity="0.95"/>
+
+  <!-- Eyebrow -->
+  <text x="82" y="155" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="700"
+        fill="#fbbf24" letter-spacing="6">★ MOVIE DISCOVERY PLATFORM</text>
+
+  <!-- Título (Bebas con fallback condensada) -->
+  <text x="76" y="310" font-family="'Bebas Neue','Arial Narrow',Impact,sans-serif"
+        font-size="165" fill="#f8fafc" letter-spacing="4">LUMINA</text>
+  <text x="76" y="465" font-family="'Bebas Neue','Arial Narrow',Impact,sans-serif"
+        font-size="165" fill="#fbbf24" letter-spacing="4">ENGINE</text>
+
+  <!-- Tagline -->
+  <text x="82" y="530" font-family="Manrope, Arial, sans-serif" font-size="32"
+        fill="#94a3b8">Busca, descubre y guarda tus películas favoritas</text>
+</svg>
