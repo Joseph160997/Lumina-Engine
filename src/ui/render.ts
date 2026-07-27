@@ -123,7 +123,7 @@ export const renderMovies = (
 };
 
 /**
- * Busca el mejor trailer (oficial de YouTube优先) — sin cambios.
+ * Busca el mejor trailer (oficial de YouTube) — sin cambios.
  */
 function findMainTrailer(videos: ReadonlyArray<Video>): Video | null {
   const youtubeVideos = videos.filter((video) => video.youtubeUrl !== null);
@@ -232,7 +232,7 @@ export const renderMovieDetails = (
       </div>
     </div>
     `
-    : "<p class='text-slate-500 italic'>No hay trailer disponible para esta filmeria.</p>";
+    : "<p class='text-slate-500 italic'>No hay trailer disponible para esta pelicula.</p>";
 
   const htmlContent = `
   <!-- ══ Banner backdrop (rompe el padding del modal con -mx-6 -mt-6) ══ -->
