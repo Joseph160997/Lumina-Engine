@@ -102,13 +102,17 @@ export function syncFavoriteButton(
 
 /**
  * Actualiza el botón de favoritos del navbar (contador + visibilidad).
- * Mudado desde favoritesController: es una operación de DOM, no de negocio.
+ * IMPORTANTE: no usa innerText — eso destruiría los spans responsive
+ * (el "Favoritos" que se oculta en móvil) y el texto plano resultante
+ * aplastaría el input de búsqueda en pantallas chicas. Solo tocamos
+ * el span .fav-count y la clase hidden.
  */
 export function refreshNavbarButton(button: HTMLButtonElement): void {
-  const favorites = getFavorites();
-  if (favorites.length > 0) {
+  const count = getFavorites().length;
+  if (count > 0) {
     button.classList.remove("hidden");
-    button.innerText = `❤️ Mis favoritos (${favorites.length})`;
+    const countEl = button.querySelector(".fav-count");
+    if (countEl) countEl.textContent = String(count);
   } else {
     button.classList.add("hidden");
   }
