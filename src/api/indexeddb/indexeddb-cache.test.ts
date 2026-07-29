@@ -1,28 +1,47 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { isCacheValid, type CacheEntry } from "./indexeddb-cache";
+import { storage } from "./indexedDbClient";
+import {
+  isCacheValid,
+  getValidCache,
+  getRawCache,
+  setCache,
+  type CacheEntry,
+} from "./indexeddb-cache";
 
 // ═══════════════════════════════════════════════════════════
-// isCacheValid
+// MOCK DEL MÓDULO DE INDEXEDDB
 //
-// Congelamos el reloj con fake timers para que Date.now() sea
-// determinístico. Sin esto, los casos límite (edad ≈ TTL) serían
-// flaky por los microsegundos entre el Date.now() del test y el
-// de la función.
+// Reemplazamos `storage` por funciones falsas (vi.fn()) para no
+// tocar una base de datos real.
+vi.mock("./indexedDbClient", () => ({
+  storage: {
+    get: vi.fn(),
+    save: vi.fn(),
+    delete: vi.fn(),
+    clear: vi.fn(),
+  },
+}));
+
+// - useFakeTimers + setSystemTime: congelan el reloj → tests
+//   determinísticos (sin flakiness en los casos límite de TTL).
+// - clearAllMocks: limpia el historial de llamadas de storage
+//   entre tests, para que un toHaveBeenCalledWith no se contamine
+//   con las llamadas del test anterior.
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-01-01T12:00:00Z"));
+  vi.clearAllMocks();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 // ═══════════════════════════════════════════════════════════
-
+// isCacheValid — función pura (lógica de TTL)
+// ═══════════════════════════════════════════════════════════
 describe("isCacheValid", () => {
-  // Se ejecuta ANTES de cada test: fija el "ahora" a una fecha conocida.
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-01-01T12:00:00Z"));
-  });
-
-  // Se ejecuta DESPUÉS de cada test: restaura el reloj real para no
-  // contaminar otros archivos de test.
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it("should return false when the entry is undefined", () => {
     expect(isCacheValid(undefined)).toBe(false);
   });
@@ -53,7 +72,6 @@ describe("isCacheValid", () => {
       data: "cached-data",
       cachedAt: Date.now() - 5000, // exactamente 5s de edad
     };
-    // 5000 < 5000 es false → expirado
     expect(isCacheValid(entry, 5000)).toBe(false);
   });
 
@@ -62,7 +80,6 @@ describe("isCacheValid", () => {
       data: "cached-data",
       cachedAt: Date.now() - 4999, // 1ms antes del límite
     };
-    // 4999 < 5000 es true → todavía válido
     expect(isCacheValid(entry, 5000)).toBe(true);
   });
 
@@ -85,5 +102,108 @@ describe("isCacheValid", () => {
       };
       expect(isCacheValid(entry)).toBe(false);
     });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// getValidCache — devuelve los datos SOLO si la entrada es fresca
+// ═══════════════════════════════════════════════════════════
+describe("getValidCache", () => {
+  it("should return the data when the cached entry is fresh", async () => {
+    const entry: CacheEntry<string> = {
+      data: "cached-movies",
+      cachedAt: Date.now() - 1000, // 1s de edad
+    };
+    // Configuramos el mock: cuando llamen a storage.get, devuelve esta entrada
+    vi.mocked(storage.get).mockResolvedValue(entry);
+
+    const result = await getValidCache<string>("key", 5000); // TTL 5s
+
+    expect(result).toBe("cached-movies"); // 1s < 5s → válido
+  });
+
+  it("should return undefined when the cached entry is expired", async () => {
+    const entry: CacheEntry<string> = {
+      data: "cached-movies",
+      cachedAt: Date.now() - 10000, // 10s de edad
+    };
+    vi.mocked(storage.get).mockResolvedValue(entry);
+
+    const result = await getValidCache<string>("key", 5000); // TTL 5s
+
+    expect(result).toBeUndefined(); // 10s > 5s → expirado
+  });
+
+  it("should return undefined when there is no cached entry", async () => {
+    vi.mocked(storage.get).mockResolvedValue(undefined);
+
+    const result = await getValidCache<string>("key", 5000);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("should query storage with the given key", async () => {
+    vi.mocked(storage.get).mockResolvedValue(undefined);
+
+    await getValidCache("my-cache-key", 5000);
+
+    // Verificamos que la función fue llamada con el argumento correcto
+    expect(storage.get).toHaveBeenCalledWith("my-cache-key");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// getRawCache — devuelve la entrada cruda SIN chequear validez
+// (fallback para cuando la red falla: mejor datos viejos que nada)
+// ═══════════════════════════════════════════════════════════
+describe("getRawCache", () => {
+  it("should return the raw entry even if it is expired", async () => {
+    const entry: CacheEntry<string> = {
+      data: "stale-data",
+      cachedAt: Date.now() - 999999999, // muy vieja
+    };
+    vi.mocked(storage.get).mockResolvedValue(entry);
+
+    const result = await getRawCache<string>("key");
+
+    // A diferencia de getValidCache, NO filtra por TTL
+    expect(result).toEqual(entry);
+  });
+
+  it("should return undefined when there is no entry", async () => {
+    vi.mocked(storage.get).mockResolvedValue(undefined);
+
+    const result = await getRawCache<string>("key");
+
+    expect(result).toBeUndefined();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// setCache — envuelve los datos con el timestamp actual y guarda
+// ═══════════════════════════════════════════════════════════
+describe("setCache", () => {
+  it("should save the data wrapped with the current timestamp", async () => {
+    vi.mocked(storage.save).mockResolvedValue(undefined);
+
+    await setCache("key", { movies: [1, 2, 3] });
+
+    expect(storage.save).toHaveBeenCalledWith(
+      { data: { movies: [1, 2, 3] }, cachedAt: Date.now() },
+      "key",
+    );
+  });
+
+  it("should stamp cachedAt with the frozen 'now'", async () => {
+    vi.mocked(storage.save).mockResolvedValue(undefined);
+
+    await setCache("key", "payload");
+
+    // Leemos con qué argumentos se llamó al mock (primer llamado, primer argumento)
+    const savedEntry = vi.mocked(storage.save).mock
+      .calls[0][0] as CacheEntry<string>;
+    expect(savedEntry.cachedAt).toBe(
+      new Date("2026-01-01T12:00:00Z").getTime(),
+    );
   });
 });
