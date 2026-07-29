@@ -14,12 +14,17 @@ export default defineConfig({
     // Convención: archivos .test.ts o .spec.ts dentro de src/.
     include: ["src/**/*.test.ts"],
 
-    // Reporte de cobertura (opcional pero profesional).
+    // Reporte de cobertura.
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.test.ts", "src/vite-env.d.ts", "src/main.ts"],
+      exclude: [
+        "src/**/*.test.ts",
+        "src/test/**",
+        "src/vite-env.d.ts",
+        "src/main.ts",
+      ],
     },
   },
 });
