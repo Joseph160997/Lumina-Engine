@@ -5,95 +5,20 @@ import {
   mapMoviePage,
   mapMovieDetail,
 } from "./mapper";
-import type {
-  TmdbRawMovieDto,
-  TmdbMovieListResponseDto,
-  TmdbRawMovieDetailDto,
-  TmdbRawCastDto,
-  TmdbRawVideoDto,
-} from "../dto/movie.dto";
 
-// ═══════════════════════════════════════════════════════════
-// FACTORIES — DTOs de entrada válidos (el mapper asume que el
-// validator ya pasó). Overrides tipados con Partial<T>.
-// ═══════════════════════════════════════════════════════════
+import {
+  makeRawMovie,
+  makeRawDetail,
+  makeRawCast,
+  makeRawVideo,
+} from "../../../test/factories/tmdb";
+import { TmdbMovieListResponseDto } from "../dto/movie.dto";
 
 // Catálogo de géneros real para los tests de mapMovie/mapMoviePage.
 const genreCatalog = new Map<number, string>([
   [28, "Action"],
   [12, "Adventure"],
 ]);
-
-const makeRawMovie = (
-  overrides: Partial<TmdbRawMovieDto> = {},
-): TmdbRawMovieDto => ({
-  adult: false,
-  backdrop_path: "/backdrop.jpg",
-  genre_ids: [28, 12],
-  id: 123,
-  original_language: "en",
-  original_title: "Original Title",
-  overview: "An overview",
-  popularity: 100,
-  poster_path: "/poster.jpg",
-  release_date: "2022-01-15",
-  title: "Movie Title",
-  video: false,
-  vote_average: 7.5,
-  vote_count: 1000,
-  ...overrides,
-});
-
-const makeRawCast = (
-  overrides: Partial<TmdbRawCastDto> = {},
-): TmdbRawCastDto => ({
-  id: 1,
-  name: "Actor Name",
-  character: "Hero",
-  profile_path: "/profile.jpg",
-  ...overrides,
-});
-
-const makeRawVideo = (
-  overrides: Partial<TmdbRawVideoDto> = {},
-): TmdbRawVideoDto => ({
-  id: "v1",
-  key: "abc123",
-  name: "Official Trailer",
-  site: "YouTube",
-  type: "Trailer",
-  official: true,
-  ...overrides,
-});
-
-const makeRawDetail = (
-  overrides: Partial<TmdbRawMovieDetailDto> = {},
-): TmdbRawMovieDetailDto => ({
-  adult: false,
-  backdrop_path: "/backdrop.jpg",
-  id: 123,
-  original_language: "en",
-  original_title: "Original Title",
-  overview: "An overview",
-  popularity: 100,
-  poster_path: "/poster.jpg",
-  release_date: "2022-01-15",
-  title: "Movie Title",
-  video: false,
-  vote_average: 8,
-  vote_count: 500,
-  genres: [{ id: 28, name: "Action" }],
-  runtime: 120,
-  budget: 1000000,
-  revenue: 5000000,
-  status: "Released",
-  tagline: "A tagline",
-  imdb_id: "tt1234567",
-  homepage: "https://example.com",
-  credits: { cast: [makeRawCast()] },
-  videos: { results: [makeRawVideo()] },
-  ...overrides,
-});
 
 // ═══════════════════════════════════════════════════════════
 // buildGenreCatalog
