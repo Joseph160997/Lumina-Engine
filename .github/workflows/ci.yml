@@ -36,6 +36,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # 6. Compila TypeScript y Vite
+      # 6. Corre los tests unitarios  ← NUEVO
+      - name: Test
+        run: npm run test
+
+      # 7. Compila TypeScript y Vite
       - name: Build
         run: npm run build
