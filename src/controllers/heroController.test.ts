@@ -1,29 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { getNextHeroIndex } from "./heroController";
 import { setHeroMovies } from "../state/heroState";
-import type { Movie } from "../types/movie";
 
-// ═══════════════════════════════════════════════════════════
-// Factory local de Movie.
-// getNextHeroIndex solo usa `.length`, pero setHeroMovies exige
-// Movie[] tipado, así que construimos objetos válidos.
-const makeMovie = (overrides: Partial<Movie> = {}): Movie => ({
-  id: 1,
-  title: "Test Movie",
-  originalTitle: "Test Movie",
-  overview: "An overview",
-  posterUrl: null,
-  backdropUrl: null,
-  releaseDate: null,
-  rating: 7.5,
-  voteCount: 100,
-  genres: [],
-  ...overrides,
-});
-
-/** Crea N películas con ids distintos. */
-const makeMovies = (count: number): Movie[] =>
-  Array.from({ length: count }, (_, i) => makeMovie({ id: i + 1 }));
+import { makeMovies } from "../test/factories/movie";
 
 describe("getNextHeroIndex", () => {
   // Cargamos un estado conocido ANTES de cada test: 3 películas
