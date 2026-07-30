@@ -179,6 +179,7 @@ describe("movie.repository", () => {
 
       expect(httpClient).toHaveBeenCalledTimes(1);
       expect(setCache).toHaveBeenCalledTimes(1);
+      expect(result.movies).toHaveLength(1);
     });
 
     it("should fall back to stale cache when the network fails", async () => {
