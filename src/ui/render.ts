@@ -122,6 +122,109 @@ export const renderMovies = (
   container.innerHTML = htmlContent;
 };
 
+export const renderPagination = (
+  currentPage: number,
+  totalPages: number,
+  totalResults: number,
+  container: HTMLElement,
+): void => {
+  if (!container) return;
+
+  const safeCurrentPage = Math.min(
+    Math.max(currentPage, 1),
+    Math.max(totalPages, 1),
+  );
+
+  if (totalPages <= 1) {
+    container.innerHTML = "";
+    if ("classList" in container) {
+      container.classList.add("hidden");
+    }
+    return;
+  }
+
+  if ("classList" in container) {
+    container.classList.remove("hidden");
+  }
+
+  const pageNumbers: Array<number | null> = [];
+
+  if (totalPages <= 7) {
+    for (let page = 1; page <= totalPages; page += 1) {
+      pageNumbers.push(page);
+    }
+  } else {
+    pageNumbers.push(1);
+
+    const startPage = Math.max(2, safeCurrentPage - 2);
+    const endPage = Math.min(totalPages - 1, safeCurrentPage + 2);
+
+    if (startPage > 2) {
+      pageNumbers.push(null);
+    }
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      pageNumbers.push(page);
+    }
+
+    if (endPage < totalPages - 1) {
+      pageNumbers.push(null);
+    }
+
+    pageNumbers.push(totalPages);
+  }
+
+  const buttonsHtml = pageNumbers
+    .map((pageNumber) => {
+      if (pageNumber === null) {
+        return `<span class="px-2 text-sm text-slate-500">...</span>`;
+      }
+
+      const isActive = pageNumber === safeCurrentPage;
+      return `
+        <button
+          type="button"
+          data-page="${pageNumber}"
+          class="min-w-10 rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+            isActive
+              ? "border-amber-400 bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20"
+              : "border-white/10 bg-white/5 text-slate-300 hover:border-amber-400/40 hover:text-white"
+          }"
+          ${isActive ? 'aria-current="page"' : ""}
+        >
+          ${pageNumber}
+        </button>`;
+    })
+    .join("");
+
+  container.innerHTML = `
+    <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between sm:gap-6">
+      <p class="text-sm text-slate-400">
+        Página ${safeCurrentPage} de ${totalPages} · ${totalResults.toLocaleString()} resultados
+      </p>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-page="${safeCurrentPage - 1}"
+          class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-300 transition-all duration-200 hover:border-amber-400/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          ${safeCurrentPage <= 1 ? "disabled" : ""}
+        >
+          ← Anterior
+        </button>
+        <div class="flex items-center gap-2">${buttonsHtml}</div>
+        <button
+          type="button"
+          data-page="${safeCurrentPage + 1}"
+          class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-300 transition-all duration-200 hover:border-amber-400/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          ${safeCurrentPage >= totalPages ? "disabled" : ""}
+        >
+          Siguiente →
+        </button>
+      </div>
+    </div>
+  `;
+};
+
 /**
  * Busca el mejor trailer (oficial de YouTube) — sin cambios.
  */

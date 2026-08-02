@@ -2,7 +2,7 @@ import "./style.css";
 import { getGenreCatalog } from "./api/repositories/genre.repository";
 import { toggleMovieFavorite } from "./controllers/favoritesController";
 import { openMovieDetail, closeModal } from "./controllers/modalController";
-import { performSearch } from "./controllers/searchController";
+import { loadPage, performSearch } from "./controllers/searchController";
 import {
   initHero,
   goToSlide,
@@ -12,7 +12,10 @@ import {
 } from "./controllers/heroController";
 import { getFavorites } from "./services/favoritesServices";
 import {
+  getCurrentPage,
   getLastSearchMovies,
+  getTotalPages,
+  getTotalResults,
   setCurrentMovies,
   setIsViewingFavorites,
   setResolvedGenreCatalog,
@@ -30,6 +33,9 @@ import {
 
 // Búsqueda y grilla
 const movieGrid = document.getElementById("movie-grid") as HTMLElement;
+const paginationControls = document.getElementById(
+  "pagination-controls",
+) as HTMLElement;
 const searchForm = document.getElementById("search-form") as HTMLFormElement;
 const searchInput = document.getElementById("search-input") as HTMLInputElement;
 
@@ -125,13 +131,13 @@ const handleInputSearch = (event: Event): void => {
   clearTimeout(debounceTimer);
   if (query.trim().length < 3) return;
   debounceTimer = window.setTimeout(() => {
-    performSearch(query, movieGrid);
+    performSearch(query, movieGrid, paginationControls);
   }, 500);
 };
 
 const handleSearch = (event: Event): void => {
   event.preventDefault();
-  performSearch(searchInput.value, movieGrid);
+  performSearch(searchInput.value, movieGrid, paginationControls);
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -214,6 +220,8 @@ btnFavorites.addEventListener("click", (event) => {
   if (favorites.length > 0) {
     setCurrentMovies(favorites);
     renderMovies(favorites, movieGrid);
+    paginationControls.innerHTML = "";
+    paginationControls.classList.add("hidden");
     btnFavorites.classList.add("hidden");
     btnBack.classList.remove("hidden");
     searchForm.classList.add("opacity-50", "pointer-events-none");
@@ -226,10 +234,35 @@ btnBack.addEventListener("click", (event) => {
   const lastSearch = getLastSearchMovies();
   setCurrentMovies(lastSearch);
   renderMovies(lastSearch, movieGrid);
+  paginationControls.classList.remove("hidden");
+  if (getTotalPages() > 1) {
+    // Re-renderiza los controles con la última búsqueda cargada.
+    import("./ui/render").then(({ renderPagination }) => {
+      renderPagination(
+        getCurrentPage(),
+        getTotalPages(),
+        getTotalResults(),
+        paginationControls,
+      );
+    });
+  } else {
+    paginationControls.innerHTML = "";
+  }
   btnBack.classList.add("hidden");
   refreshNavbarButton(btnFavorites);
   searchForm.classList.remove("opacity-50", "pointer-events-none");
   setIsViewingFavorites(false);
+});
+
+paginationControls.addEventListener("click", async (event) => {
+  const target = event.target as HTMLElement;
+  const pageButton = target.closest("[data-page]") as HTMLElement | null;
+  if (!pageButton) return;
+
+  const page = Number(pageButton.getAttribute("data-page"));
+  if (Number.isNaN(page)) return;
+
+  await loadPage(page, movieGrid, paginationControls);
 });
 
 // -- Hero --

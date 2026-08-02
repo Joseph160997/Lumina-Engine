@@ -1,7 +1,6 @@
 import type { Movie } from "../types/movie";
 import { escapeHtml } from "./render";
-// ✅ CAMBIO: syncHeroFavButton se mudó a favoritesSync.
-// Ahora importamos la función genérica + la config del hero.
+
 import { syncFavoriteButton, HERO_FAV_CONFIG } from "./favoritesSync";
 
 /** Elementos del bloque de texto (copy) de un slide del hero. */
